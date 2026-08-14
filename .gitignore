@@ -19,3 +19,6 @@ _dbg_*.py
 
 # WorkBuddy local cache
 .workbuddy/
+
+# 本地私密文件：断语库溯源指纹句（勿提交，公开会让指纹失效）
+.fingerprints.json
