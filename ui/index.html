@@ -1243,8 +1243,11 @@ function matchRules(ctx){
   const cats={};
   RULES.forEach(r=>{ if(!cats[r.category]) cats[r.category]=[]; });
   RULES.forEach(r=>{
-    const c=r.condition; let hit=true;
+    const c=r.condition||{}; let hit=true;
     let wx=null,st=null,tenArr=null,pos=null;
+    // 空 condition 规则为专用触发型（dayun_*/liuyue_*/liuri_*/qinq_27~30 等由专用函数按 id 触发），
+    // 不参与主引擎匹配，避免无条件命中导致固定断语出现在每个命盘
+    if(Object.keys(c).length===0){ hit=false; }
     for(const k in c){
       const v=c[k];
       if(k==='日主'){ if(v!==ctx.dayMasterFull) hit=false; }
