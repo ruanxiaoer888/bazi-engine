@@ -1,0 +1,115 @@
+# bazi-engine 八字命理 Skill · 项目交接文档（HANDOFF）
+
+> 更新时间：2026-08-14 14:30 · 当前版本 **v1.2.1**（全面扫描修复批次：原生 select 初始化/合婚 HTML 结构/iOS 防缩放/文档断语数同步）
+> 项目性质：**Michael 个人独立研发项目**，与魅可科技（Meke）业务无任何关联，推广/发布按个人项目口径。
+
+---
+
+## 一、当前任务（进行中 / 待办）
+
+### 发布前（就差这两步）
+1. **真人验收**（需 Michael 亲手操作，约 10 分钟）
+   - 打开 `ui/index.html` 排 2~3 个真实盘
+   - 重点看：四柱命盘表（日柱金边高亮）、手机窄屏（640px 响应式）、流日面板、六亲详解面板
+2. **提交发布**
+   - 生成图标：按 `发布物料.md` 中的图标提示词（可用 ImageGen）
+   - 按 `发布物料.md` 准备 SkillHub 提交材料（简介/示例对话/合规声明）
+
+> ✅ 发布前收尾（2026-08-13 已完成）：check_conflicts.js 已同步打包目录 + SKILL.md 登记；`断语库.json.bak` 旧备份已清理；新增对外 `README.md`；SKILL.md frontmatter 补 `tags`/`license`（MIT）。
+
+### 发布后增强（已记录，可后置）
+- 晚子时 / 节气临界时刻的引擎提示语（已知缺口，非阻塞）
+
+---
+
+## 二、已完成内容（截至 v1.2.0）
+
+### 功能全景（132 项任务中 132 completed）
+| 模块 | 状态 |
+|------|------|
+| 排盘引擎（四柱/大运/流年/流月/流日） | ✅ 完整 |
+| **UI 美学升级**：墨底 + 古铜金高端商务界面，壹~玖中文序号徽章，四柱专业表，零外部依赖 | ✅ v1.1 |
+| **流日分析**：单月逐日 30 天（每日干支/十神/与命局冲合刑害/空亡/喜忌/十二长生 + 关键日小结） | ✅ v1.1 |
+| **六亲详解**：宫位为体（年祖上/月父母/日配偶/时子女）+ 十神为用 + 喜忌空亡，五段式输出 | ✅ v1.2 |
+| 流月分析（十二流月逐月 + 断语） | ✅ |
+| 流年深度规则（岁运并临/伏吟/反吟/空亡/十二长生） | ✅ |
+| 合婚七大维度评分 | ✅ |
+| 五行补救 / 神煞 / 调候用神（穷通宝鉴） | ✅ |
+| 三式宫位（胎元/命宫/身宫）、特殊格局（专旺5+从格4） | ✅ |
+
+### 关键资产
+- **断语库**：`knowledge-base/04-断语库/断语库.json` — **504 条**（六亲30 / 流年30 / 流月20 / 流日5 / 合婚20 等），每条含 `suggestion` 建议字段，全量接入渲染
+- **UI**：`ui/index.html` — 单文件离线（**零外部依赖**，无 Google Fonts 外链），内置 206 年节气 + 504 条断语
+- **引擎**：`tools/build_ui.py` — Python 构建脚本，内联断语库 + 节气 + 全部 JS 逻辑
+- **知识库**：三命通会/渊海子平/滴天髓/子平真诠/穷通宝鉴全文梳理均已入库
+- **打包目录**：`~/.workbuddy/skills/bazi-engine/` — 已同步，MD5 全 MATCH，可独立运行
+- **版本**：SKILL.md frontmatter 已加 `version: 1.2.0` + `tags` + `license: MIT`
+- **对外文档**：`README.md`（项目门面：功能/快速开始/示例对话/免责声明）+ `发布物料.md`（内部发布材料：卖点/图标提示词/渠道建议）
+
+### 验证体系（5 套回归，全部 PASS：FAIL:0 WARN:0）
+| 脚本 | 覆盖 |
+|------|------|
+| `test_ui.js` | UI 结构与渲染 |
+| `test_eval_state.js` | 引擎状态 |
+| `test_p1_fixes.js` | P1 修复回归 |
+| `verify_sleep_rules.js` | 沉睡规则接入 |
+| `verify_ux_e2e.js` | 端到端用户视角（A~G 组：输入容错/边界/报告质量/稳定性/完整性/**流日 F 组 12 项**/**六亲 G 组 8 项**） |
+| `check_conflicts.js` | 反义断语同盘矛盾检测（40 对规则，1000 盘 0 冲突） |
+
+> 另含 `audit_hit_distribution.js`（命中分布审查）、`check_dup_hits.js`（重复命中检测）——发布后仍可继续用于断语库维护。
+
+### 交付文档
+- `发布物料.md` — 6 大卖点 / 图标提示词 / 3 个示例对话 / 合规声明 / 渠道建议（SkillHub 优先）
+
+---
+
+## 三、卡住的问题（当前阻塞：无）
+
+- ✅ 全部 132 项任务已清零（刚理清 #74 滞留状态）
+- ⚠️ 唯一"卡点"是**真人验收**需要 Michael 本人操作（模拟回归无法替代真实观感）
+- 🔜 无技术性阻塞；晚子时提示语为已知非阻塞缺口
+
+---
+
+## 四、下一步计划（按优先级）
+
+1. **[Michael] 真人验收** → 排 2~3 个真实盘，反馈 UI/流日/六亲体验
+2. **[小二] 生成图标** → 按 `发布物料.md` 提示词出图（验收 OK 后）
+3. **[小二] 准备 SkillHub 提交材料** → 简介 + 示例对话 + 合规声明整理成提交包
+4. **[Michael] 提交发布** → SkillHub 上传
+5. **[后置] 晚子时/节气临界引擎提示语** → 发布后迭代
+
+---
+
+## 五、踩过的坑（经验教训，避免重蹈）
+
+### 测试/调试类
+1. **`LAST` 是 eval 内块级变量（`let LAST`）**，测试脚本必须用项目既有的 `__setLast()` 设置，直接 `globalThis.LAST=...` 会触发"请先排盘"拦截 —— verify_ux_e2e.js F 区曾因此报错
+2. **`new Date(2026,2,0)` 取的是 2 月末（28 天）**，`new Date(2026,3,0)` 才是 3 月末（31 天）—— 月份参数从 0 开始，算月末天数时月份要 +1
+3. **node `-e` 方式跑长脚本有 TS 剥离干扰**，异常堆栈不可读 —— 改用临时文件（`_dbg_*.js`）调试，用完即删
+4. **vm 沙箱 stub 中元素必须经 `document.getElementById` 触发创建**，直接访问 `_els['id']` 会 undefined —— 调试脚本要先调用 getElementById 再取 innerHTML
+5. **`initSelects()` 只填选项不显隐**：改原生 select 后，时/分 select 带 `class="hidden"`，必须在 `initSelects()` 后显式调用 `toggleTimeMode()` / `toggleHeTimeMode('A'/'B')`，否则时间选择器对用户不可见
+6. **合婚 A/B 两侧 HTML 结构必须对称**：B 侧性别 div 漏 `</div>` 会致 `.row` 嵌套错乱（浏览器容错不报错），扫描时用 diff 对比 A/B 或数标签平衡
+7. **iOS Safari select 字号 <16px 聚焦自动放大页面**：移动端 media query 内 `select{font-size:16px}` 防误触
+8. **文档数字随功能同步**：断语数/版本号等硬数字散落在 README/README.en/SKILL/HANDOFF/发布物料，扩库后易漏改——用 `grep -rn "旧数字"` 全局清查
+9. **打包目录防多版本混入**：`tools/index.html`（旧 UI 误拷贝 337KB）曾与 `ui/index.html` 并存，打开错文件会看到旧界面——UI 唯一真源是 `ui/index.html`，定期比对打包目录与源码清单
+
+### 构建/依赖类
+5. **Google Fonts `@import` 外链违反"单文件零外部依赖"承诺** —— UI 升级时删除，改用系统字体栈（Songti SC/STSong/SimSun + system-ui）
+6. **SKILL.md 实际位于 `skill/SKILL.md`（非项目根）** —— 同步打包时第一版 `cp` 失败，须用正确相对路径
+7. **断语库 JSON 每改必验** —— 用 `python json.load` 校验合法性 + 统计规则数，再重建 UI（断语数会反映在 build 输出里）
+
+### 需求/流程类
+8. **7 项功能核查中 #2 与 #4 重复（都是流月分析）** —— 先向用户澄清再动手，避免重复劳动
+9. **任务账目会滞留**：实际完成但状态未更新（本次理清 #27/41/59/66/68/69/70/71/72/75/74 共 11 个）—— 完成一项应立即 TaskUpdate
+
+---
+
+## 六、项目速查
+
+- 源码目录：`E:\michael\workBuddy\bazi-project`
+- 打包目录：`C:\Users\34743\.workbuddy\skills\bazi-engine`
+- 构建命令：`python tools/build_ui.py`（输出 `ui/index.html`）
+- 回归命令：`node tools/verify_ux_e2e.js`（其余 7 套同理：test_ui / test_dst / test_liuri_v2 / test_liuyue_v2 / test_eval_state / test_p1_fixes / verify_sleep_rules）
+- 同步命令：文件 cp 到打包目录后 md5sum 校验（README.md / README.en.md / SKILL.md / tools/build_ui.py / ui/index.html / tools/各测试脚本）
+- 命名约定：对外统一 "bazi-engine"（原名 bazi-master 因 SkillHub 同名竞品已弃用），个人项目口径，不挂钩魅可
