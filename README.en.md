@@ -39,12 +39,15 @@ Same birth data in, same chart out — every single time.
 ### Example dialogue
 
 **Q:** Chart for me — May 15, 1990, 10:00 AM, male, born in Guangzhou.
+
 **A:** Four Pillars (庚午 辛巳 庚辰 癸巳), element distribution, favorable gods, 8-step Da Yun, current-year reading — every statement with its classical citation.
 
 **Q:** Are we compatible? Me: 1990-05-15 10:00 M Guangzhou. Her: 1992-08-08 20:00 F Beijing.
+
 **A:** 7-dimension compatibility score (day-master complementarity / element generation / family cross-check / year synchronicity), flagging harmonious and clashing points.
 
 **Q:** Which day in March 2026 is good for a business meeting?
+
 **A:** Day-by-day expansion: clash/combine days against the natal chart, favorable vs unfavorable days, key-day summary — "clash days favor stillness, combine days favor socializing."
 
 ## Technical Notes
