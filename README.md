@@ -2,7 +2,8 @@
 
 一个开箱即用的八字排盘与命理分析 Skill：输入出生信息，自动排出四柱八字、大运流年，并参照经典命理典籍给出带出处的专业解读。
 
-> **English**: [README.en.md](README.en.md)
+> **English**: [README.en.md](README.en.md)  
+> **GitHub**: https://github.com/ruanxiaoer888/bazi-engine
 
 > 单文件离线运行，无任何外部依赖；排盘精确至节气时刻。
 

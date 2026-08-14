@@ -108,6 +108,7 @@
 ## 六、项目速查
 
 - 源码目录：`E:\michael\workBuddy\bazi-project`
+- GitHub 仓库：https://github.com/ruanxiaoer888/bazi-engine
 - 打包目录：`C:\Users\34743\.workbuddy\skills\bazi-engine`
 - 构建命令：`python tools/build_ui.py`（输出 `ui/index.html`）
 - 回归命令：`node tools/verify_ux_e2e.js`（其余 7 套同理：test_ui / test_dst / test_liuri_v2 / test_liuyue_v2 / test_eval_state / test_p1_fixes / verify_sleep_rules）
