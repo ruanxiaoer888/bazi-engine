@@ -2,7 +2,8 @@
 
 A deterministic, zero-dependency BaZi (Chinese Four Pillars) charting and analysis engine. Feed it a birth date, and it computes the Four Pillars, Luck Cycles (Da Yun), and annual/monthly/daily fortunes with **every reading traced back to a classical text source**.
 
-> Single-file offline runtime — open in a browser and it works. No API keys, no external services, no build step.
+> Single-file offline runtime — open in a browser and it works. No API keys, no external services, no build step.  
+> **GitHub**: https://github.com/ruanxiaoer888/bazi-engine
 
 ## Why "engine"?
 
