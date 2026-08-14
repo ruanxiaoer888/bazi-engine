@@ -1,7 +1,7 @@
 # bazi-engine · SkillHub 提交材料包
 
 > 版本：v1.2.1  
-> 配套图标：`assets/icon_taiji_v1.png`（推荐） / `assets/icon_taiji_v2.png`  
+> 配套图标：`assets/icon_taiji_v1.png`（已定稿 2026-08-14）  
 > 配套截图：`assets/screenshots/`（9 张）
 
 ---
@@ -102,12 +102,11 @@ bazi-engine 是一款**确定性排盘 + 可追溯断语**的四柱八字命理�
 每条分析结尾统一提示："命理分析仅供参考，人生在于自身选择与努力。"
 ```
 
-## 五、图标选择建议
+## 五、图标（已定稿）
 
-- **推荐：`assets/icon_taiji_v1.png`**（平面古印风）
+- **最终图标：`assets/icon_taiji_v1.png`**（平面古印风，2026-08-14 确认）
   - 理由：黑金对比强烈，小尺寸 icon 下太极阴阳辨识度最高；印章/罗盘质感与"严谨命理引擎"定位一致。
-- **备选：`assets/icon_taiji_v2.png`**（立体金属感）
-  - 理由：更现代奢华，但渐变在小尺寸/浅色背景下可能细节丢失。
+- ~~备选 `assets/icon_taiji_v2.png`（立体金属感）~~ → 未选用，已随定稿从仓库移除（git 历史可恢复）。
 
 > 提交时直接使用 `icon_taiji_v1.png`，无需额外裁剪（SkillHub 通常会自动缩放）。
 
@@ -129,7 +128,7 @@ bazi-engine 是一款**确定性排盘 + 可追溯断语**的四柱八字命理�
 ## 七、提交前 Checklist
 
 - [ ] Michael 已真人验收 1~2 个真实盘
-- [ ] 已选定最终图标：`assets/icon_taiji_v1.png`（默认）
+- [x] 已选定最终图标：`assets/icon_taiji_v1.png`（2026-08-14 确认）
 - [ ] 已复制 SkillHub 基础信息 + 详细描述 + 示例对话 + 合规声明
 - [ ] 已上传 1~3 张核心截图
 - [ ] `~/.workbuddy/skills/bazi-engine/` 打包目录为最终版本（build_ui.py / ui/index.html / README 等 MD5 全 MATCH）
