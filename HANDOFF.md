@@ -22,7 +22,7 @@
 
 ---
 
-## 二、已完成内容（截至 v1.2.0）
+## 二、已完成内容（截至 v1.2.1）
 
 ### 功能全景（132 项任务中 132 completed）
 | 模块 | 状态 |
@@ -43,10 +43,15 @@
 - **引擎**：`tools/build_ui.py` — Python 构建脚本，内联断语库 + 节气 + 全部 JS 逻辑
 - **知识库**：三命通会/渊海子平/滴天髓/子平真诠/穷通宝鉴全文梳理均已入库
 - **打包目录**：`~/.workbuddy/skills/bazi-engine/` — 已同步，MD5 全 MATCH，可独立运行
-- **版本**：SKILL.md frontmatter 已加 `version: 1.2.0` + `tags` + `license: MIT`
+- **版本**：SKILL.md frontmatter 已加 `version: 1.2.1` + `tags` + `license: MIT`
 - **对外文档**：`README.md`（项目门面：功能/快速开始/示例对话/免责声明）+ `发布物料.md`（内部发布材料：卖点/图标提示词/渠道建议）
 
-### 验证体系（5 套回归，全部 PASS：FAIL:0 WARN:0）
+### 关键修复（2026-08-14 全面扫描）
+- **空 condition 规则无条件命中 bug**：71 条 condition 为 `{}` 的规则中，8 条（qinq_27~30 + edu_17~20）落入主渲染分类会**固定显示在每个命盘**（`for...in` 空对象后 `hit` 保持 true）。修复：`matchRules` 开头 `if(Object.keys(c).length===0){ hit=false; }` 排除（专用函数仍按 id 触发 dayun_*/liuyue_*/liuri_*/qinq_27~30/he_*）
+- **edu_17~20 真孤儿复活**：补差异化 condition 使其重新参与主引擎匹配——edu_17 印星为用有力 / edu_18 食神多而有力 / edu_19 月干透印+伤官泄秀 / edu_20 身弱财多；edu_19 原与 combo_伤官_正印 条件相同会同盘重复，已加"月干+印为用有力"约束并改文案消除
+- 验证：新增 `tools/verify_edu_rules.js` 回归（edu 命中率 ≥1 次且 <60%、qinq_27~30 不进主渲染）；8 套既有回归 + 冲突检测全绿
+
+### 验证体系（9 套回归，全部 PASS：FAIL:0 WARN:0）
 | 脚本 | 覆盖 |
 |------|------|
 | `test_ui.js` | UI 结构与渲染 |
@@ -55,6 +60,10 @@
 | `verify_sleep_rules.js` | 沉睡规则接入 |
 | `verify_ux_e2e.js` | 端到端用户视角（A~G 组：输入容错/边界/报告质量/稳定性/完整性/**流日 F 组 12 项**/**六亲 G 组 8 项**） |
 | `check_conflicts.js` | 反义断语同盘矛盾检测（40 对规则，1000 盘 0 冲突） |
+| `test_dst.js` | 夏令时窗口/边界校正（29 项） |
+| `test_liuri_v2.js` | 流日规则 v2（10 项） |
+| `test_liuyue_v2.js` | 流月规则 v2（10 项） |
+| `verify_edu_rules.js` | 空 condition 排除 + 学业规则复活回归（edu_17~20 命中率须 ≥1 次且 <60%，qinq_27~30 不进入主渲染） |
 
 > 另含 `audit_hit_distribution.js`（命中分布审查）、`check_dup_hits.js`（重复命中检测）——发布后仍可继续用于断语库维护。
 
@@ -73,11 +82,11 @@
 
 ## 四、下一步计划（按优先级）
 
-1. **[Michael] 真人验收** → 排 2~3 个真实盘，反馈 UI/流日/六亲体验
-2. **[小二] 生成图标** → 按 `发布物料.md` 提示词出图（验收 OK 后）
-3. **[小二] 准备 SkillHub 提交材料** → 简介 + 示例对话 + 合规声明整理成提交包
-4. **[Michael] 提交发布** → SkillHub 上传
-5. **[后置] 晚子时/节气临界引擎提示语** → 发布后迭代
+1. **[Michael] 真人验收** → 排 2~3 个真实盘，反馈 UI/流日/六亲体验（打开 `ui/index.html`）
+2. **[Michael] 选最终图标** → v1 平面古印风（推荐）/ v2 立体金属感，选后定稿 logo
+3. **[Michael] 提交发布** → SkillHub（用 `SkillHub-Submission-Kit.md` 提交包）
+4. **[后置] 晚子时/节气临界引擎提示语** → 发布后迭代
+5. **[后置] 第 3 批次断语扩充**（流年 30→55 / 用神喜忌 31→55 / 六亲 30→50，目标 800~1000 条，复用 `drafts/` 取材方法论）→ 发布后迭代
 
 ---
 
@@ -111,6 +120,6 @@
 - GitHub 仓库：https://github.com/ruanxiaoer888/bazi-engine
 - 打包目录：`C:\Users\34743\.workbuddy\skills\bazi-engine`
 - 构建命令：`python tools/build_ui.py`（输出 `ui/index.html`）
-- 回归命令：`node tools/verify_ux_e2e.js`（其余 7 套同理：test_ui / test_dst / test_liuri_v2 / test_liuyue_v2 / test_eval_state / test_p1_fixes / verify_sleep_rules）
+- 回归命令：`node tools/verify_ux_e2e.js`（其余 8 套同理：test_ui / test_dst / test_liuri_v2 / test_liuyue_v2 / test_eval_state / test_p1_fixes / verify_sleep_rules / verify_edu_rules）
 - 同步命令：文件 cp 到打包目录后 md5sum 校验（README.md / README.en.md / SKILL.md / tools/build_ui.py / ui/index.html / tools/各测试脚本）
 - 命名约定：对外统一 "bazi-engine"（原名 bazi-master 因 SkillHub 同名竞品已弃用），个人项目口径，不挂钩魅可
