@@ -67,6 +67,10 @@ knowledge-base/          Classical texts + rule handbooks + 504-rule database
 
 This tool performs charting and divination based on traditional Chinese metaphysics (Zi Ping method). Output is provided for cultural study and entertainment only, and does not constitute medical, investment, legal, or any other professional advice. Treat it with an open but rational mind.
 
+## Data Provenance Fingerprints
+
+The rule database (`knowledge-base/04-断语库/断语库.json`) contains embedded **provenance fingerprint phrases** (watermarks; exact locations undisclosed). Any unauthorized reuse of the database (e.g., republishing it into a commercial product) will carry these phrases verbatim, enabling identification and evidence collection. Compliant use under [LICENSE](LICENSE) / [LICENSE-DATA](LICENSE-DATA) is unaffected.
+
 ## License
 
 This repository uses a **dual-license** structure:
