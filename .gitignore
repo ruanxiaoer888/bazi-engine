@@ -1,0 +1,21 @@
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Debug temp files
+_dbg_*.js
+_dbg_*.py
+*.tmp
+
+# WorkBuddy local cache
+.workbuddy/
