@@ -655,6 +655,7 @@ TPL = r'''<!DOCTYPE html>
 </div>
 
 <script>
+// [ENGINE:BEGIN]
 const JIEQI = __JIEQI__;
 const RULES = __RULES__;
 
@@ -1132,8 +1133,10 @@ const WX_SK={木:{生:'火',克:'土',被生:'水',被克:'金'},火:{生:'土',
 
 // 断语库匹配
 function findRule(id){ return RULES.find(r=>r.id===id)||null; }
+// [ENGINE:END]
 function fmtRule(r){ if(!r) return ''; return `<div style="margin-top:4px;font-size:12px;color:var(--gold)">【古籍断语】${r.conclusion}（出处：${r.source}）${r.suggestion?` → ${r.suggestion}`:''}</div>`; }
 
+// [ENGINE:BEGIN]
 // 状态条件运行时评估：为"状态"条件提供真实判断（十神/五行/喜忌/格局上下文）
 function evalState(st, c, ctx){
   const avg=ctx.avgFive||1;
@@ -1383,9 +1386,11 @@ function matchRules(ctx){
   });
   return cats;
 }
+// [ENGINE:END]
 
 let LAST=null; // 最近一次排盘 ctx
 let LIU_OPEN=false, LIU_YUE_OPEN=false, LIU_DAY_OPEN=false, LIU_QIN_OPEN=false; // 展开/收起状态
+// [ENGINE:BEGIN]
 const SHI_CHEN_MAP={子:[0,0],丑:[2,0],寅:[4,0],卯:[6,0],辰:[8,0],巳:[10,0],午:[12,0],未:[14,0],申:[16,0],酉:[18,0],戌:[20,0],亥:[22,0]};
 // 中国夏令时（1986-1991）窗口表：起止日 02:00 整（北京时间），期间钟表拨快 1 小时
 const DST_WINDOWS=[
@@ -1415,6 +1420,7 @@ function applyDst(y,m,d,hh){
   }
   return {y,m,d,hh,dst:1};
 }
+// [ENGINE:END]
 
 // ===== 原生 select 下拉初始化（年/月/日/时/分 + 合婚 A/B） =====
 function selDaysIn(y,m){ return new Date(y,m,0).getDate(); }
@@ -1643,6 +1649,7 @@ function renderResult(ctx){
     };
   });
 }
+// [ENGINE:BEGIN]
 // 大运规则匹配（dayun_01~20 模板规则：按大运干支与原局关系命中）
 function matchDayun(ctx, gz){
   const out=[];
@@ -1667,6 +1674,7 @@ function matchDayun(ctx, gz){
   if(tenRule) out.push(findRule(tenRule));
   const seen={}; return out.filter(r=>r&&!seen[r.id]&&(seen[r.id]=true));
 }
+// [ENGINE:END]
 function renderDaYun(ctx){
   const dy=ctx.dy;
   let html=`<p style="margin-bottom:12px">${ctx.gender==='男'?'男命':'女命'}年干${ctx.yg[0]}属${yang(ctx.yg[0])?'阳':'阴'}，大运${dy.shun?'顺排':'逆排'}，约 ${dy.startAge.toFixed(1)} 岁起运（起运岁数 = 出生距${dy.shun?'下一个':'上一个'}节的天数 ÷ 3）。</p><div class="dayun">`;
@@ -2060,6 +2068,7 @@ function runLiuDay(){
   document.getElementById('btnLiuDay').textContent='收起逐日运势 ↑';
   LIU_DAY_OPEN=true;
 }
+// [ENGINE:BEGIN]
 // 流日规则匹配 v2（liuri_01~05 基础 + 批次1 细分：十神/六冲/六合/三合/五合/十二长生/天克地冲/伏吟）
 function matchLiuDay(ctx, g, z, ten, rels, kong, isXi, isJi){
   const out=[];
@@ -2098,6 +2107,7 @@ function matchLiuDay(ctx, g, z, ten, rels, kong, isXi, isJi){
   if(z===zi) out.push(findRule('liuri_fuyin'));
   const seen={}; return out.filter(r=>r&&!seen[r.id]&&(seen[r.id]=true));
 }
+// [ENGINE:END]
 // ===== 六亲详解（父母/配偶/子女/兄弟）=====
 function runLiuQin(){
   if(!LAST){alert('请先排盘');return;}
@@ -2222,6 +2232,7 @@ function runLiuQin(){
   LIU_QIN_OPEN=true;
 }
 // 流月规则匹配（liuyue_01~20 模板规则：按流月干支十神与命局关系命中；v2 扩展：12长生/六冲细分/天干五合/特殊）
+// [ENGINE:BEGIN]
 function matchLiuYue(ctx, mgz, mTen, rels){
   const out=[];
   const mg=mgz[0], mz=mgz[1];
@@ -2355,6 +2366,7 @@ function analyzeLiuDeep(ctx, ltg, lz, dyGz){
   });
   return rules;
 }
+// [ENGINE:END]
 
 // ===== 合婚 =====
 function toggleHeTimeMode(s){
@@ -2724,3 +2736,47 @@ html = TPL.replace('__JIEQI__', json.dumps(jieqi, ensure_ascii=False)).replace('
 with open(ROOT + r'\ui\index.html', 'w', encoding='utf-8') as f:
     f.write(html)
 print('index.html built, size=%dKB, jieqi years=%d, rules=%d' % (len(html)//1024, len(jieqi['data']), len(rules)))
+
+# ===== 抽取引擎层，生成独立可复用库 engine/engine.dist.js =====
+# 引擎代码由 TPL 中的 [ENGINE:BEGIN]/[ENGINE:END] 标记对界定（纯计算、无 DOM 依赖），
+# 与 ui/index.html 同源同步，供 C 端（bazi-app）及第三方直接复用。
+import re
+regions = re.findall(r'// \[ENGINE:BEGIN\]\n(.*?)\n?// \[ENGINE:END\]', html, re.S)
+if len(regions) != 6:
+    raise SystemExit('引擎标记区段数异常：期望 6，实际 %d' % len(regions))
+engine_js = '\n\n'.join(r.rstrip() for r in regions)
+
+EXPORTS = """paipan, dayGZ, yearGZ, monthGZ, hourGZ, tenGod, computeFive, getDaYun, getPattern,
+calcTaiYuan, calcMingGong, calcShenGong, calcKongWang, calcChangSheng, calcShenSha, getRemedy,
+solarCorrection, matchRules, evalState, yongShenChong, findRule, matchDayun, matchLiuDay, matchLiuYue,
+analyzeLiuDeep, applyDst, dstOffset, getMonthBrief, wxOfSanhe, liuTenDesc, GAN_WX_OfTen, liuRelDesc,
+csLiuDesc, num, yang, parseItem, z, gv, ge, posOfToken,
+JIEQI, RULES, GAN, ZHI, GAN_WX, ZHI_WX, WUHU, WUSHU, JIE_ZHI, JIE_ORDER, WX_NAMES, SHENG, CANG,
+SHENGX, CHONG, LIUHE, SANHE, XING_PAIRS, HAI_PAIRS, WU_HE, WU_CHONG, NAYIN, NAYIN_WX, CS_NAME,
+CS_BASE, CITY_LON, PATTERN_NAME, REMEDY, SHENSHA, WX_SK, SHI_CHEN_MAP, DST_WINDOWS, TIANYI, WENCHANG,
+LUSHEN, XUETANG, JINYU, YIMA, TAOHUA, HUAGAI, HONGLUAN, JIANGXING, TIANDE, YUEDE, LONGDE, YANGBLADE,
+JIESHA, WANGSHEN, ZAISHA, GUCHEN, GUASU, SUIPO, XUEREN, LIUXIA"""
+
+DIST_TPL = """/* bazi-engine 独立引擎库 —— 由 tools/build_ui.py 自动生成，请勿手改
+ * 纯计算层：四柱排盘 / 五行身强弱 / 大运 / 神煞 / 断语匹配 / 流年流月流日规则 / 合婚数据 / 夏令时与真太阳时校正。
+ * 无 DOM 依赖。浏览器与 Node 双端可用：
+ *   浏览器：<script src="engine.dist.js"></script> → window.BaziEngine
+ *   Node：  const BaziEngine = require('./engine.dist.js');
+ */
+(function(root, factory){
+  if (typeof module === 'object' && module.exports) { module.exports = factory(); }
+  else { root.BaziEngine = factory(); }
+})(typeof self !== 'undefined' ? self : this, function(){
+
+__ENGINE__
+
+return {
+__EXPORTS__
+};
+});
+"""
+dist = DIST_TPL.replace('__ENGINE__', engine_js).replace('__EXPORTS__', EXPORTS)
+os.makedirs(os.path.join(ROOT, 'engine'), exist_ok=True)
+with open(os.path.join(ROOT, 'engine', 'engine.dist.js'), 'w', encoding='utf-8') as f:
+    f.write(dist)
+print('engine/engine.dist.js built, size=%dKB, regions=%d' % (len(dist)//1024, len(regions)))
