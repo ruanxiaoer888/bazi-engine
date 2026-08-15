@@ -396,7 +396,7 @@
       </div>
     </div>
     <div class="row">
-      <div><label>出生城市（用于真太阳时校正）</label><input id="birthplace" placeholder="如：湖北省黄冈市（县级市请填到县）"></div>
+      <div><label>出生城市（用于真太阳时校正）</label><input id="birthplace" placeholder="如：广东省广州市（县级市请填到县）"></div>
       <div><label>是否校正真太阳时</label>
         <select id="truesun"><option value="yes">是（按经度校正，推荐）</option><option value="no">否（用北京时间）</option></select>
       </div>
@@ -490,7 +490,7 @@
         <div><label>流年（公历年份）</label><input id="liuYear" type="number" value="2026"></div>
         <div><label>对应大运</label><select id="liuDayun"></select></div>
       </div>
-      <button class="ghost" onclick="runLiu()">分析该流年 →</button>
+      <button class="ghost" id="btnLiu" onclick="runLiu()">分析该流年 →</button>
       <div class="liu-box" id="liuResult"></div>
     </div>
 
@@ -498,7 +498,7 @@
       <h2><span class="num">捌</span>流月分析</h2>
       <div class="row">
         <div><label>目标年份</label><input id="liuMonthYear" type="number" value="2026"></div>
-        <div style="display:flex;align-items:flex-end;flex-wrap:wrap"><button class="ghost" onclick="runLiuYue()" style="margin-top:0;white-space:normal;max-width:100%">展开十二流月 →</button></div>
+        <div style="display:flex;align-items:flex-end;flex-wrap:wrap"><button class="ghost" id="btnLiuYue" onclick="runLiuYue()" style="margin-top:0;white-space:normal;max-width:100%">展开十二流月 →</button></div>
       </div>
       <div id="liuMonthResult"></div>
     </div>
@@ -513,7 +513,7 @@
           <option value="7">7 月</option><option value="8">8 月</option><option value="9">9 月</option>
           <option value="10">10 月</option><option value="11">11 月</option><option value="12">12 月</option>
         </select></div>
-        <div style="display:flex;align-items:flex-end;flex-wrap:wrap"><button class="ghost" onclick="runLiuDay()" style="margin-top:0;white-space:normal;max-width:100%">展开逐日运势 →</button></div>
+        <div style="display:flex;align-items:flex-end;flex-wrap:wrap"><button class="ghost" id="btnLiuDay" onclick="runLiuDay()" style="margin-top:0;white-space:normal;max-width:100%">展开逐日运势 →</button></div>
       </div>
       <div id="liuDayResult"></div>
     </div>
@@ -521,7 +521,7 @@
     <div class="card" id="liuQinCard">
       <h2><span class="num">拾</span>六亲详解</h2>
       <div style="color:var(--muted);font-size:12px;margin-top:2px">父母 · 配偶 · 子女 · 兄弟 —— 以宫位为体、十神为用，参合喜忌旺衰与神煞</div>
-      <div style="margin-top:10px;max-width:100%"><button class="ghost" onclick="runLiuQin()" style="margin-top:0;white-space:normal;max-width:100%">展开六亲详解 →</button></div>
+      <div style="margin-top:10px;max-width:100%"><button class="ghost" id="btnLiuQin" onclick="runLiuQin()" style="margin-top:0;white-space:normal;max-width:100%">展开六亲详解 →</button></div>
       <div id="liuQinResult"></div>
     </div>
 
@@ -562,14 +562,23 @@
               <select id="hMinuteA" class="hidden"><option value="0">00分</option></select>
               <select id="hShichenA" class="hidden">
                 <option value="">选时辰</option>
-                <option value="子">子时</option><option value="丑">丑时</option><option value="寅">寅时</option><option value="卯">卯时</option>
-                <option value="辰">辰时</option><option value="巳">巳时</option><option value="午">午时</option><option value="未">未时</option>
-                <option value="申">申时</option><option value="酉">酉时</option><option value="戌">戌时</option><option value="亥">亥时</option>
+                <option value="子">子时（23:00-01:00）</option>
+                <option value="丑">丑时（01:00-03:00）</option>
+                <option value="寅">寅时（03:00-05:00）</option>
+                <option value="卯">卯时（05:00-07:00）</option>
+                <option value="辰">辰时（07:00-09:00）</option>
+                <option value="巳">巳时（09:00-11:00）</option>
+                <option value="午">午时（11:00-13:00）</option>
+                <option value="未">未时（13:00-15:00）</option>
+                <option value="申">申时（15:00-17:00）</option>
+                <option value="酉">酉时（17:00-19:00）</option>
+                <option value="戌">戌时（19:00-21:00）</option>
+                <option value="亥">亥时（21:00-23:00）</option>
               </select>
             </div>
           </div>
         </div>
-        <div><label>出生城市</label><input id="hPlaceA" placeholder="如：湖北省黄冈市"></div>
+        <div><label>出生城市</label><input id="hPlaceA" placeholder="如：广东省广州市"></div>
       </div>
       <div>
         <h3 style="font-size:14px;color:var(--gold);margin:6px 0">乙方</h3>
@@ -597,9 +606,18 @@
               <select id="hMinuteB" class="hidden"><option value="0">00分</option></select>
               <select id="hShichenB" class="hidden">
                 <option value="">选时辰</option>
-                <option value="子">子时</option><option value="丑">丑时</option><option value="寅">寅时</option><option value="卯">卯时</option>
-                <option value="辰">辰时</option><option value="巳">巳时</option><option value="午">午时</option><option value="未">未时</option>
-                <option value="申">申时</option><option value="酉">酉时</option><option value="戌">戌时</option><option value="亥">亥时</option>
+                <option value="子">子时（23:00-01:00）</option>
+                <option value="丑">丑时（01:00-03:00）</option>
+                <option value="寅">寅时（03:00-05:00）</option>
+                <option value="卯">卯时（05:00-07:00）</option>
+                <option value="辰">辰时（07:00-09:00）</option>
+                <option value="巳">巳时（09:00-11:00）</option>
+                <option value="午">午时（11:00-13:00）</option>
+                <option value="未">未时（13:00-15:00）</option>
+                <option value="申">申时（15:00-17:00）</option>
+                <option value="酉">酉时（17:00-19:00）</option>
+                <option value="戌">戌时（19:00-21:00）</option>
+                <option value="亥">亥时（21:00-23:00）</option>
               </select>
             </div>
           </div>
@@ -1343,6 +1361,7 @@ function matchRules(ctx){
 }
 
 let LAST=null; // 最近一次排盘 ctx
+let LIU_OPEN=false, LIU_YUE_OPEN=false, LIU_DAY_OPEN=false, LIU_QIN_OPEN=false; // 展开/收起状态
 const SHI_CHEN_MAP={子:[0,0],丑:[2,0],寅:[4,0],卯:[6,0],辰:[8,0],巳:[10,0],午:[12,0],未:[14,0],申:[16,0],酉:[18,0],戌:[20,0],亥:[22,0]};
 // 中国夏令时（1986-1991）窗口表：起止日 02:00 整（北京时间），期间钟表拨快 1 小时
 const DST_WINDOWS=[
@@ -1385,7 +1404,7 @@ function selFill(sel, opts, placeholder){
   }
   sel.innerHTML=html;
 }
-function selYear(id){ const a=[]; for(let i=2100;i>=1895;i--) a.push({v:i,l:i+'年'}); selFill(document.getElementById(id), a, '年份'); }
+function selYear(id){ const sel=document.getElementById(id); if(!sel) return; const a=[]; const curYear=new Date().getFullYear(); for(let i=curYear;i>=1895;i--) a.push({v:i,l:i+'年'}); selFill(sel, a, '年份'); if(!sel.value) sel.value=String(curYear); }
 function selMonth(id){ const a=[]; for(let i=1;i<=12;i++) a.push({v:i,l:i+'月'}); selFill(document.getElementById(id), a, '月份'); }
 function selDay(id, yId, mId){
   const sel=document.getElementById(id);
@@ -1580,6 +1599,11 @@ function renderResult(ctx){
   document.getElementById('liuDayYear').value=new Date().getFullYear();
   document.getElementById('liuDayResult').innerHTML='';
   document.getElementById('liuQinResult').innerHTML='';
+  LIU_OPEN=LIU_YUE_OPEN=LIU_DAY_OPEN=LIU_QIN_OPEN=false;
+  const btnLiu=document.getElementById('btnLiu'); if(btnLiu) btnLiu.textContent='分析该流年 →';
+  const btnLiuYue=document.getElementById('btnLiuYue'); if(btnLiuYue) btnLiuYue.textContent='展开十二流月 →';
+  const btnLiuDay=document.getElementById('btnLiuDay'); if(btnLiuDay) btnLiuDay.textContent='展开逐日运势 →';
+  const btnLiuQin=document.getElementById('btnLiuQin'); if(btnLiuQin) btnLiuQin.textContent='展开六亲详解 →';
   // 绘制图表
   renderCharts(ctx);
   // 显示
@@ -1710,11 +1734,22 @@ function renderTiaohou(ctx){
 function backToForm(){
   document.getElementById('result').classList.add('hidden');
   document.getElementById('formCard').style.display='block';
+  // 重置展开状态
+  LIU_OPEN=LIU_YUE_OPEN=LIU_DAY_OPEN=LIU_QIN_OPEN=false;
+  const btnLiu=document.getElementById('btnLiu'); if(btnLiu) btnLiu.textContent='分析该流年 →';
+  const btnLiuYue=document.getElementById('btnLiuYue'); if(btnLiuYue) btnLiuYue.textContent='展开十二流月 →';
+  const btnLiuDay=document.getElementById('btnLiuDay'); if(btnLiuDay) btnLiuDay.textContent='展开逐日运势 →';
+  const btnLiuQin=document.getElementById('btnLiuQin'); if(btnLiuQin) btnLiuQin.textContent='展开六亲详解 →';
+  document.getElementById('liuResult').innerHTML='';
+  document.getElementById('liuMonthResult').innerHTML='';
+  document.getElementById('liuDayResult').innerHTML='';
+  document.getElementById('liuQinResult').innerHTML='';
 }
 
 // ===== 流年分析 =====
 function runLiu(){
   if(!LAST){alert('请先排盘');return;}
+  if(LIU_OPEN){document.getElementById('liuResult').innerHTML='';document.getElementById('btnLiu').textContent='分析该流年 →';LIU_OPEN=false;return;}
   const ctx=LAST;
   const ty=+document.getElementById('liuYear').value;
   const di=+document.getElementById('liuDayun').value;
@@ -1865,10 +1900,13 @@ function runLiu(){
   out.push(`<div class="li"><b>十二长生：</b>日主 ${ctx.dayMaster}(${ctx.dmWx}) 在流年 ${lz} 为 <b>${liuCS}</b>。${csLiuDesc(liuCS)}</div>`);
   out.push(`<div class="li" style="color:var(--muted);font-size:12px">注：流年分析为趋势参考。冲多为变动，合多为融合，具体吉凶须结合喜用神与全局。健康问题请遵医嘱。</div>`);
   document.getElementById('liuResult').innerHTML=out.join('');
+  document.getElementById('btnLiu').textContent='收起流年分析 ↑';
+  LIU_OPEN=true;
 }
 // ===== 流月分析 =====
 function runLiuYue(){
   if(!LAST){alert('请先排盘');return;}
+  if(LIU_YUE_OPEN){document.getElementById('liuMonthResult').innerHTML='';document.getElementById('btnLiuYue').textContent='展开十二流月 →';LIU_YUE_OPEN=false;return;}
   const ctx=LAST;
   const ty=+document.getElementById('liuMonthYear').value;
   if(isNaN(ty)||!Number.isInteger(ty)||ty<1900||ty>2100){alert('请输入有效年份（1900-2100）');return;}
@@ -1911,10 +1949,13 @@ function runLiuYue(){
   out.push('</tbody></table>');
   out.push('<div style="color:var(--muted);font-size:12px;margin-top:10px">注：流月分析基于月柱与命局关系，结合调候用神给出趋势参考。吉凶须结合大运流年综合判断。</div>');
   document.getElementById('liuMonthResult').innerHTML=out.join('');
+  document.getElementById('btnLiuYue').textContent='收起十二流月 ↑';
+  LIU_YUE_OPEN=true;
 }
 // ===== 流日分析（单月逐日 30 天）=====
 function runLiuDay(){
   if(!LAST){alert('请先排盘');return;}
+  if(LIU_DAY_OPEN){document.getElementById('liuDayResult').innerHTML='';document.getElementById('btnLiuDay').textContent='展开逐日运势 →';LIU_DAY_OPEN=false;return;}
   const ctx=LAST;
   const ty=+document.getElementById('liuDayYear').value;
   const tm=+document.getElementById('liuDayMonth').value;
@@ -1992,6 +2033,8 @@ function runLiuDay(){
   }
   out.push('<div style="color:var(--muted);font-size:12px;margin-top:10px">注：流日分析为逐日趋势参考，冲合并见时以具体事项为准。重要签约、手术、考试等重大事项，建议优先选喜用当值、无冲克之日。吉凶须结合流年流月综合判断。</div>');
   document.getElementById('liuDayResult').innerHTML=out.join('');
+  document.getElementById('btnLiuDay').textContent='收起逐日运势 ↑';
+  LIU_DAY_OPEN=true;
 }
 // 流日规则匹配 v2（liuri_01~05 基础 + 批次1 细分：十神/六冲/六合/三合/五合/十二长生/天克地冲/伏吟）
 function matchLiuDay(ctx, g, z, ten, rels, kong, isXi, isJi){
@@ -2034,6 +2077,7 @@ function matchLiuDay(ctx, g, z, ten, rels, kong, isXi, isJi){
 // ===== 六亲详解（父母/配偶/子女/兄弟）=====
 function runLiuQin(){
   if(!LAST){alert('请先排盘');return;}
+  if(LIU_QIN_OPEN){document.getElementById('liuQinResult').innerHTML='';document.getElementById('btnLiuQin').textContent='展开六亲详解 →';LIU_QIN_OPEN=false;return;}
   const ctx=LAST;
   const pn=['年柱','月柱','日柱','时柱'];
   const p=ctx.pillars;
@@ -2150,6 +2194,8 @@ function runLiuQin(){
 
   out.push('<div style="color:var(--muted);font-size:12px;margin-top:10px">注：六亲分析以宫位为体、十神为用，参合喜忌旺衰与神煞。六亲缘厚薄为命理参考，亲情经营重在当下用心。吉凶须结合大运流年综合判断。</div>');
   document.getElementById('liuQinResult').innerHTML=out.join('');
+  document.getElementById('btnLiuQin').textContent='收起六亲详解 ↑';
+  LIU_QIN_OPEN=true;
 }
 // 流月规则匹配（liuyue_01~20 模板规则：按流月干支十神与命局关系命中；v2 扩展：12长生/六冲细分/天干五合/特殊）
 function matchLiuYue(ctx, mgz, mTen, rels){
@@ -2506,7 +2552,7 @@ function renderCharts(ctx){
   document.getElementById('chart-dayunTrend').innerHTML=drawDayunTrend(ctx);
 }
 function drawWxBar(ctx){
-  const w=680,h=240,pad=20,barH=32,gap=10;
+  const w=680,h=300,pad=20,barH=32,gap=10;
   const wx=['木','火','土','金','水'];
   const clr={木:varVal('--wood'),火:varVal('--fire'),土:varVal('--earth'),金:varVal('--metal'),水:varVal('--water')};
   const total=ctx.sumFive||1;
