@@ -133,7 +133,7 @@ TPL = r"""<!DOCTYPE html>
   .time-group select#shichen,.time-group select#hShichenA,.time-group select#hShichenB{flex:1}
   .time-hint{font-size:11px;color:var(--muted);margin-top:4px;min-height:18px}
 .cal-toggle{display:flex;gap:0;margin-bottom:0}
-  .cal-toggle button{flex:1;padding:2px 10px;border:1px solid var(--line);background:var(--bg2);color:var(--muted);font-size:12.5px;cursor:pointer;margin-top:0;letter-spacing:1px;font-weight:400;font-family:var(--font-body);border-radius:0}
+  .cal-toggle button{flex:1;padding:2px 16px;border:1px solid var(--line);background:var(--bg2);color:var(--muted);font-size:12.5px;cursor:pointer;margin-top:0;letter-spacing:1px;font-weight:400;font-family:var(--font-body);border-radius:0}
   .cal-toggle button:first-child{border-radius:6px 0 0 6px;border-right:none}
   .cal-toggle button:last-child{border-radius:0 6px 6px 0;border-left:none}
   .cal-toggle button.active{background:var(--gold);color:#0a0a0f;border-color:var(--gold);font-weight:700}
