@@ -14,13 +14,14 @@
 - **项目性质**：Michael 个人独立研发项目，**与魅可科技（Meke）业务无任何关联**，推广/发布一律按个人项目口径
 - **双轨关系**：bazi-engine（B 端引擎底座）↔ 另仓 `bazi-app`（C 端「算了么」变现），引擎层共用，UI 各自独立
 
-## 2. 当前阶段（2026-08-15）
+## 2. 当前阶段（2026-08-16）
 
 - **版本**：v1.2.1（全面扫描修复批次：原生 select 初始化 / 合婚 HTML 结构 / iOS 防缩放 / 文档断语数同步）
 - **功能**：132 项任务**全部完成**（排盘/大运/流年/流月/流日/六亲/合婚/五行补救/神煞/调候用神/三式宫位/特殊格局）
+- **农历模块**：引擎层新增 `lunarToSolar`/`leapMonth`/`leapDays`/`monthDays`/`lunarDayName` + `LUNAR_INFO` 数据表（1900-2099），与 bazi-app C 端实现完全一致
 - **断语库**：`knowledge-base/04-断语库/断语库.json` — **504 条**（六亲30/流年30/流月20/流日5/合婚20 等），每条含 `suggestion` 建议字段
 - **UI**：`ui/index.html` 单文件离线，**零外部依赖**（无 Google Fonts），墨底 + 古铜金高端商务风，壹~玖中文序号徽章，内置 206 年节气
-- **引擎**：`engine/engine.dist.js`（185KB，UMD 双端）
+- **引擎**：`engine/engine.dist.js`（188KB，UMD 双端）
 - **阻塞项**：**无技术阻塞**。唯一卡点是**真人验收需要 Michael 亲手做**（模拟回归无法替代真实观感）
 - **GitHub**：已推送，远程 main=`330ff03`，与本地 HEAD 一致（已同步）
 
@@ -37,7 +38,7 @@
 
 ### 引擎抽层机制（重要，commit `807ab4c`）
 
-- `tools/build_ui.py` 的 TPL 内用 6 对 `// [ENGINE:BEGIN]` / `// [ENGINE:END]` 注释标记界定**纯计算层**（不搬代码，UI 行为不变）
+- `tools/build_ui.py` 的 TPL 内用 7 对 `// [ENGINE:BEGIN]` / `// [ENGINE:END]` 注释标记界定**纯计算层**（不搬代码，UI 行为不变）
 - 构建时把标记区段抽取拼装为 `engine/engine.dist.js`
 - **边界规则（铁律）**：引擎层 = 纯计算（无 DOM/CSS）；`fmtRule`/`analyzeHe`/所有 `render*`/`run*`/`draw*` 留在 UI 层（返回 HTML 的展示函数不进引擎库）
 - **新增引擎函数**：写进标记区内即可自动进入 dist；新增 UI 函数则写标记区外
@@ -50,6 +51,11 @@ const ctx = BaziEngine.paipan(name, gender, y, m, d, hh, mm, place, truesun)
 const rules = BaziEngine.matchRules(ctx, category)   // 断语匹配
 const adj = BaziEngine.applyDst(y, m, d, hh, mm)     // {dst:0|1, y,m,d,hh,mm}
 const map = BaziEngine.SHI_CHEN_MAP['巳']            // [9,0] 时辰→时分
+
+// 农历转公历（1900-2099，与 bazi-app C 端实现一致）
+const solar = BaziEngine.lunarToSolar(2024, 1, 1, false)  // {y:2024,m:2,d:10}
+const leap = BaziEngine.leapMonth(2017)                    // 6（闰六月）
+const dayName = BaziEngine.lunarDayName(15)                // '十五'
 ```
 
 **排盘前预处理（B/C 端通用）**：
@@ -114,8 +120,9 @@ const map = BaziEngine.SHI_CHEN_MAP['巳']            // [9,0] 时辰→时分
 # 构建（产出 ui/index.html + engine/engine.dist.js）
 python tools/build_ui.py
 
-# 回归（核心 3 套 + 其余 7 套）
+# 回归（核心 3 套 + 其余 8 套）
 node tools/test_engine.js        # 独立引擎库 28 项
+node tools/test_lunar.js         # 农历转换模块 27 项
 node tools/verify_ux_e2e.js      # 端到端用户视角（A~G 组，含流日 F 组 12 项/六亲 G 组 8 项）
 node tools/test_dst.js           # 夏令时窗口/边界 29 项
 # 其余：test_ui / test_eval_state / test_p1_fixes / verify_sleep_rules /

@@ -1,6 +1,6 @@
 # bazi-engine 八字命理 Skill · 项目交接文档（HANDOFF）
 
-> 更新时间：2026-08-15 17:10 · 当前版本 **v1.2.1**（全面扫描修复批次：原生 select 初始化/合婚 HTML 结构/iOS 防缩放/文档断语数同步）
+> 更新时间：2026-08-16 00:20 · 当前版本 **v1.2.1**（全面扫描修复批次：原生 select 初始化/合婚 HTML 结构/iOS 防缩放/文档断语数同步 + 农历模块同步）
 > 项目性质：**Michael 个人独立研发项目**，与魅可科技（Meke）业务无任何关联，推广/发布按个人项目口径。
 > **给 Codex / 新会话**：先读同目录 `AI_CONTEXT.md`（冷启动文档），再读本文件。
 
@@ -11,9 +11,9 @@
 **战略**：bazi-engine 走 B 端专业引擎底座（面向命理师，开源）；另建 **`E:\michael\workBuddy\bazi-app`** 走 C 端轻量娱乐变现（大白话 + 付费报告）。
 
 **引擎抽层实现**（commit `807ab4c`）：
-- `tools/build_ui.py` 的 TPL 内用 6 对 `// [ENGINE:BEGIN]` / `// [ENGINE:END]` 注释标记界定纯计算层（**不搬代码**，`ui/index.html` 行为不变，仅多无害注释）
-- 构建时同时产出 **`engine/engine.dist.js`**（185KB，UMD：浏览器 `window.BaziEngine` / Node `require` 双端可用），导出 paipan/matchRules/calcShenSha/applyDst/matchLiuYue 等约 100 个函数与数据表
-- 新增回归 `node tools/test_engine.js`（28 项，独立库直测）；原有 6 套回归不受影响
+- `tools/build_ui.py` 的 TPL 内用 7 对 `// [ENGINE:BEGIN]` / `// [ENGINE:END]` 注释标记界定纯计算层（**不搬代码**，`ui/index.html` 行为不变，仅多无害注释）
+- 构建时同时产出 **`engine/engine.dist.js`**（188KB，UMD：浏览器 `window.BaziEngine` / Node `require` 双端可用），导出 paipan/matchRules/calcShenSha/applyDst/matchLiuYue/lunarToSolar/leapMonth 等约 105 个函数与数据表
+- 新增回归 `node tools/test_engine.js`（28 项，独立库直测）+ `node tools/test_lunar.js`（27 项，农历模块验证）；原有 8 套回归不受影响
 - **C 端同步方法**：`python tools/build_ui.py` 后 `cp engine/engine.dist.js ../bazi-app/web/`
 - **边界规则**：引擎层 = 纯计算（无 DOM/CSS）；`fmtRule`/`analyzeHe`/所有 render*/run*/draw* 留在 UI 层（返回 HTML 的展示函数不进引擎库）；新增引擎函数时放进标记区内即可自动进入 dist
 
@@ -50,6 +50,7 @@
 | 合婚七大维度评分 | ✅ |
 | 五行补救 / 神煞 / 调候用神（穷通宝鉴） | ✅ |
 | 三式宫位（胎元/命宫/身宫）、特殊格局（专旺5+从格4） | ✅ |
+| **农历转换模块**：引擎层新增 `lunarToSolar`/`leapMonth`/`leapDays`/`monthDays`/`lunarDayName` + `LUNAR_INFO` 数据表（1900-2099），与 bazi-app C 端实现完全一致 | ✅ 2026-08-16 |
 
 ### 关键资产
 - **断语库**：`knowledge-base/04-断语库/断语库.json` — **504 条**（六亲30 / 流年30 / 流月20 / 流日5 / 合婚20 等），每条含 `suggestion` 建议字段，全量接入渲染
@@ -65,7 +66,7 @@
 - **edu_17~20 真孤儿复活**：补差异化 condition 使其重新参与主引擎匹配——edu_17 印星为用有力 / edu_18 食神多而有力 / edu_19 月干透印+伤官泄秀 / edu_20 身弱财多；edu_19 原与 combo_伤官_正印 条件相同会同盘重复，已加"月干+印为用有力"约束并改文案消除
 - 验证：新增 `tools/verify_edu_rules.js` 回归（edu 命中率 ≥1 次且 <60%、qinq_27~30 不进主渲染）；8 套既有回归 + 冲突检测全绿
 
-### 验证体系（9 套回归，全部 PASS：FAIL:0 WARN:0）
+### 验证体系（10 套回归，全部 PASS：FAIL:0 WARN:0）
 | 脚本 | 覆盖 |
 |------|------|
 | `test_ui.js` | UI 结构与渲染 |
@@ -78,6 +79,7 @@
 | `test_liuri_v2.js` | 流日规则 v2（10 项） |
 | `test_liuyue_v2.js` | 流月规则 v2（10 项） |
 | `verify_edu_rules.js` | 空 condition 排除 + 学业规则复活回归（edu_17~20 命中率须 ≥1 次且 <60%，qinq_27~30 不进入主渲染） |
+| `test_lunar.js` | 农历转换模块（导出完整性/闰月判断/非闰月转换/闰月转换/日名映射/边界年份/排盘联动，27 项） |
 
 > 另含 `audit_hit_distribution.js`（命中分布审查）、`check_dup_hits.js`（重复命中检测）——发布后仍可继续用于断语库维护。
 
