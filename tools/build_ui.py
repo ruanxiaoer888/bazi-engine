@@ -132,6 +132,12 @@ TPL = r"""<!DOCTYPE html>
   .time-group select#timeMode,.time-group select#hTimeModeA,.time-group select#hTimeModeB{width:auto;flex:0 0 auto;min-width:96px}
   .time-group select#shichen,.time-group select#hShichenA,.time-group select#hShichenB{flex:1}
   .time-hint{font-size:11px;color:var(--muted);margin-top:4px;min-height:18px}
+  .cal-toggle{display:flex;gap:0;margin-bottom:8px}
+  .cal-toggle button{flex:1;padding:8px 12px;border:1px solid var(--line);background:var(--bg2);color:var(--muted);font-size:12.5px;cursor:pointer;margin-top:0;letter-spacing:1px;font-weight:400;font-family:var(--font-body);border-radius:0}
+  .cal-toggle button:first-child{border-radius:6px 0 0 6px;border-right:none}
+  .cal-toggle button:last-child{border-radius:0 6px 6px 0;border-left:none}
+  .cal-toggle button.active{background:var(--gold);color:#0a0a0f;border-color:var(--gold);font-weight:700}
+  .cal-toggle button:hover:not(.active){border-color:var(--gold3);color:var(--ink)}
   button{
     background:linear-gradient(135deg,var(--gold2),var(--gold) 45%,var(--gold3));
     color:#0a0a0f;border:none;padding:12px 34px;border-radius:var(--radius2);font-size:14.5px;
@@ -390,7 +396,11 @@ TPL = r"""<!DOCTYPE html>
     </div>
     <div class="row">
       <div>
-        <label>阳历生日</label>
+        <div class="cal-toggle" id="calToggle" style="margin-bottom:8px">
+          <button class="active" data-cal="solar" onclick="switchCal('solar')">阳历</button>
+          <button data-cal="lunar" onclick="switchCal('lunar')">农历</button>
+        </div>
+        <label id="dateLabel">阳历生日</label>
         <div class="date-group">
           <select id="year"><option value="">年份</option></select>
           <select id="month"><option value="">月份</option></select>
@@ -574,7 +584,11 @@ TPL = r"""<!DOCTYPE html>
         </div>
         <div class="row">
           <div>
-            <label>阳历生日</label>
+            <div class="cal-toggle" id="hCalToggleA" style="margin-bottom:8px">
+              <button class="active" data-cal="solar" onclick="switchHeCal('A','solar')">阳历</button>
+              <button data-cal="lunar" onclick="switchHeCal('A','lunar')">农历</button>
+            </div>
+            <label id="hDateLabelA">阳历生日</label>
             <div class="date-group">
               <select id="hYearA"><option value="">年份</option></select>
               <select id="hMonthA"><option value="">月份</option></select>
@@ -618,7 +632,11 @@ TPL = r"""<!DOCTYPE html>
         </div>
         <div class="row">
           <div>
-            <label>阳历生日</label>
+            <div class="cal-toggle" id="hCalToggleB" style="margin-bottom:8px">
+              <button class="active" data-cal="solar" onclick="switchHeCal('B','solar')">阳历</button>
+              <button data-cal="lunar" onclick="switchHeCal('B','lunar')">农历</button>
+            </div>
+            <label id="hDateLabelB">阳历生日</label>
             <div class="date-group">
               <select id="hYearB"><option value="">年份</option></select>
               <select id="hMonthB"><option value="">月份</option></select>
@@ -1502,6 +1520,79 @@ function selDay(id, yId, mId){
   selFill(sel, a, '日期');
   if(cur && +cur<=max) sel.value=cur;
 }
+
+// ===== 农历切换逻辑 =====
+let calMode='solar'; // 'solar' | 'lunar'
+let hCalModeA='solar', hCalModeB='solar';
+function lunarDayName(d){
+  if(d===10) return '初十'; if(d===20) return '二十'; if(d===30) return '三十';
+  const px=['初','十','廿','三'], dg=['','一','二','三','四','五','六','七','八','九','十'];
+  return px[Math.floor((d-1)/10)] + dg[d%10 || 10];
+}
+function switchCal(mode){
+  if(mode===calMode) return;
+  calMode=mode;
+  document.querySelectorAll('#calToggle button').forEach(b=>{ b.classList.toggle('active', b.dataset.cal===mode); });
+  document.getElementById('dateLabel').textContent = (mode==='lunar'?'农历':'阳历') + '生日';
+  document.getElementById('year').value='';
+  fillDateOptions();
+}
+function switchHeCal(side, mode){
+  const oldMode = side==='A'?hCalModeA:hCalModeB;
+  if(mode===oldMode) return;
+  if(side==='A') hCalModeA=mode; else hCalModeB=mode;
+  document.querySelectorAll('#hCalToggle'+side+' button').forEach(b=>{ b.classList.toggle('active', b.dataset.cal===mode); });
+  document.getElementById('hDateLabel'+side).textContent = (mode==='lunar'?'农历':'阳历') + '生日';
+  document.getElementById('hYear'+side).value='';
+  fillHeDateOptions(side);
+}
+function fillDateOptions(){
+  const ySel=document.getElementById('year'), mSel=document.getElementById('month'), dSel=document.getElementById('day');
+  const yv=ySel.value;
+  if(calMode==='solar'){
+    selMonth('month');
+    dSel.innerHTML='<option value="">日期</option>';
+    if(yv && mSel.value) selDay('day','year','month');
+  } else {
+    // 农历月
+    const y=+yv || new Date().getFullYear();
+    const leap=leapMonth(y);
+    let mh='<option value="">月份</option>';
+    for(let i=1;i<=12;i++){
+      mh += '<option value="'+i+'">'+LUNAR_MONTH_NAMES[i-1]+'</option>';
+      if(i===leap) mh += '<option value="'+i+'l">'+LUNAR_MONTH_NAMES[i-1]+'（闰）</option>';
+    }
+    mSel.innerHTML=mh;
+    dSel.innerHTML='<option value="">日期</option>';
+  }
+}
+function fillLunarDays(y, mv, dId){
+  const isLeap = mv.endsWith('l');
+  const m = +mv.replace('l','');
+  let n; if(isLeap) n=leapDays(y); else n=monthDays(y,m);
+  let dh=''; for(let i=1;i<=n;i++) dh += '<option value="'+i+'">'+lunarDayName(i)+'</option>';
+  document.getElementById(dId).innerHTML = '<option value="">日期</option>'+dh;
+}
+function fillHeDateOptions(side){
+  const mode = side==='A'?hCalModeA:hCalModeB;
+  const ySel=document.getElementById('hYear'+side), mSel=document.getElementById('hMonth'+side), dSel=document.getElementById('hDay'+side);
+  const yv=ySel.value;
+  if(mode==='solar'){
+    selMonth('hMonth'+side);
+    dSel.innerHTML='<option value="">日期</option>';
+    if(yv && mSel.value) selDay('hDay'+side,'hYear'+side,'hMonth'+side);
+  } else {
+    const y=+yv || new Date().getFullYear();
+    const leap=leapMonth(y);
+    let mh='<option value="">月份</option>';
+    for(let i=1;i<=12;i++){
+      mh += '<option value="'+i+'">'+LUNAR_MONTH_NAMES[i-1]+'</option>';
+      if(i===leap) mh += '<option value="'+i+'l">'+LUNAR_MONTH_NAMES[i-1]+'（闰）</option>';
+    }
+    mSel.innerHTML=mh;
+    dSel.innerHTML='<option value="">日期</option>';
+  }
+}
 function selHour(id){ const a=[]; for(let i=0;i<=23;i++) a.push({v:i,l:(i<10?'0':'')+i+'时'}); selFill(document.getElementById(id), a, '时'); }
 function selMinute(id){ const a=[]; for(let i=0;i<=59;i++) a.push({v:i,l:(i<10?'0':'')+i+'分'}); selFill(document.getElementById(id), a, '分'); }
 function selBindDay(yId, mId, dId){
@@ -1514,14 +1605,21 @@ function initSelects(){
   selYear('year'); selMonth('month'); selDay('day','year','month');
   selHour('hour'); selMinute('minute');
   selBindDay('year','month','day');
+  // 农历日期联动（仅农历模式）
+  const mEl=document.getElementById('month');
+  if(mEl && mEl.addEventListener) mEl.addEventListener('change', function(){ if(calMode==='lunar'){ const y=+document.getElementById('year').value||2000; fillLunarDays(y, this.value, 'day'); } });
   // 合婚 A
   selYear('hYearA'); selMonth('hMonthA'); selDay('hDayA','hYearA','hMonthA');
   selHour('hHourA'); selMinute('hMinuteA');
   selBindDay('hYearA','hMonthA','hDayA');
+  const hmA=document.getElementById('hMonthA');
+  if(hmA && hmA.addEventListener) hmA.addEventListener('change', function(){ if(hCalModeA==='lunar'){ const y=+document.getElementById('hYearA').value||2000; fillLunarDays(y, this.value, 'hDayA'); } });
   // 合婚 B
   selYear('hYearB'); selMonth('hMonthB'); selDay('hDayB','hYearB','hMonthB');
   selHour('hHourB'); selMinute('hMinuteB');
   selBindDay('hYearB','hMonthB','hDayB');
+  const hmB=document.getElementById('hMonthB');
+  if(hmB && hmB.addEventListener) hmB.addEventListener('change', function(){ if(hCalModeB==='lunar'){ const y=+document.getElementById('hYearB').value||2000; fillLunarDays(y, this.value, 'hDayB'); } });
 }
 initSelects();
 toggleTimeMode();
@@ -1551,13 +1649,25 @@ function generate(){
   const name=document.getElementById('name').value||'匿名';
   const gender=document.getElementById('gender').value;
   let y=+document.getElementById('year').value;
-  let m=+document.getElementById('month').value;
+  let mVal=document.getElementById('month').value;
   let d=+document.getElementById('day').value;
+  let m;
+  let lunarInput=null;
+  if(calMode==='lunar'){
+    if(!y||!mVal||!d){alert('请填写完整农历生日');return;}
+    const isLeap=mVal.endsWith('l');
+    const lm=+mVal.replace('l','');
+    lunarInput={y, m:lm, d, isLeap, mName:document.getElementById('month').selectedOptions[0].text, dName:lunarDayName(d)};
+    const solar=lunarToSolar(y,lm,d,isLeap);
+    y=solar.y; m=solar.m; d=solar.d;
+  } else {
+    m=+mVal;
+    if(!y||!m||!d){alert('请填写完整阳历生日');return;}
+  }
   const timeMode=document.getElementById('timeMode').value;
   const place=(document.getElementById('birthplace').value||'').trim();
   const truesun=document.getElementById('truesun').value;
   if(!gender){alert('请选择性别（用于排大运顺逆）');return;}
-  if(!y||!m||!d){alert('请填写完整阳历生日');return;}
   let hh=0,mm=0;
   let shichenMode=false;
   if(timeMode==='exact'){
@@ -1577,6 +1687,7 @@ function generate(){
     const ctx=paipan(name,gender,y,m,d,hh,mm,place,'no');
     ctx.dst=0;
     ctx.shichenMode=true;
+    ctx.lunarInput=lunarInput;
     LAST=ctx;
     renderResult(ctx);
   } else {
@@ -1586,6 +1697,7 @@ function generate(){
     const ctx=paipan(name,gender,y,m,d,hh,mm,place,truesun);
     ctx.dst=dstFlag;
     ctx.shichenMode=false;
+    ctx.lunarInput=lunarInput;
     LAST=ctx;
     renderResult(ctx);
   }
@@ -1593,7 +1705,11 @@ function generate(){
 
 function renderResult(ctx){
   document.getElementById('rName').textContent=ctx.name+' · '+(ctx.gender==='男'?'乾造':'坤造');
-  document.getElementById('rMeta').textContent=`阳历 ${ctx.y}年${ctx.m}月${ctx.d}日 ${String(ctx.hh).padStart(2,'0')}:${String(ctx.mm).padStart(2,'0')} | 出生地：${ctx.place||'未填'}`;
+  let metaText=`阳历 ${ctx.y}年${ctx.m}月${ctx.d}日 ${String(ctx.hh).padStart(2,'0')}:${String(ctx.mm).padStart(2,'0')} | 出生地：${ctx.place||'未填'}`;
+  if(ctx.lunarInput){
+    metaText = `农历 ${ctx.lunarInput.y}年${ctx.lunarInput.mName}${ctx.lunarInput.dName} → ` + metaText;
+  }
+  document.getElementById('rMeta').textContent=metaText;
   document.getElementById('rDay').textContent=ctx.dayMaster+'（'+ctx.dmWx+'）';
   document.getElementById('rStrength').innerHTML='身<span class="tag">'+ctx.strength+'（藏干加权）</span>';
   // chips
@@ -2449,9 +2565,21 @@ function runHe(){
 function readHe(s){
   const name=document.getElementById('hName'+s).value||('甲乙'[s==='A'?0:1]+'方');
   const sex=document.getElementById('hSex'+s).value;
-  const y=+document.getElementById('hYear'+s).value;
-  const m=+document.getElementById('hMonth'+s).value;
-  const d=+document.getElementById('hDay'+s).value;
+  let y=+document.getElementById('hYear'+s).value;
+  let mVal=document.getElementById('hMonth'+s).value;
+  let d=+document.getElementById('hDay'+s).value;
+  let m;
+  const mode = s==='A'?hCalModeA:hCalModeB;
+  if(mode==='lunar'){
+    if(!y||!mVal||!d){alert('请填写'+s+'方完整农历生日');return null;}
+    const isLeap=mVal.endsWith('l');
+    const lm=+mVal.replace('l','');
+    const solar=lunarToSolar(y,lm,d,isLeap);
+    y=solar.y; m=solar.m; d=solar.d;
+  } else {
+    m=+mVal;
+    if(!y||!m||!d){alert('请填写双方出生日期');return null;}
+  }
   const timeMode=document.getElementById('hTimeMode'+s).value;
   const place=(document.getElementById('hPlace'+s).value||'').trim();
   if(!sex){alert('请选择'+(s==='A'?'甲方':'乙方')+'性别（用于排大运顺逆）');return null;}
