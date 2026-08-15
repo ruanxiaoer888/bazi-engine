@@ -396,8 +396,8 @@ TPL = r"""<!DOCTYPE html>
     </div>
     <div class="row">
       <div>
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-          <label id="dateLabel">阳历生日</label>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin:14px 0 6px">
+          <label id="dateLabel" style="margin:0">阳历生日</label>
           <div class="cal-toggle" id="calToggle">
             <button class="active" data-cal="solar" onclick="switchCal('solar')">阳历</button>
             <button data-cal="lunar" onclick="switchCal('lunar')">农历</button>
@@ -586,8 +586,8 @@ TPL = r"""<!DOCTYPE html>
         </div>
         <div class="row">
           <div>
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-              <label id="hDateLabelA">阳历生日</label>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin:14px 0 6px">
+              <label id="hDateLabelA" style="margin:0">阳历生日</label>
               <div class="cal-toggle" id="hCalToggleA">
                 <button class="active" data-cal="solar" onclick="switchHeCal('A','solar')">阳历</button>
                 <button data-cal="lunar" onclick="switchHeCal('A','lunar')">农历</button>
@@ -636,8 +636,8 @@ TPL = r"""<!DOCTYPE html>
         </div>
         <div class="row">
           <div>
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-              <label id="hDateLabelB">阳历生日</label>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin:14px 0 6px">
+              <label id="hDateLabelB" style="margin:0">阳历生日</label>
               <div class="cal-toggle" id="hCalToggleB">
                 <button class="active" data-cal="solar" onclick="switchHeCal('B','solar')">阳历</button>
                 <button data-cal="lunar" onclick="switchHeCal('B','lunar')">农历</button>
