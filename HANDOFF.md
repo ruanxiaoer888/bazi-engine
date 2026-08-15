@@ -1,7 +1,20 @@
 # bazi-engine 八字命理 Skill · 项目交接文档（HANDOFF）
 
-> 更新时间：2026-08-14 14:30 · 当前版本 **v1.2.1**（全面扫描修复批次：原生 select 初始化/合婚 HTML 结构/iOS 防缩放/文档断语数同步）
+> 更新时间：2026-08-15 14:00 · 当前版本 **v1.2.1**（全面扫描修复批次：原生 select 初始化/合婚 HTML 结构/iOS 防缩放/文档断语数同步）
 > 项目性质：**Michael 个人独立研发项目**，与魅可科技（Meke）业务无任何关联，推广/发布按个人项目口径。
+
+---
+
+## 〇、双轨战略与引擎抽层（2026-08-15，重要架构决策）
+
+**战略**：bazi-engine 走 B 端专业引擎底座（面向命理师，开源）；另建 **`E:\michael\workBuddy\bazi-app`** 走 C 端轻量娱乐变现（大白话 + 付费报告）。
+
+**引擎抽层实现**（commit `807ab4c`）：
+- `tools/build_ui.py` 的 TPL 内用 6 对 `// [ENGINE:BEGIN]` / `// [ENGINE:END]` 注释标记界定纯计算层（**不搬代码**，`ui/index.html` 行为不变，仅多无害注释）
+- 构建时同时产出 **`engine/engine.dist.js`**（185KB，UMD：浏览器 `window.BaziEngine` / Node `require` 双端可用），导出 paipan/matchRules/calcShenSha/applyDst/matchLiuYue 等约 100 个函数与数据表
+- 新增回归 `node tools/test_engine.js`（28 项，独立库直测）；原有 6 套回归不受影响
+- **C 端同步方法**：`python tools/build_ui.py` 后 `cp engine/engine.dist.js ../bazi-app/web/`
+- **边界规则**：引擎层 = 纯计算（无 DOM/CSS）；`fmtRule`/`analyzeHe`/所有 render*/run*/draw* 留在 UI 层（返回 HTML 的展示函数不进引擎库）；新增引擎函数时放进标记区内即可自动进入 dist
 
 ---
 
@@ -119,7 +132,7 @@
 - 源码目录：`E:\michael\workBuddy\bazi-project`
 - GitHub 仓库：https://github.com/ruanxiaoer888/bazi-engine
 - 打包目录：`C:\Users\34743\.workbuddy\skills\bazi-engine`
-- 构建命令：`python tools/build_ui.py`（输出 `ui/index.html`）
-- 回归命令：`node tools/verify_ux_e2e.js`（其余 8 套同理：test_ui / test_dst / test_liuri_v2 / test_liuyue_v2 / test_eval_state / test_p1_fixes / verify_sleep_rules / verify_edu_rules）
+- 构建命令：`python tools/build_ui.py`（输出 `ui/index.html` + `engine/engine.dist.js`）
+- 回归命令：`node tools/test_engine.js`（独立引擎库）+ `node tools/verify_ux_e2e.js`（其余 8 套同理：test_ui / test_dst / test_liuri_v2 / test_liuyue_v2 / test_eval_state / test_p1_fixes / verify_sleep_rules / verify_edu_rules）
 - 同步命令：文件 cp 到打包目录后 md5sum 校验（README.md / README.en.md / SKILL.md / tools/build_ui.py / ui/index.html / tools/各测试脚本）
 - 命名约定：对外统一 "bazi-engine"（原名 bazi-master 因 SkillHub 同名竞品已弃用），个人项目口径，不挂钩魅可
