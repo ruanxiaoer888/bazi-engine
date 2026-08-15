@@ -602,7 +602,7 @@ TPL = r'''<!DOCTYPE html>
             </div>
           </div>
         </div>
-        <div><label>出生城市</label><input id="hPlaceA" placeholder="如：广东省广州市"></div>
+        <div><label>出生城市</label><input id="hPlaceA" placeholder="如：广东省广州市（县级市请填到县）"></div>
       </div>
       <div>
         <h3 style="font-size:14px;color:var(--gold);margin:6px 0">乙方</h3>
@@ -646,7 +646,7 @@ TPL = r'''<!DOCTYPE html>
             </div>
           </div>
         </div>
-        <div><label>出生城市</label><input id="hPlaceB" placeholder="如：上海市"></div>
+        <div><label>出生城市</label><input id="hPlaceB" placeholder="如：广东省广州市（县级市请填到县）"></div>
       </div>
     </div>
     <button onclick="runHe()">开始合婚 →</button>
