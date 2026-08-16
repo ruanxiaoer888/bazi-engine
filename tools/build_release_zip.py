@@ -12,7 +12,7 @@ import zipfile
 from pathlib import Path
 
 PKG = Path(r'C:\Users\34743\.workbuddy\skills\bazi-engine')
-OUT = Path(r'E:\michael\workBuddy\bazi-project\bazi-engine-v1.2.1-final2.zip')
+OUT = Path(r'E:\michael\workBuddy\bazi-project\bazi-engine-v1.2.1.zip')
 
 # SkillHub 禁止的文件类型（在 ZIP 中排除，项目根保留）
 EXCLUDE_PATTERNS = {'LICENSE', 'LICENSE-DATA', 'README.en.md'}
