@@ -21,7 +21,7 @@
 - **农历模块**：引擎层新增 `lunarToSolar`/`leapMonth`/`leapDays`/`monthDays`/`lunarDayName` + `LUNAR_INFO` 数据表（1900-2099），与 bazi-app C 端实现完全一致
 - **农历/阳历双模式切换**：主表单 + 合婚 A/B 各自独立（`switchCal`/`switchHeCal`），农历输入自动 `lunarToSolar` 转公历
 - **合婚布局**：甲乙上下双区块（移除左右双栏），每人独立「是否校正真太阳时」下拉框（`hTruesunA/B`）；`readHe` 时段模式强制 `truesun:'no'`
-- **断语库**：`knowledge-base/04-断语库/断语库.json` — **504 条**（六亲30/流年30/流月20/流日5/合婚20 等），每条含 `suggestion` 建议字段
+- **断语库**：`kb/04-rules-db/rules.json` — **504 条**（六亲30/流年30/流月20/流日5/合婚20 等），每条含 `suggestion` 建议字段
 - **UI**：`ui/index.html` 单文件离线，**零外部依赖**（无 Google Fonts），墨底 + 古铜金高端商务风，壹~玖中文序号徽章，内置 206 年节气
 - **引擎**：`engine/engine.dist.js`（188KB，UMD 双端）
 - **阻塞项**：**无技术阻塞**。唯一卡点是**真人验收需要 Michael 亲手做**（模拟回归无法替代真实观感）
@@ -34,7 +34,7 @@
 | 构建 | `tools/build_ui.py` | Python 构建脚本，内联断语库 + 节气 + 全部 JS → 产出 `ui/index.html` + `engine/engine.dist.js` |
 | UI | `ui/index.html` | 单文件成品（唯一真源），打开即用，离线可用 |
 | 引擎 | `engine/engine.dist.js` | 构建副产物，**不要手改**。UMD：浏览器 `window.BaziEngine` / Node `require` |
-| 知识库 | `knowledge-base/` | 01-基础表 / 02-规则手册 / 03-古籍原文 / 04-断语库 / 05-参考资料 |
+| 知识库 | `kb/` | 01-基础表 / 02-规则手册 / 03-古籍原文 / 04-断语库 / 05-参考资料 |
 | 打包 | `~/.workbuddy/skills/bazi-engine/` | SkillHub 发布用打包目录，与源码 MD5 同步校验 |
 | 发布材料 | `发布物料.md` + `SkillHub-Submission-Kit.md` | 卖点/图标提示词/示例对话/合规声明 + 提交包模板 |
 
