@@ -1,4 +1,3 @@
-_rename_kb.py
 # IDE
 .vscode/
 .idea/
@@ -23,7 +22,6 @@ _dbg_*.py
 
 # 本地私密文件：断语库溯源指纹句（勿提交，公开会让指纹失效）
 .fingerprints.json
+
+# 发布包 ZIP（构建产物，不入库）
 bazi-engine-*.zip
-_rename_kb.py
-bazi-engine-*.zip
-_rename_kb.py
