@@ -21,13 +21,22 @@
 
 ## 一、当前任务（进行中 / 待办）
 
-### ✅ 2026-08-16 审计修复（本轮，已完成，待提交）
+### ✅ 2026-08-16 审计修复（第一轮，已提交 `5a61801`）
 - 接手后核实真实状态：文档记录 `main=330ff03` 已过时，实际 HEAD=`0dc1a45`（本地=远程，已同步）；HANDOFF/AI_CONTEXT 滞后 7 个 UI commit（08-16 00:56~02:15）
 - 审计发现并修复 3 项，全套 **12 套回归复跑全绿（FAIL:0 WARN:0）**：
   1. **合婚时段模式 truesun 回归**（`cb4100f` 引入）：`readHe()` 时段模式（只知时辰）改为强制 `truesun:'no'`，与主表单 `generate()` 一致；精确模式仍读 `hTruesun` 下拉框（支持按人分别校正）
   2. **verify_ux_e2e 测试脚本 toggle 适配**（`80ec029` 加「展开/收起」开关后测试未同步，导致 F6/F8/G5/G7 判空）：`__setLast` 内联重置 4 个面板开关 + 新增 `__resetPanels`，F 组流日调用前重置
   3. **清理 lunarDayName 重复定义**：删除 UI 区重复定义（保留引擎区定义，engine.dist.js 不受影响）
-- 待提交文件：`tools/build_ui.py` / `tools/verify_ux_e2e.js` / `ui/index.html`（`engine/engine.dist.js` 无变化，无需同步 bazi-app）
+- ✅ 已提交 commit `5a61801`（5 文件：`tools/build_ui.py` / `tools/verify_ux_e2e.js` / `ui/index.html` / `HANDOFF.md` / `AI_CONTEXT.md`；`engine/engine.dist.js` 无变化，无需同步 bazi-app）
+
+### ✅ 2026-08-16 验收发现修复（第二轮，已完成，待提交）
+- Michael 真人验收 1995-05-15 广州盘时发现「喜用」chip 五行全列（截图确认），根因 `build_ui.py:1143` 中和分支 `xiYong=WX_NAMES.slice()` 直接五行全列
+- 修复 3 项：
+  1. **`xiYong` 中和分支按 `ratio` 细分**（`build_ui.py:1139-1159`）：偏强 (ratio>0.5) → 走强逻辑（喜用=克泄耗 3 个），偏弱 (ratio<0.5) → 走弱逻辑（喜用=生扶 2 个），真中和 (ratio≈0.5) → 喜忌空（前端显示「—」）
+  2. **`yongShenChong` 判定更严格**（`build_ui.py:1315-1344`）：需 ≥2 处冲克合证据才判「用神被冲克合」，避免单个合/克就命中（之前宽松，被 `xiYong.length>=5` workaround 掩盖，xiYong 修复后暴露为 test_eval_state 1 FAIL）
+  3. **新增 `tools/test_xiyong.js`**：针对性回归，10 盘验证 xiYong/jiYong 结构合理性
+- 引擎层影响：`yongShenChong` 在引擎标记区内（1196-1448），`engine.dist.js` 188KB → 189KB，**已同步到 bazi-app**（md5 一致）
+- 验收样本 1995-05-15 修复后：xiYong=`水、金、土`（3 个），jiYong=`火、木`（2 个）
 
 ### 发布前（就差这两步）
 1. **真人验收**（需 Michael 亲手操作，约 10 分钟）
