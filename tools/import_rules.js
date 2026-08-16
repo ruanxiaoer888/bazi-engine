@@ -25,7 +25,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const DB_PATH = path.join(__dirname, '..', 'knowledge-base', '04-断语库', '断语库.json');
+const DB_PATH = path.join(__dirname, '..', 'kb', '04-rules-db', 'rules.json');
 const VALID_CATS = ['性格','事业','财运','婚姻','格局','用神喜忌','健康','十神组合','学业','六亲','神煞','流年','合婚','五行生克','大运','流月','流日'];
 const COND_DIMS = ['日主','旺衰','十神','五行','状态','性别','位置','组合','格局','神煞','流年','流月','流日'];
 
@@ -139,7 +139,7 @@ function main() {
     // 同步 description 中的条数说明（若含"规则 N 条"字样）
     db.description = (db.description || '').replace(/规则\s*\d+\s*条/, `规则 ${db.rules.length} 条`);
     fs.writeFileSync(DB_PATH, JSON.stringify(db, null, 2) + '\n', 'utf8');
-    console.log(`✓ 已合并 ${okClean.length} 条 → 断语库.json（现共 ${db.rules.length} 条）`);
+    console.log(`✓ 已合并 ${okClean.length} 条 → rules.json（现共 ${db.rules.length} 条）`);
     console.log('\n后续步骤（流水线 Step 5）:');
     console.log('  python tools/build_ui.py');
     console.log('  node tools/test_ui.js');

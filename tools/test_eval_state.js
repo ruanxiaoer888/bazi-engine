@@ -132,7 +132,7 @@ console.log('== F. P0 输入校验（非法输入拦截）==');
 
 console.log('== G. 月劫格 condition 修复 ==');
 {
-  const db = JSON.parse(fs.readFileSync(__dirname + '/../knowledge-base/04-断语库/断语库.json','utf8'));
+  const db = JSON.parse(fs.readFileSync(__dirname + '/../kb/04-rules-db/rules.json','utf8'));
   const yj = db.rules.find(r=>r.id==='pattern_月劫格');
   assert('月劫格 condition 为 格局=月劫格', yj && yj.condition['格局']==='月劫格', JSON.stringify(yj?yj.condition:null));
   const jl = db.rules.find(r=>r.id==='pattern_建禄格');
