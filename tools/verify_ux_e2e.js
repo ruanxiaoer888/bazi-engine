@@ -15,7 +15,7 @@ function _getEl(id){
 }
 var document={getElementById:_getEl,querySelectorAll:()=>[],querySelector:()=>null};
 var alert=(msg)=>{globalThis._alerts.push(String(msg));};`;
-const expose = ';globalThis.matchRules=matchRules;globalThis.paipan=paipan;globalThis.RULES=RULES;globalThis.SHENSHA=SHENSHA;globalThis.yearGZ=yearGZ;globalThis.monthGZ=monthGZ;globalThis.dayGZ=dayGZ;globalThis.hourGZ=hourGZ;globalThis.matchDayun=matchDayun;globalThis.matchLiuYue=matchLiuYue;globalThis.generate=generate;globalThis.runHe=runHe;globalThis.runLiu=runLiu;globalThis.runLiuYue=runLiuYue;globalThis.runLiuDay=runLiuDay;globalThis.runLiuQin=runLiuQin;globalThis.__setLast=function(x){LAST=x;};globalThis.LAST=null;';
+const expose = ';globalThis.matchRules=matchRules;globalThis.paipan=paipan;globalThis.RULES=RULES;globalThis.SHENSHA=SHENSHA;globalThis.yearGZ=yearGZ;globalThis.monthGZ=monthGZ;globalThis.dayGZ=dayGZ;globalThis.hourGZ=hourGZ;globalThis.matchDayun=matchDayun;globalThis.matchLiuYue=matchLiuYue;globalThis.generate=generate;globalThis.runHe=runHe;globalThis.runLiu=runLiu;globalThis.runLiuYue=runLiuYue;globalThis.runLiuDay=runLiuDay;globalThis.runLiuQin=runLiuQin;globalThis.__setLast=function(x){LAST=x;LIU_OPEN=false;LIU_YUE_OPEN=false;LIU_DAY_OPEN=false;LIU_QIN_OPEN=false;};globalThis.__resetPanels=function(){LIU_OPEN=false;LIU_YUE_OPEN=false;LIU_DAY_OPEN=false;LIU_QIN_OPEN=false;};globalThis.LAST=null;';
 eval(stub + code + expose);
 
 let fails = 0, warns = 0;
@@ -162,7 +162,7 @@ assert('F0 流日规则 50 条已入库', liuriN===50, '实际='+liuriN);
 // F1 正常调用：2026年3月（31天）
 globalThis._inp = { liuDayYear:'2026', liuDayMonth:'3' };
 globalThis.__setLast(paipan('测','男',1990,5,15,10,0,'广州市','yes'));
-globalThis.runLiuDay();
+globalThis.__resetPanels(); globalThis.runLiuDay();
 const ld = globalThis._els['liuDayResult'].innerHTML;
 assert('F1 流日输出非空', ld.length>0, 'len='+ld.length);
 const daysMar = new Date(2026,3,0).getDate(); // 2026-03 月末
@@ -173,34 +173,34 @@ assert('F4 日柱单元格渲染', ld.indexOf('class="mz"')>=0);
 assert('F5 表格含图例', ld.indexOf('ld-legend')>=0);
 // F6 平年 2 月（2026=28 天）
 globalThis._inp = { liuDayYear:'2026', liuDayMonth:'2' };
-globalThis.runLiuDay();
+globalThis.__resetPanels(); globalThis.runLiuDay();
 const ld2 = globalThis._els['liuDayResult'].innerHTML;
 assert('F6 2026年2月=28行', ((ld2.match(/<tr/g)||[]).length-1)===28, '行数='+((ld2.match(/<tr/g)||[]).length-1));
 // F7 闰年 2 月（2028=29 天）
 globalThis._inp = { liuDayYear:'2028', liuDayMonth:'2' };
-globalThis.runLiuDay();
+globalThis.__resetPanels(); globalThis.runLiuDay();
 const ld3 = globalThis._els['liuDayResult'].innerHTML;
 assert('F7 2028年2月=29行', ((ld3.match(/<tr/g)||[]).length-1)===29, '行数='+((ld3.match(/<tr/g)||[]).length-1));
 // F8 月份越界拦截
 globalThis._alerts=[];
 globalThis._inp = { liuDayYear:'2026', liuDayMonth:'13' };
-globalThis.runLiuDay();
+globalThis.__resetPanels(); globalThis.runLiuDay();
 assert('F8 月份越界拦截', globalThis._alerts.length>0, globalThis._alerts.slice(-1)[0]);
 // F9 年份越界拦截
 globalThis._alerts=[];
 globalThis._inp = { liuDayYear:'1800', liuDayMonth:'3' };
-globalThis.runLiuDay();
+globalThis.__resetPanels(); globalThis.runLiuDay();
 assert('F9 年份越界拦截', globalThis._alerts.length>0, globalThis._alerts.slice(-1)[0]);
 // F10 未排盘拦截
 globalThis._alerts=[];
 globalThis.__setLast(null);
 globalThis._inp = { liuDayYear:'2026', liuDayMonth:'3' };
-globalThis.runLiuDay();
+globalThis.__resetPanels(); globalThis.runLiuDay();
 assert('F10 未排盘拦截', globalThis._alerts.length>0, globalThis._alerts.slice(-1)[0]);
 // F11 断语命中抽查：冲日柱日期应带 ld-hot
 globalThis._inp = { liuDayYear:'2026', liuDayMonth:'3' };
 globalThis.__setLast(paipan('测','男',1990,5,15,10,0,'广州市','yes'));
-globalThis.runLiuDay();
+globalThis.__resetPanels(); globalThis.runLiuDay();
 const ld4 = globalThis._els['liuDayResult'].innerHTML;
 assert('F11 表格渲染含 ld-hot 标记或冲合关系列', ld4.indexOf('ld-hot')>=0||ld4.indexOf('冲日')>=0||ld4.indexOf('合日')>=0);
 
