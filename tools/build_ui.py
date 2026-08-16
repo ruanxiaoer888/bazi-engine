@@ -240,7 +240,12 @@ TPL = r"""<!DOCTYPE html>
   .ld-legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;margin-top:10px;padding:8px 10px;border:1px dashed var(--gold3);border-radius:6px}
   .ld-hot{color:var(--gold2);font-weight:600}
   .ld-he{color:var(--green);font-weight:600}
-  .ld-hot-row td{background:rgba(201,163,95,0.06)}
+  /* 2026-08-16：冲红/合绿，破格 vs 成格区分 */
+.ld-hot-row td{background:rgba(224,96,96,0.18);border-left:3px solid var(--red)}     /* 冲日柱：红色，破格 */
+.ld-he-row td{background:rgba(82,176,131,0.18);border-left:3px solid var(--green)}   /* 合日柱/天干合日：绿色，成格 */
+.ld-hot-he-row td{background:rgba(201,163,95,0.15);border-left:3px solid var(--gold2)} /* 冲+合同日：金色混合 */
+.ld-hot-text{color:var(--red);font-weight:600}
+.ld-he-text{color:var(--green);font-weight:600}
   .ld-rule{color:var(--gold);opacity:.75}
   /* ===== 六亲详解 ===== */
   .qin-sec{border:1px solid var(--gold3);border-radius:10px;padding:12px 14px;margin-bottom:10px;background:rgba(201,163,95,0.03)}
@@ -365,13 +370,18 @@ TPL = r"""<!DOCTYPE html>
   ::-webkit-scrollbar-track{background:var(--bg)}
   ::-webkit-scrollbar-thumb{background:var(--line3);border-radius:3px}
   /* ===== 响应式 ===== */
-  @media (max-width:640px){
+  @media (max-width:768px){
     body{padding:20px 12px}
     h1{font-size:26px;letter-spacing:6px;text-indent:6px}
     .card{padding:20px}
     .form-card{max-width:100%}
     .rc p{font-size:13px}
     .dayun .step{min-width:78px}
+    /* 2026-08-16 修复：~645px 边界 .time-group 在 140px 列里被 timeMode 96px 固定宽度挤压、
+       时分 select 只剩 ~15px 几乎不可用。断点提到 768px + 强制 .row 单列，
+       让 .date-group/.time-group 占满宽度不被压缩 */
+    .row{flex-direction:column;gap:0}
+    .row>div{min-width:0}
     /* iOS Safari: select 字号 <16px 聚焦时自动放大页面，移动端统一 16px 防误触 */
     select{font-size:16px}
   }
@@ -1650,6 +1660,17 @@ function initSelects(){
   selBindDay('hYearB','hMonthB','hDayB');
   const hmB=document.getElementById('hMonthB');
   if(hmB && hmB.addEventListener) hmB.addEventListener('change', function(){ if(hCalModeB==='lunar'){ const y=+document.getElementById('hYearB').value||2000; fillLunarDays(y, this.value, 'hDayB'); } });
+  // 2026-08-16：流日面板切换年月时自动刷新（展开状态下）—— 之前 LIU_DAY_OPEN toggle 导致必须先收起再展开
+  const ldYEl=document.getElementById('liuDayYear');
+  if(ldYEl && ldYEl.addEventListener) ldYEl.addEventListener('change', function(){ if(LIU_DAY_OPEN){ LIU_DAY_OPEN=false; runLiuDay(); } });
+  const ldMEl=document.getElementById('liuDayMonth');
+  if(ldMEl && ldMEl.addEventListener) ldMEl.addEventListener('change', function(){ if(LIU_DAY_OPEN){ LIU_DAY_OPEN=false; runLiuDay(); } });
+  // 2026-08-16：流年/流月面板控件切换时自动刷新（展开状态下），与流日一致
+  const liuYearEl=document.getElementById('liuYear');
+  if(liuYearEl && liuYearEl.addEventListener) liuYearEl.addEventListener('change', function(){ if(LIU_OPEN){ LIU_OPEN=false; runLiu(); } });
+  // 2026-08-16：liuDayun 的监听移到 renderResult 末尾（sel.onchange），避免空 select 监听不可靠
+  const liuMonthYearEl=document.getElementById('liuMonthYear');
+  if(liuMonthYearEl && liuMonthYearEl.addEventListener) liuMonthYearEl.addEventListener('change', function(){ if(LIU_YUE_OPEN){ LIU_YUE_OPEN=false; runLiuYue(); } });
 }
 initSelects();
 toggleTimeMode();
@@ -1823,6 +1844,8 @@ function renderResult(ctx){
   // 流年大运下拉
   const sel=document.getElementById('liuDayun');
   sel.innerHTML=ctx.dy.steps.map((gz,k)=>`<option value="${k}">${gz}（${ctx.dy.shun?'顺':'逆'}·约${(ctx.dy.startAge+k*10).toFixed(0)}岁起）</option>`).join('');
+  // 2026-08-16：renderResult 末尾直接绑 onchange，确保 select 已填充 options 后监听生效（initSelects 阶段空 select 上的 change 监听不稳定）
+  sel.onchange=function(){ if(LIU_OPEN){ LIU_OPEN=false; runLiu(); } };
   document.getElementById('liuYear').value=new Date().getFullYear();
   document.getElementById('liuMonthYear').value=new Date().getFullYear();
   document.getElementById('liuResult').innerHTML='';
@@ -2200,7 +2223,7 @@ function runLiuDay(){
   const pn=['年','月','日','时'];
   const tenTxt={'正官':'利职名','七杀':'压力机遇','正财':'利正财','偏财':'利偏财','正印':'利贵人','偏印':'利钻研','食神':'利表达','伤官':'创新思','比肩':'合作助','劫财':'防耗财'};
   const xi=ctx.xiYong||[], ji=ctx.jiYong||[];
-  let hotDays=[], relDays=[];
+  let hotDays=[], relDays=[], heDaysArr=[], heRelsArr=[];
   let out=[`<h3 style="font-size:16px;color:var(--gold);margin-bottom:12px">${ty} 年${monthNames[tm-1]}（${ty}-${String(tm).padStart(2,'0')}）逐日分析 · ${days} 天</h3>`];
   out.push('<div class="ld-legend"><span class="ml-good">● 喜用</span><span class="ml-warn">● 忌神/空亡</span><span class="ld-hot">● 冲合日柱（关键日）</span><span class="ml-neu">● 中和</span></div>');
   out.push('<table class="month-table ld-table"><thead><tr><th>日期</th><th>日柱</th><th>纳音</th><th>十神</th><th>与命局关系</th><th>当日简评</th></tr></thead><tbody>');
@@ -2252,15 +2275,26 @@ function runLiuDay(){
     // 断语匹配
     const mrs=matchLiuDay(ctx, g, z, ten, rels, kong, isXi, isJi);
     if(mrs.length) brief.push('<span class="ml-neu ld-rule">'+mrs.map(r=>r.conclusion.replace(/[，。].*$/,'')).join(' / ')+'</span>');
-    // 关键日标记
-    const hitRi=rels.some(r=>r.indexOf('冲日')>=0||r.indexOf('合日')>=0||r.indexOf('天干合日')>=0);
-    if(hitRi){ hotDays.push(d); relDays.push(`${d}日${rels.filter(r=>r.indexOf('冲日')>=0||r.indexOf('合日')>=0||r.indexOf('天干合日')>=0).join('、')}`); }
-    out.push(`<tr${hitRi?' class="ld-hot-row"':''}><td><b>${d}</b><br><span class="ml-neu" style="font-size:11px">周${week}</span></td><td><span class="mz">${gz}</span></td><td style="color:var(--muted);font-size:12px">${nayin}</td><td>${ten}</td><td style="font-size:12px">${rels.length?rels.slice(0,3).join(' '):'—'}</td><td style="text-align:left;font-size:12px">${brief.slice(0,3).join(' ')}</td></tr>`);
+    // 2026-08-16：关键日按冲/合分类（破格=红/成格=绿），分别记录用于底部小结
+    const chongHits=rels.filter(r=>r.indexOf('冲日')>=0);
+    const heHits=rels.filter(r=>r.indexOf('合日')>=0||r.indexOf('天干合日')>=0);
+    const hitRiChong=chongHits.length>0;
+    const hitRiHe=heHits.length>0;
+    let riClass='';
+    if(hitRiChong && hitRiHe) riClass=' class="ld-hot-he-row"';
+    else if(hitRiChong) riClass=' class="ld-hot-row"';
+    else if(hitRiHe) riClass=' class="ld-he-row"';
+    if(hitRiChong){ hotDays.push(d); relDays.push(`${d}日${chongHits.join('、')}`); }
+    if(hitRiHe){ heDaysArr.push(d); heRelsArr.push(`${d}日${heHits.join('、')}`); }
+    out.push(`<tr${riClass}><td><b>${d}</b><br><span class="ml-neu" style="font-size:11px">周${week}</span></td><td><span class="mz">${gz}</span></td><td style="color:var(--muted);font-size:12px">${nayin}</td><td>${ten}</td><td style="font-size:12px">${rels.length?rels.slice(0,3).join(' '):'—'}</td><td style="text-align:left;font-size:12px">${brief.slice(0,3).join(' ')}</td></tr>`);
   }
   out.push('</tbody></table>');
   // 本月关键日小结
-  if(hotDays.length){
-    out.push(`<div class="li" style="margin-top:10px"><b>本月关键日：</b>${relDays.join('；')}。冲日柱之日宜静守，合日柱之日宜社交谈合作。</div>`);
+  if(hotDays.length || heDaysArr.length){
+    const parts=[];
+    if(hotDays.length) parts.push(`<span class="ld-hot-text">冲日柱：${hotDays.join('、')}日</span>`);
+    if(heDaysArr.length) parts.push(`<span class="ld-he-text">合日柱/天干合日：${heDaysArr.join('、')}日</span>`);
+    out.push(`<div class="li" style="margin-top:10px"><b>本月关键日：</b>${parts.join('；')}。冲日柱之日宜静守，合日柱之日宜社交谈合作。</div>`);
   } else {
     out.push(`<div class="li" style="margin-top:10px"><b>本月关键日：</b>本月无冲合日柱的显著引动之日，整体节奏平稳，可关注上方喜用/忌神标记逐日安排。</div>`);
   }
