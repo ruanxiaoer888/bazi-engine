@@ -1136,11 +1136,25 @@ function paipan(name,gender,y,m,d,hh,mm,place,truesun){
     else if(maxC>=2) specialDetail='从格·从势格（多神并存）';
     else specialDetail='从格';
   }
-  // 喜用神
+  // 喜用神（2026-08-16 修复：中和不五行全列，按 ratio 细分偏强/偏弱/真中和）
   let xiYong=[], jiYong=[];
-  if(strength==='强'){ xiYong=[WX_NAMES[keWo],WX_NAMES[woKe],WX_NAMES[woSheng]]; jiYong=[WX_NAMES[dmIdx],WX_NAMES[shengWo]]; }
-  else if(strength==='弱'){ xiYong=[WX_NAMES[dmIdx],WX_NAMES[shengWo]]; jiYong=[WX_NAMES[keWo],WX_NAMES[woKe],WX_NAMES[woSheng]]; }
-  else { xiYong=WX_NAMES.slice(); }
+  if(strength==='强'){
+    xiYong=[WX_NAMES[keWo],WX_NAMES[woKe],WX_NAMES[woSheng]];
+    jiYong=[WX_NAMES[dmIdx],WX_NAMES[shengWo]];
+  } else if(strength==='弱'){
+    xiYong=[WX_NAMES[dmIdx],WX_NAMES[shengWo]];
+    jiYong=[WX_NAMES[keWo],WX_NAMES[woKe],WX_NAMES[woSheng]];
+  } else if(strength==='中和'){
+    if(ratio>0.5){
+      xiYong=[WX_NAMES[keWo],WX_NAMES[woKe],WX_NAMES[woSheng]];
+      jiYong=[WX_NAMES[dmIdx],WX_NAMES[shengWo]];
+    } else if(ratio<0.5){
+      xiYong=[WX_NAMES[dmIdx],WX_NAMES[shengWo]];
+      jiYong=[WX_NAMES[keWo],WX_NAMES[woKe],WX_NAMES[woSheng]];
+    } else {
+      xiYong=[]; jiYong=[];
+    }
+  }
   // 日支十神
   const dayZhiTG=CANG[dayZhi][0][0];
   const dayZhiTG_ten=tenGod(dayZhiTG, dmWx, dmYin);
@@ -1299,6 +1313,7 @@ function evalState(st, c, ctx){
   }
 }
 // 用神被冲克合：喜用所在干支被其他柱冲/合/克/刑
+// 2026-08-16 修复：需要 ≥2 处冲克合证据才判"破损"，避免单个合/克就命中（之前宽松，所有有明确 xiYong 的盘都命中）
 function yongShenChong(ctx){
   const gan=[], zhi=[];
   ctx.pillars.forEach((p,i)=>{
@@ -1307,24 +1322,25 @@ function yongShenChong(ctx){
     if(ctx.xiYong.includes(GAN_WX[tg])) zhi.push({z:p[1],i});
   });
   if(!gan.length&&!zhi.length) return false;
+  let count=0;
   for(const o of gan){
     for(let j=0;j<4;j++){
       if(j===o.i) continue;
       const g=ctx.pillars[j][0];
-      if(WU_HE[g]===o.g||WU_HE[o.g]===g) return true;                    // 天干相合
-      if(WX_SK[GAN_WX[g]]&&WX_SK[GAN_WX[g]].被克===GAN_WX[o.g]) return true; // 天干相克
+      if(WU_HE[g]===o.g||WU_HE[o.g]===g) count++;                    // 天干相合
+      else if(WX_SK[GAN_WX[g]]&&WX_SK[GAN_WX[g]].被克===GAN_WX[o.g]) count++; // 天干相克
     }
   }
   for(const o of zhi){
     for(let j=0;j<4;j++){
       if(j===o.i) continue;
       const z=ctx.pillars[j][1];
-      if(CHONG[z]===o.z||CHONG[o.z]===z) return true;                          // 冲
-      if(LIUHE.some(pr=>pr.includes(z)&&pr.includes(o.z))) return true;        // 合
-      if(XING_PAIRS.some(pr=>(pr[0]===z&&pr[1]===o.z)||(pr[0]===o.z&&pr[1]===z))) return true; // 刑
+      if(CHONG[z]===o.z||CHONG[o.z]===z) count++;                          // 冲
+      else if(LIUHE.some(pr=>pr.includes(z)&&pr.includes(o.z))) count++;        // 合
+      else if(XING_PAIRS.some(pr=>(pr[0]===z&&pr[1]===o.z)||(pr[0]===o.z&&pr[1]===z))) count++; // 刑
     }
   }
-  return false;
+  return count>=2;
 }
 
 function matchRules(ctx){

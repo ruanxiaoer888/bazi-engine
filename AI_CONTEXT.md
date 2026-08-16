@@ -78,7 +78,8 @@ const dayName = BaziEngine.lunarDayName(15)                // '十五'
 
 ## 5. 下一步优先级（不要打乱顺序）
 
-0. **[Michael] 确认并提交本轮修复** → 3 文件（`tools/build_ui.py`/`tools/verify_ux_e2e.js`/`ui/index.html`），可选 bump 版本号至 v1.2.2
+0. ✅ 第一轮已提交 `5a61801`（5 文件：build_ui.py/verify_ux_e2e.js/ui.index.html/AI_CONTEXT.md/HANDOFF.md）
+   -1. **[Michael] 第二轮提交待确认** → 4 文件（`tools/build_ui.py` xiYong/yongShenChong 修复 + `tools/test_xiyong.js` 新增 + `ui/index.html`/`engine/engine.dist.js` 同步），可选 bump 版本号至 v1.2.2
 1. **[Michael 亲手] 真人验收**（约 10 分钟）：打开 `ui/index.html` 排 2~3 个真实盘，重点看四柱命盘表（日柱金边高亮）/ 手机窄屏 640px 响应式 / 流日面板 / 六亲详解面板；顺手验证 1990 年 5 月夏令时盘是否提示回拨
 2. **[Michael] 选最终图标**：`发布物料.md` 有 v1 平面古印风（推荐）/ v2 立体金属感，定稿后放入发布包
 3. **[Michael] 提交发布**：按 `SkillHub-Submission-Kit.md` 提交包（简介/示例对话/合规声明）
@@ -109,6 +110,8 @@ const dayName = BaziEngine.lunarDayName(15)                // '十五'
 - **文档数字随功能同步**：断语数/版本号散落在 README/README.en/SKILL/HANDOFF/发布物料，扩库后用 `grep -rn "旧数字"` 全局清查
 - **合婚「只知时辰」须强制 `truesun:'no'`**：`readHe` 时段模式不能读 `hTruesun` 下拉框默认值（默认 `'yes'`），否则会错误做真太阳时校正，与主表单 `generate` 行为不一致
 - **流日/六亲面板是 toggle 开关（非幂等渲染）**：`runLiuDay`/`runLiuQin` 每次调用切换展开/收起，测试脚本连续调用第二次会触发「收起」判空；`LIU_DAY_OPEN` 等是 eval 内 `let` 变量，外部须经 `__resetPanels` 辅助函数访问（`globalThis.xxx` 访问不到）
+- **身中和喜用不能五行全列**：原 `xiYong=WX_NAMES.slice()` 让所有身中和盘喜用五行全列（UI 显示 5 个元素），但此时喜忌无定论。修复：按 `ratio` 细分——偏强(ratio>0.5)走强逻辑，偏弱(ratio<0.5)走弱逻辑，真中和(ratio≈0.5)喜忌空
+- **「用神被冲克合」状态判定要 ≥2 处证据**：原 `yongShenChong` 任一合/克就 return true（宽松，被 `xiYong.length>=5` workaround 掩盖）。xiYong 修复后 workaround 失效，所有有明确 xiYong 的盘都命中 → 改为累计冲克合次数，<2 时不判破损
 
 ### 构建/依赖
 - **Google Fonts `@import` 外链违反"单文件零外部依赖"承诺**，已删除，勿加回
