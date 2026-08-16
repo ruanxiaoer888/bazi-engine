@@ -886,7 +886,9 @@ function getRemedy(strength, five, avgFive, xiYong, monthZhi){
   else if(['寅','卯','辰'].includes(monthZhi)) tiaoHouWx['金']=true;     // 春补金（含辰湿土月）
   if(strength!=='中和'){
     xiYong.forEach(w=>{ if(REMEDY[w]) items.push(Object.assign({wx:w}, REMEDY[w])); });
-    note='以喜用神为准（非"缺什么补什么"）：命局偏弱喜 '+xiYong.join('、')+'，可对应加强；';
+    // 2026-08-16 修复：文案按身强/身弱区分（之前写死"偏弱"，身强盘显示错误且与喜用矛盾）
+    const sDesc = strength==='强' ? '偏强，宜克泄耗（食伤/财/官杀）平衡，喜' : '偏弱，宜生扶（印/比劫）扶持，喜';
+    note='以喜用神为准（非"缺什么补什么"）：命局'+sDesc+' '+xiYong.join('、')+'，可对应加强；';
     // 调候提示：若喜用神中未含调候五行，作为补充说明
     const thKeys=Object.keys(tiaoHouWx);
     const needTH=thKeys.filter(w=>tiaoHouWx[w]&&!xiYong.includes(w));
