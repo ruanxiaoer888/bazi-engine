@@ -9,7 +9,7 @@
 import json, os
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-RULE_PATH = os.path.join(ROOT, 'knowledge-base', '04-断语库', '断语库.json')
+RULE_PATH = os.path.join(ROOT, 'kb', '04-rules-db', 'rules.json')
 
 # 载入现有规则
 seed = json.load(open(RULE_PATH, encoding='utf-8'))
