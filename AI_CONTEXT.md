@@ -34,7 +34,7 @@
 | 构建 | `tools/build_ui.py` | Python 构建脚本，内联断语库 + 节气 + 全部 JS → 产出 `ui/index.html` + `engine/engine.dist.js` |
 | UI | `ui/index.html` | 单文件成品（唯一真源），打开即用，离线可用 |
 | 引擎 | `engine/engine.dist.js` | 构建副产物，**不要手改**。UMD：浏览器 `window.BaziEngine` / Node `require` |
-| 知识库 | `kb/` | 01-基础表 / 02-规则手册 / 03-古籍原文 / 04-断语库 / 05-参考资料 |
+| 知识库 | `kb/` | 01-basics / 02-rules / 03-classics / 04-rules-db / 05-reference |
 | 打包 | `~/.workbuddy/skills/bazi-engine/` | SkillHub 发布用打包目录，与源码 MD5 同步校验 |
 | 发布材料 | `发布物料.md` + `SkillHub-Submission-Kit.md` | 卖点/图标提示词/示例对话/合规声明 + 提交包模板 |
 

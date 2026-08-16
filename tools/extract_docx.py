@@ -2,7 +2,7 @@
 """从八字命理目录下的 .docx 文件中提取全文，输出为 Markdown 文件。
 
 用法：
-  python extract_docx.py          # 提取所有 .docx 到 knowledge-base/04-古籍原文/
+  python extract_docx.py          # 提取所有 .docx 到 kb/03-classics/
   python extract_docx.py --list   # 仅列出文件信息，不提取
   python extract_docx.py --file "穷通宝鉴-AI知识库.docx"  # 仅提取指定文件
 """
@@ -11,7 +11,7 @@ from docx import Document
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SOURCE_DIR = os.path.normpath(os.path.join(ROOT, '..', '八字命理'))
-OUT_DIR = os.path.join(ROOT, 'knowledge-base', '03-古籍原文')
+OUT_DIR = os.path.join(ROOT, 'kb', '03-classics')
 
 DOCX_MAP = {
     '穷通宝鉴-AI知识库.docx': '穷通宝鉴-AI知识库_全文.md',
