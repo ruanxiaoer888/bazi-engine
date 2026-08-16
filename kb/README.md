@@ -8,7 +8,7 @@
 ## 目录结构
 
 ```
-knowledge-base/
+kb/
 ├── 01-basics/               ← 排盘必备的静态查表数据
 │   ├── 天干地支五行表.md      ← 十天干/十二地支阴阳五行方位
 │   ├── 时辰对照表.md          ← 十二时辰、早晚子时、五鼠遁元
@@ -35,8 +35,8 @@ knowledge-base/
 │   ├── 生辰八字与五行对照表_全文.md ← docx 提取全文，五行对照参考
 │   └── 算命流程_全文.md           ← docx 提取全文，步骤化算命流程
 ├── 04-rules-db/               ← 结构化断语，供智能体调用
-│   ├── 断语库.json            ← 生产断语库（261 条，按 condition 匹配）
-│   └── 断语库模板.json        ← 规则 schema + 示例（编写新规则参考）
+│   ├── rules.json            ← 生产断语库（504 条，按 condition 匹配）
+│   └── rules-template.json        ← 规则 schema + 示例（编写新规则参考）
 └── 05-reference/             ← 扩展参考与未来方向
     ├── 可视化输出规范.md      ← SVG 图表设计标准（排盘表/五行图/十神关系图）
     └── 综合命理提示词模板.md  ← 八字+紫微+面相+手相四法合一完整模板
@@ -53,7 +53,7 @@ knowledge-base/
 
 - [x] 03-classics 补全《渊海子平》格局歌诀、《子平真诠》用神专论（2026-08-10 完成）
 - [x] 03-classics 补全《滴天髓》核心注疏（2026-08-10 完成）
-- [x] 04-rules-db 已扩至 **261 条**（性格40/事业52/财运28/婚姻31/健康25/格局24/用神喜忌26/十神组合16/学业7/六亲6），手写种子 + `tools/gen_rules.py` 批量扩充
+- [x] 04-rules-db 已扩至 **504 条**（性格40/事业52/财运28/婚姻31/健康25/格局24/用神喜忌26/十神组合16/学业7/六亲6），手写种子 + `tools/gen_rules.py` 批量扩充
 - [x] 真实排盘引擎已接入（lunar-python 节气表 + 藏干加权身强身弱 + 月令取格 + 喜用神）
 - [x] 流年分析（流年干支/十神/与原局生克冲合/与大运关系）
 - [x] 合婚配对（七大维度加权评分：日柱关系25/五行互补25/纳音10/十神15/生肖10/大运10/用神5）
@@ -85,5 +85,5 @@ knowledge-base/
 
 **校验**：算法与 lunar-python 逐项对比（节气精确时刻口径），并以 `八字命理/新历农历对照表.xlsx` 每日干支交叉验证；`tools/test_ui.js`（node 运行）覆盖四柱/晚子时/立春界/真太阳时/藏干五行/断语匹配/流年/合婚/纳音表，全部 PASS。
 
-**构建**：`tools/build_ui.py` 读取 `ui/jieqi.json` 与 `knowledge-base/04-rules-db/断语库.json`，注入 HTML 模板生成 `ui/index.html`（单文件）。断语库扩展用 `tools/gen_rules.py`（生成后重跑 build_ui.py）。修改后校验：先 `build_ui.py` 再 `node test_ui.js`。
+**构建**：`tools/build_ui.py` 读取 `ui/jieqi.json` 与 `kb/04-rules-db/rules.json`，注入 HTML 模板生成 `ui/index.html`（单文件）。断语库扩展用 `tools/gen_rules.py`（生成后重跑 build_ui.py）。修改后校验：先 `build_ui.py` 再 `node test_ui.js`。
 
