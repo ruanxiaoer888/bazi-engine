@@ -23,3 +23,5 @@ _dbg_*.py
 
 # 本地私密文件：断语库溯源指纹句（勿提交，公开会让指纹失效）
 .fingerprints.json
+bazi-engine-*.zip
+_rename_kb.py
