@@ -22,7 +22,7 @@ condition 字段约定（与 ui 匹配器对齐）：
 import json, os
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-RULE_PATH = os.path.join(ROOT, 'knowledge-base', '04-断语库', '断语库.json')
+RULE_PATH = os.path.join(ROOT, 'kb', '04-rules-db', 'rules.json')
 
 GAN = ['甲','乙','丙','丁','戊','己','庚','辛','壬','癸']
 GAN_WX = {'甲':'木','乙':'木','丙':'火','丁':'火','戊':'土','己':'土','庚':'金','辛':'金','壬':'水','癸':'水'}

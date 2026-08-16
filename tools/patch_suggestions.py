@@ -7,7 +7,7 @@ import json, sys, io
 
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 
-DB = 'knowledge-base/04-断语库/断语库.json'
+DB = 'kb/04-rules-db/rules.json'
 
 SUG = {
     # ===== 大运 20 =====

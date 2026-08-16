@@ -8,6 +8,8 @@ description: >
   即使只提"算命""八字"而未明确说用 skill，也应启用本 skill。
 version: 1.2.1
 tags: [八字, 命理, 四柱, 排盘, 运势, bazi, fortune]
+category: 传统文化/命理占卜
+platforms: [WorkBuddy, QClaw, ima]
 license: MIT
 ---
 
@@ -32,26 +34,26 @@ license: MIT
 
 分析前按需读取 `kb/` 下的文件：
 
-- `kb/01-基础表/天干地支五行表.md` — 干支、十神、藏干、十二长生
-- `kb/01-基础表/时辰对照表.md` — 时辰换算、五鼠遁元
-- `kb/01-基础表/五鼠遁五虎遁详解.md` — 五虎遁/五鼠遁完整映射表与口诀
-- `kb/01-基础表/六十甲子纳音表.md` — 纳音五行
-- `kb/01-基础表/神煞速查表.md` — 24 项核心神煞查法（天干/地支/干支混合三种匹配，吉凶分级）
-- `kb/02-规则手册/大运排盘规则.md` — 顺逆排、起运年龄
-- `kb/02-规则手册/古籍论命规则摘要.md` — 九本典籍核心规则
-- `kb/02-规则手册/五行补救方案.md` — 补金木水火土方案
-- `kb/02-规则手册/合婚配对规则.md` — 合婚七大维度
-- `kb/02-规则手册/算命流程.md` — 九步算命完整流程（资料核准→排盘→断事→流年）
-- `kb/02-规则手册/推算示例.md` — 万年历推算完整案例与综合练习
-- `kb/02-规则手册/八字MBTI映射.md` — 八字×MBTI 交叉映射参考（可选）
-- `kb/03-古籍原文/十干论.md` — 十天干调候用神（核心依据）
-- `kb/03-古籍原文/子平真诠用神专论.md` — 用神格局取法（《子平真诠》精要）
-- `kb/03-古籍原文/渊海子平格局歌诀.md` — 内外十八格歌诀速查
-- `kb/03-古籍原文/滴天髓注疏.md` — 干支体象与命理通则
+- `kb/01-basics/ganzhi-wuxing.md` — 干支、十神、藏干、十二长生
+- `kb/01-basics/shichen.md` — 时辰换算、五鼠遁元
+- `kb/01-basics/wushuhun-wuhuhun.md` — 五虎遁/五鼠遁完整映射表与口诀
+- `kb/01-basics/najin.md` — 纳音五行
+- `kb/01-basics/shensha.md` — 24 项核心神煞查法（天干/地支/干支混合三种匹配，吉凶分级）
+- `kb/02-rules/dayun.md` — 顺逆排、起运年龄
+- `kb/02-rules/classical-rules.md` — 九本典籍核心规则
+- `kb/02-rules/remedy.md` — 补金木水火土方案
+- `kb/02-rules/marriage.md` — 合婚七大维度
+- `kb/02-rules/workflow.md` — 九步算命完整流程（资料核准→排盘→断事→流年）
+- `kb/02-rules/example.md` — 万年历推算完整案例与综合练习
+- `kb/02-rules/bazi-mbti.md` — 八字×MBTI 交叉映射参考（可选）
+- `kb/03-classics/shigan-lun.md` — 十天干调候用神（核心依据）
+- `kb/03-classics/ziping-zhenquan.md` — 用神格局取法（《子平真诠》精要）
+- `kb/03-classics/yuanhai-geshi.md` — 内外十八格歌诀速查
+- `kb/03-classics/ditian-sui-zhushu.md` — 干支体象与命理通则
 - `kb/04-rules-db/rules.json` — 生产断语库（**504 条，suggestion 建议字段 100% 覆盖**，按 condition 匹配输出；含流日类别 liuri_01~05；手写种子 + `tools/gen_rules.py` 批量扩充）
 - `kb/04-rules-db/rules-template.json` — 断语库 schema 与示例（编写新规则时参考）
-- `kb/05-参考资料/可视化输出规范.md` — SVG 图表设计标准（排盘表/五行图/十神关系图等），含配色方案与渲染示例
-- `kb/05-参考资料/综合命理提示词模板.md` — 八字+紫微+面相+手相四法合一完整提示词（当前项目仅实现八字部分，余为未来扩展参考）
+- `kb/05-reference/viz-spec.md` — SVG 图表设计标准（排盘表/五行图/十神关系图等），含配色方案与渲染示例
+- `kb/05-reference/prompt-template.md` — 八字+紫微+面相+手相四法合一完整提示词（当前项目仅实现八字部分，余为未来扩展参考）
 - `tools/build_ui.py` — 构建单文件 `ui/index.html`（注入 jieqi.json + 断语库）
 - `tools/gen_rules.py` — 批量扩充断语库（修改后重跑 build_ui.py）
 - `tools/test_ui.js` — node 校验脚本（四柱/晚子时/立春界/藏干五行/断语/流年/合婚/纳音/神煞/五行补救/十神真值表）
