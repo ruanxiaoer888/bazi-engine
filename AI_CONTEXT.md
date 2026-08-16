@@ -14,18 +14,20 @@
 - **项目性质**：Michael 个人独立研发项目，**与魅可科技（Meke）业务无任何关联**，推广/发布一律按个人项目口径
 - **双轨关系**：bazi-engine（B 端引擎底座）↔ 另仓 `bazi-app`（C 端「算了么」变现），引擎层共用，UI 各自独立
 
-## 2. 当前阶段（2026-08-16）
+## 2. 当前阶段（2026-08-16 21:37）
 
-- **版本**：v1.2.1（标签未 bump，累计：全面扫描修复批次 + 农历模块同步 + 农历/阳历双模式切换 + 合婚上下布局 + 合婚时段模式修复）
+- **版本**：v1.2.1（标签未 bump，累计：全面扫描修复批次 + 农历模块同步 + 农历/阳历双模式切换 + 合婚上下布局 + 合婚时段模式修复 + xiYong ratio 细分 + 五行补救文案强/弱区分 + 太极 logo）
 - **功能**：132 项任务**全部完成**（排盘/大运/流年/流月/流日/六亲/合婚/五行补救/神煞/调候用神/三式宫位/特殊格局）
 - **农历模块**：引擎层新增 `lunarToSolar`/`leapMonth`/`leapDays`/`monthDays`/`lunarDayName` + `LUNAR_INFO` 数据表（1900-2099），与 bazi-app C 端实现完全一致
 - **农历/阳历双模式切换**：主表单 + 合婚 A/B 各自独立（`switchCal`/`switchHeCal`），农历输入自动 `lunarToSolar` 转公历
 - **合婚布局**：甲乙上下双区块（移除左右双栏），每人独立「是否校正真太阳时」下拉框（`hTruesunA/B`）；`readHe` 时段模式强制 `truesun:'no'`
 - **断语库**：`kb/04-rules-db/rules.json` — **504 条**（六亲30/流年30/流月20/流日5/合婚20 等），每条含 `suggestion` 建议字段
 - **UI**：`ui/index.html` 单文件离线，**零外部依赖**（无 Google Fonts），墨底 + 古铜金高端商务风，壹~玖中文序号徽章，内置 206 年节气
-- **引擎**：`engine/engine.dist.js`（188KB，UMD 双端）
-- **阻塞项**：**无技术阻塞**。唯一卡点是**真人验收需要 Michael 亲手做**（模拟回归无法替代真实观感）
-- **GitHub**：已推送，远程 main=`0dc1a45`（08-16 02:15），与本地 HEAD 一致（已同步）；另有本轮修复 3 文件（build_ui.py/verify_ux_e2e.js/ui/index.html）待提交
+- **引擎**：`engine/engine.dist.js`（189KB，UMD 双端，含 getRemedy/yongShenChong/农历模块）
+- **发布状态**：**ClawHub 已发布**（clawhub.ai/ruanxiaoer888/bazi-engine，公开可装）+ **SkillHub 申诉中**（被误判"涉政"→ 已清典籍名 + 修 ZIP 根 SKILL.md 同步，重提后再次被拒，已申诉 1/3 次）+ GitHub 开源
+- **真人验收**：✅ 已完成（3 案例全部通过，截图 `assets/screenshots/final/`）
+- **阻塞项**：**无技术阻塞**。唯一等待是 SkillHub 申诉回复（1~3 工作日）与 ClawHub Needs review 转正
+- **GitHub**：已推送，HEAD=`30d24b0`（2026-08-16 21:08），远程一致
 
 ## 3. 技术架构
 
@@ -71,20 +73,20 @@ const dayName = BaziEngine.lunarDayName(15)                // '十五'
 | 双轨战略 | bazi-engine 走 B 端专业引擎底座（开源，面向命理师）；`bazi-app` 走 C 端轻量娱乐变现，引擎抽层共享 |
 | 视觉 | 墨底 + 古铜金高端商务风；卡片标题用壹~玖深中文序号圆形徽章；系统字体栈（Songti SC/STSong/SimSun + system-ui）；**零外部依赖**（已移除 Google Fonts） |
 | 断语库 | 504 条（v1.2.1），路线图 434→504→800→1000；每条必须含 `suggestion` 建议字段；规则命中须可追溯古籍出处 |
-| 古籍规范 | 输出必须标注出处（穷通宝鉴/三命通会/滴天髓/渊海子平/子平真诠），保证可追溯、可检验 |
-| 验收规范 | **发布前必须真人验收 2~3 个样本盘**（模拟回归不能替代），通过后才批准提交 SkillHub |
-| 命名 | 对外统一 "bazi-engine"（不挂钩魅可）；C 端叫「算了么」 |
-| 引擎同步 | `python tools/build_ui.py` 后 `cp engine/engine.dist.js ../bazi-app/web/engine.dist.js` |
+| 古籍规范 | 输出必须标注出处（穷通宝鉴/三命通会/滴天髓/渊海子平/子平真诠），保证可追溯、可检验。**注意：SkillHub 发布版 SKILL.md 不写具体典籍名**（平台误判"涉政"，改为「古代命理典籍」）；内部文档/KB 保留 |
+| 验收规范 | ✅ 已通过真人验收（3 案例：排盘 1990-05-15 / 流日 1996-02-22 / 合婚 1996-08-13+1973-03-02） |
+| 命名 | 对外统一 "bazi-engine"（不挂钩魅可）；C 端 bazi-app 叫「本初」（原「算了么」因品牌冲突改名，域名 benchu.xiaoerpro.com） |
+| 引擎同步 | `python tools/build_ui.py` 后 `cp engine/engine.dist.js ../bazi-app/web/engine.dist.js` 并 commit |
 
 ## 5. 下一步优先级（不要打乱顺序）
 
-0. ✅ 第一轮已提交 `5a61801`（5 文件：build_ui.py/verify_ux_e2e.js/ui.index.html/AI_CONTEXT.md/HANDOFF.md）
-   -1. **[Michael] 第二轮提交待确认** → 4 文件（`tools/build_ui.py` xiYong/yongShenChong 修复 + `tools/test_xiyong.js` 新增 + `ui/index.html`/`engine/engine.dist.js` 同步），可选 bump 版本号至 v1.2.2
-1. **[Michael 亲手] 真人验收**（约 10 分钟）：打开 `ui/index.html` 排 2~3 个真实盘，重点看四柱命盘表（日柱金边高亮）/ 手机窄屏 640px 响应式 / 流日面板 / 六亲详解面板；顺手验证 1990 年 5 月夏令时盘是否提示回拨
-2. **[Michael] 选最终图标**：`发布物料.md` 有 v1 平面古印风（推荐）/ v2 立体金属感，定稿后放入发布包
-3. **[Michael] 提交发布**：按 `SkillHub-Submission-Kit.md` 提交包（简介/示例对话/合规声明）
+0. **[等待] SkillHub 申诉回复**（1~3 工作日）：通过则上架；不通过换 Coze 扣子（国内流量最大）或 Dify
+1. **[确认] ClawHub SkillSpector 扫描**：Needs review → Published 即完成海外发布闭环
+2. **[协作] bazi-app C 端**：引擎已同步（bazi-app commit `e981ac9`），C 端部署/虎皮椒开通在另一个对话推进
+3. **[后置] 断语库扩充 504→800+**（复用 `drafts/` 取材方法论）→ 发布后迭代
 4. **[后置] 晚子时/节气临界**输入侧**提示语**（已知缺口，非阻塞；输出侧已有提示）
-5. **[后置] v1.3 断语库扩容**：流年 30→55 / 用神喜忌 31→55 / 六亲 30→50，目标 800~1000 条（复用 `drafts/` 取材方法论）
+5. **[后置] MCP/API 化**（P2 路线图）
+6. **[后置] 商标注册**（41/42 必选 + 9/45 防御，注册前代理检索规避「本初子午」近似）
 
 ## 6. 与 Michael 协作的偏好
 
