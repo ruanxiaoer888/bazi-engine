@@ -25,3 +25,5 @@ _dbg_*.py
 .fingerprints.json
 bazi-engine-*.zip
 _rename_kb.py
+bazi-engine-*.zip
+_rename_kb.py
