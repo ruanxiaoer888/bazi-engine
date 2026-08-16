@@ -12,7 +12,7 @@
 
 **引擎抽层实现**（commit `807ab4c`）：
 - `tools/build_ui.py` 的 TPL 内用 7 对 `// [ENGINE:BEGIN]` / `// [ENGINE:END]` 注释标记界定纯计算层（**不搬代码**，`ui/index.html` 行为不变，仅多无害注释）
-- 构建时同时产出 **`engine/engine.dist.js`**（188KB，UMD：浏览器 `window.BaziEngine` / Node `require` 双端可用），导出 paipan/matchRules/calcShenSha/applyDst/matchLiuYue/lunarToSolar/leapMonth 等约 105 个函数与数据表
+- 构建时同时产出 **`engine/engine.dist.js`**（189KB，UMD：浏览器 `window.BaziEngine` / Node `require` 双端可用），导出 paipan/matchRules/calcShenSha/applyDst/matchLiuYue/lunarToSolar/leapMonth 等约 101 个函数与数据表
 - 新增回归 `node tools/test_engine.js`（28 项，独立库直测）+ `node tools/test_lunar.js`（27 项，农历模块验证）；原有 8 套回归不受影响
 - **C 端同步方法**：`python tools/build_ui.py` 后 `cp engine/engine.dist.js ../bazi-app/web/`
 - **边界规则**：引擎层 = 纯计算（无 DOM/CSS）；`fmtRule`/`analyzeHe`/所有 render*/run*/draw* 留在 UI 层（返回 HTML 的展示函数不进引擎库）；新增引擎函数时放进标记区内即可自动进入 dist
@@ -49,7 +49,7 @@
 > ✅ 发布前收尾（2026-08-13 已完成）：check_conflicts.js 已同步打包目录 + SKILL.md 登记；`断语库.json.bak` 旧备份已清理；新增对外 `README.md`；SKILL.md frontmatter 补 `tags`/`license`（MIT）。
 
 ### 发布后增强（已记录，可后置）
-- 晚子时 / 节气临界时刻的引擎提示语（已知缺口，非阻塞）
+- 晚子时 / 节气临界时刻的**输入侧**提示语（已知缺口，非阻塞；输出侧已有「校正后已入晚子时」提示）
 
 ---
 
@@ -122,7 +122,7 @@
 1. **[Michael] 真人验收** → 排 2~3 个真实盘，反馈 UI/流日/六亲体验（打开 `ui/index.html`）
 2. **[Michael] 选最终图标** → v1 平面古印风（推荐）/ v2 立体金属感，选后定稿 logo
 3. **[Michael] 提交发布** → SkillHub（用 `SkillHub-Submission-Kit.md` 提交包）
-4. **[后置] 晚子时/节气临界引擎提示语** → 发布后迭代
+4. **[后置] 晚子时/节气临界**输入侧**提示语** → 发布后迭代
 5. **[后置] 第 3 批次断语扩充**（流年 30→55 / 用神喜忌 31→55 / 六亲 30→50，目标 800~1000 条，复用 `drafts/` 取材方法论）→ 发布后迭代
 
 ---
