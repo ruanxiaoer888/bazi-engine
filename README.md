@@ -53,7 +53,7 @@
 skill/SKILL.md           Skill 定义（引导式交互 + 分析流程）
 ui/index.html            单文件离线界面
 tools/                   构建 / 测试 / 质检工具
-knowledge-base/          古籍原文 + 规则手册 + 断语库
+kb/          古籍原文 + 规则手册 + 断语库
 ```
 
 ## 免责声明
@@ -62,13 +62,13 @@ knowledge-base/          古籍原文 + 规则手册 + 断语库
 
 ## 数据溯源指纹
 
-断语库（`knowledge-base/04-断语库/断语库.json`）内含**溯源指纹句**（水印，具体位置不公开）。未经许可复用本断语库（如直接搬运数据做商业产品），指纹句会原样出现在对方内容中，可据此识别与取证。遵守 [LICENSE](LICENSE) / [LICENSE-DATA](LICENSE-DATA) 的正常使用不受任何影响。
+断语库（`kb/04-rules-db/rules.json`）内含**溯源指纹句**（水印，具体位置不公开）。未经许可复用本断语库（如直接搬运数据做商业产品），指纹句会原样出现在对方内容中，可据此识别与取证。遵守 [LICENSE](LICENSE) / [LICENSE-DATA](LICENSE-DATA) 的正常使用不受任何影响。
 
 ## License
 
 本仓库采用**双许可**结构：
 
 - **代码**（排盘引擎 / UI / 构建测试脚本 / Skill 定义）：[MIT](LICENSE) — 自由使用
-- **数据**（`knowledge-base/` 断语库与古籍汇编等）：[CC BY-NC-SA 4.0](LICENSE-DATA) — 署名 · 非商业 · 相同方式共享（古籍原文属公有领域，可自由引用）
+- **数据**（`kb/` 断语库与古籍汇编等）：[CC BY-NC-SA 4.0](LICENSE-DATA) — 署名 · 非商业 · 相同方式共享（古籍原文属公有领域，可自由引用）
 
 > 双许可边界、来源归属与商业授权说明详见 [LICENSE-DATA](LICENSE-DATA)。

@@ -63,7 +63,7 @@ Same birth data in, same chart out — every single time.
 skill/SKILL.md           Skill definition (guided interaction + analysis workflow)
 ui/index.html            Single-file offline UI
 tools/                   Build / test / quality-audit tooling
-knowledge-base/          Classical texts + rule handbooks + 504-rule database
+kb/          Classical texts + rule handbooks + 504-rule database
 ```
 
 ## Disclaimer
@@ -72,13 +72,13 @@ This tool performs charting and divination based on traditional Chinese metaphys
 
 ## Data Provenance Fingerprints
 
-The rule database (`knowledge-base/04-断语库/断语库.json`) contains embedded **provenance fingerprint phrases** (watermarks; exact locations undisclosed). Any unauthorized reuse of the database (e.g., republishing it into a commercial product) will carry these phrases verbatim, enabling identification and evidence collection. Compliant use under [LICENSE](LICENSE) / [LICENSE-DATA](LICENSE-DATA) is unaffected.
+The rule database (`kb/04-rules-db/rules.json`) contains embedded **provenance fingerprint phrases** (watermarks; exact locations undisclosed). Any unauthorized reuse of the database (e.g., republishing it into a commercial product) will carry these phrases verbatim, enabling identification and evidence collection. Compliant use under [LICENSE](LICENSE) / [LICENSE-DATA](LICENSE-DATA) is unaffected.
 
 ## License
 
 This repository uses a **dual-license** structure:
 
 - **Code** (charting engine / UI / build & test scripts / Skill definition): [MIT](LICENSE) — free to use
-- **Data** (`knowledge-base/` verdict library & classical-text compilations): [CC BY-NC-SA 4.0](LICENSE-DATA) — Attribution · NonCommercial · ShareAlike (classical texts are public domain and freely quotable)
+- **Data** (`kb/` verdict library & classical-text compilations): [CC BY-NC-SA 4.0](LICENSE-DATA) — Attribution · NonCommercial · ShareAlike (classical texts are public domain and freely quotable)
 
 > See [LICENSE-DATA](LICENSE-DATA) for the exact boundaries, source attribution, and commercial licensing.
