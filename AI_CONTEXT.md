@@ -16,14 +16,16 @@
 
 ## 2. 当前阶段（2026-08-16）
 
-- **版本**：v1.2.1（全面扫描修复批次：原生 select 初始化 / 合婚 HTML 结构 / iOS 防缩放 / 文档断语数同步）
+- **版本**：v1.2.1（标签未 bump，累计：全面扫描修复批次 + 农历模块同步 + 农历/阳历双模式切换 + 合婚上下布局 + 合婚时段模式修复）
 - **功能**：132 项任务**全部完成**（排盘/大运/流年/流月/流日/六亲/合婚/五行补救/神煞/调候用神/三式宫位/特殊格局）
 - **农历模块**：引擎层新增 `lunarToSolar`/`leapMonth`/`leapDays`/`monthDays`/`lunarDayName` + `LUNAR_INFO` 数据表（1900-2099），与 bazi-app C 端实现完全一致
+- **农历/阳历双模式切换**：主表单 + 合婚 A/B 各自独立（`switchCal`/`switchHeCal`），农历输入自动 `lunarToSolar` 转公历
+- **合婚布局**：甲乙上下双区块（移除左右双栏），每人独立「是否校正真太阳时」下拉框（`hTruesunA/B`）；`readHe` 时段模式强制 `truesun:'no'`
 - **断语库**：`knowledge-base/04-断语库/断语库.json` — **504 条**（六亲30/流年30/流月20/流日5/合婚20 等），每条含 `suggestion` 建议字段
 - **UI**：`ui/index.html` 单文件离线，**零外部依赖**（无 Google Fonts），墨底 + 古铜金高端商务风，壹~玖中文序号徽章，内置 206 年节气
 - **引擎**：`engine/engine.dist.js`（188KB，UMD 双端）
 - **阻塞项**：**无技术阻塞**。唯一卡点是**真人验收需要 Michael 亲手做**（模拟回归无法替代真实观感）
-- **GitHub**：已推送，远程 main=`330ff03`，与本地 HEAD 一致（已同步）
+- **GitHub**：已推送，远程 main=`0dc1a45`（08-16 02:15），与本地 HEAD 一致（已同步）；另有本轮修复 3 文件（build_ui.py/verify_ux_e2e.js/ui/index.html）待提交
 
 ## 3. 技术架构
 
@@ -76,6 +78,7 @@ const dayName = BaziEngine.lunarDayName(15)                // '十五'
 
 ## 5. 下一步优先级（不要打乱顺序）
 
+0. **[Michael] 确认并提交本轮修复** → 3 文件（`tools/build_ui.py`/`tools/verify_ux_e2e.js`/`ui/index.html`），可选 bump 版本号至 v1.2.2
 1. **[Michael 亲手] 真人验收**（约 10 分钟）：打开 `ui/index.html` 排 2~3 个真实盘，重点看四柱命盘表（日柱金边高亮）/ 手机窄屏 640px 响应式 / 流日面板 / 六亲详解面板；顺手验证 1990 年 5 月夏令时盘是否提示回拨
 2. **[Michael] 选最终图标**：`发布物料.md` 有 v1 平面古印风（推荐）/ v2 立体金属感，定稿后放入发布包
 3. **[Michael] 提交发布**：按 `SkillHub-Submission-Kit.md` 提交包（简介/示例对话/合规声明）
@@ -104,6 +107,8 @@ const dayName = BaziEngine.lunarDayName(15)                // '十五'
 - **合婚 A/B 两侧 HTML 结构必须对称**：漏 `</div>` 浏览器容错不报错，扫描时 diff A/B 对比
 - **iOS Safari select 字号 <16px 聚焦自动放大**：移动端 media query 内 `select{font-size:16px}`
 - **文档数字随功能同步**：断语数/版本号散落在 README/README.en/SKILL/HANDOFF/发布物料，扩库后用 `grep -rn "旧数字"` 全局清查
+- **合婚「只知时辰」须强制 `truesun:'no'`**：`readHe` 时段模式不能读 `hTruesun` 下拉框默认值（默认 `'yes'`），否则会错误做真太阳时校正，与主表单 `generate` 行为不一致
+- **流日/六亲面板是 toggle 开关（非幂等渲染）**：`runLiuDay`/`runLiuQin` 每次调用切换展开/收起，测试脚本连续调用第二次会触发「收起」判空；`LIU_DAY_OPEN` 等是 eval 内 `let` 变量，外部须经 `__resetPanels` 辅助函数访问（`globalThis.xxx` 访问不到）
 
 ### 构建/依赖
 - **Google Fonts `@import` 外链违反"单文件零外部依赖"承诺**，已删除，勿加回

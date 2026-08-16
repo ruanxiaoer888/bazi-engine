@@ -1,6 +1,6 @@
 # bazi-engine 八字命理 Skill · 项目交接文档（HANDOFF）
 
-> 更新时间：2026-08-16 00:20 · 当前版本 **v1.2.1**（全面扫描修复批次：原生 select 初始化/合婚 HTML 结构/iOS 防缩放/文档断语数同步 + 农历模块同步）
+> 更新时间：2026-08-16 11:40 · 当前版本 **v1.2.1**（标签未 bump，实际已含：农历/阳历双模式切换、合婚上下双区块布局、合婚时段模式 truesun 修复 + 测试脚本 toggle 适配）
 > 项目性质：**Michael 个人独立研发项目**，与魅可科技（Meke）业务无任何关联，推广/发布按个人项目口径。
 > **给 Codex / 新会话**：先读同目录 `AI_CONTEXT.md`（冷启动文档），再读本文件。
 
@@ -20,6 +20,14 @@
 ---
 
 ## 一、当前任务（进行中 / 待办）
+
+### ✅ 2026-08-16 审计修复（本轮，已完成，待提交）
+- 接手后核实真实状态：文档记录 `main=330ff03` 已过时，实际 HEAD=`0dc1a45`（本地=远程，已同步）；HANDOFF/AI_CONTEXT 滞后 7 个 UI commit（08-16 00:56~02:15）
+- 审计发现并修复 3 项，全套 **12 套回归复跑全绿（FAIL:0 WARN:0）**：
+  1. **合婚时段模式 truesun 回归**（`cb4100f` 引入）：`readHe()` 时段模式（只知时辰）改为强制 `truesun:'no'`，与主表单 `generate()` 一致；精确模式仍读 `hTruesun` 下拉框（支持按人分别校正）
+  2. **verify_ux_e2e 测试脚本 toggle 适配**（`80ec029` 加「展开/收起」开关后测试未同步，导致 F6/F8/G5/G7 判空）：`__setLast` 内联重置 4 个面板开关 + 新增 `__resetPanels`，F 组流日调用前重置
+  3. **清理 lunarDayName 重复定义**：删除 UI 区重复定义（保留引擎区定义，engine.dist.js 不受影响）
+- 待提交文件：`tools/build_ui.py` / `tools/verify_ux_e2e.js` / `ui/index.html`（`engine/engine.dist.js` 无变化，无需同步 bazi-app）
 
 ### 发布前（就差这两步）
 1. **真人验收**（需 Michael 亲手操作，约 10 分钟）
@@ -51,6 +59,8 @@
 | 五行补救 / 神煞 / 调候用神（穷通宝鉴） | ✅ |
 | 三式宫位（胎元/命宫/身宫）、特殊格局（专旺5+从格4） | ✅ |
 | **农历转换模块**：引擎层新增 `lunarToSolar`/`leapMonth`/`leapDays`/`monthDays`/`lunarDayName` + `LUNAR_INFO` 数据表（1900-2099），与 bazi-app C 端实现完全一致 | ✅ 2026-08-16 |
+| **农历/阳历双模式切换**：主表单 + 合婚 A/B 各自独立切换（`switchCal`/`switchHeCal`），农历输入自动 `lunarToSolar` 转公历后排盘 | ✅ 2026-08-16 |
+| **合婚上下双区块布局**：移除 `.two-col` 左右双栏，改为甲乙上下独立区块 + 金色虚线分隔；每人独立「是否校正真太阳时」下拉框（`hTruesunA/B`），`readHe` 支持按人分别校正 | ✅ 2026-08-16 |
 
 ### 关键资产
 - **断语库**：`knowledge-base/04-断语库/断语库.json` — **504 条**（六亲30 / 流年30 / 流月20 / 流日5 / 合婚20 等），每条含 `suggestion` 建议字段，全量接入渲染
@@ -66,7 +76,7 @@
 - **edu_17~20 真孤儿复活**：补差异化 condition 使其重新参与主引擎匹配——edu_17 印星为用有力 / edu_18 食神多而有力 / edu_19 月干透印+伤官泄秀 / edu_20 身弱财多；edu_19 原与 combo_伤官_正印 条件相同会同盘重复，已加"月干+印为用有力"约束并改文案消除
 - 验证：新增 `tools/verify_edu_rules.js` 回归（edu 命中率 ≥1 次且 <60%、qinq_27~30 不进主渲染）；8 套既有回归 + 冲突检测全绿
 
-### 验证体系（10 套回归，全部 PASS：FAIL:0 WARN:0）
+### 验证体系（12 套回归，全部 PASS：FAIL:0 WARN:0，2026-08-16 复跑确认）
 | 脚本 | 覆盖 |
 |------|------|
 | `test_ui.js` | UI 结构与渲染 |
@@ -79,6 +89,7 @@
 | `test_liuri_v2.js` | 流日规则 v2（10 项） |
 | `test_liuyue_v2.js` | 流月规则 v2（10 项） |
 | `verify_edu_rules.js` | 空 condition 排除 + 学业规则复活回归（edu_17~20 命中率须 ≥1 次且 <60%，qinq_27~30 不进入主渲染） |
+| `test_engine.js` | 独立引擎库直测（28 项） |
 | `test_lunar.js` | 农历转换模块（导出完整性/闰月判断/非闰月转换/闰月转换/日名映射/边界年份/排盘联动，27 项） |
 
 > 另含 `audit_hit_distribution.js`（命中分布审查）、`check_dup_hits.js`（重复命中检测）——发布后仍可继续用于断语库维护。
@@ -98,6 +109,7 @@
 
 ## 四、下一步计划（按优先级）
 
+0. **[Michael] 确认并提交本轮修复** → 3 文件（`tools/build_ui.py`/`tools/verify_ux_e2e.js`/`ui/index.html`），可选 bump 版本号至 v1.2.2（须全局清查 README/README.en/SKILL/发布物料中的版本号，避免散落不一致）
 1. **[Michael] 真人验收** → 排 2~3 个真实盘，反馈 UI/流日/六亲体验（打开 `ui/index.html`）
 2. **[Michael] 选最终图标** → v1 平面古印风（推荐）/ v2 立体金属感，选后定稿 logo
 3. **[Michael] 提交发布** → SkillHub（用 `SkillHub-Submission-Kit.md` 提交包）
@@ -118,6 +130,8 @@
 7. **iOS Safari select 字号 <16px 聚焦自动放大页面**：移动端 media query 内 `select{font-size:16px}` 防误触
 8. **文档数字随功能同步**：断语数/版本号等硬数字散落在 README/README.en/SKILL/HANDOFF/发布物料，扩库后易漏改——用 `grep -rn "旧数字"` 全局清查
 9. **打包目录防多版本混入**：`tools/index.html`（旧 UI 误拷贝 337KB）曾与 `ui/index.html` 并存，打开错文件会看到旧界面——UI 唯一真源是 `ui/index.html`，定期比对打包目录与源码清单
+10. **合婚「只知时辰」必须强制 `truesun:'no'`**：合婚改造加 `hTruesun` 下拉框后，`readHe` 时段模式若读下拉框默认 `'yes'` 会错误做真太阳时校正——时段模式须强制 `'no'`（主表单 `generate` 已有此处理），否则两处行为不一致
+11. **流日/六亲面板是 toggle 开关（非幂等渲染）**：`runLiuDay`/`runLiuQin` 每次调用切换展开/收起，测试脚本连续调用第二次会触发「收起」判空——测试前须重置 `LIU_DAY_OPEN`/`LIU_QIN_OPEN`（它们是 eval 内 `let` 变量，外部必须经 `__resetPanels` 辅助函数访问，`globalThis.xxx` 访问不到）
 
 ### 构建/依赖类
 5. **Google Fonts `@import` 外链违反"单文件零外部依赖"承诺** —— UI 升级时删除，改用系统字体栈（Songti SC/STSong/SimSun + system-ui）

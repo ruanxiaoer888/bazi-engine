@@ -1543,11 +1543,6 @@ function selDay(id, yId, mId){
 // ===== 农历切换逻辑 =====
 let calMode='solar'; // 'solar' | 'lunar'
 let hCalModeA='solar', hCalModeB='solar';
-function lunarDayName(d){
-  if(d===10) return '初十'; if(d===20) return '二十'; if(d===30) return '三十';
-  const px=['初','十','廿','三'], dg=['','一','二','三','四','五','六','七','八','九','十'];
-  return px[Math.floor((d-1)/10)] + dg[d%10 || 10];
-}
 function switchCal(mode){
   if(mode===calMode) return;
   calMode=mode;
@@ -2619,7 +2614,7 @@ function readHe(s){
     shichenMode=true;
   }
   if(shichenMode){
-    return {name,sex,y,m,d,hh,mm,place,truesun,dst:0,shichenMode:true};
+    return {name,sex,y,m,d,hh,mm,place,truesun:'no',dst:0,shichenMode:true};
   }
   const dst=applyDst(y,m,d,hh);
   return {name,sex,y:dst.y,m:dst.m,d:dst.d,hh:dst.hh,mm,place,truesun,dst:dst.dst,shichenMode:false};
