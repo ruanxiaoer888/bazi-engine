@@ -1,8 +1,8 @@
 # bazi-engine 八字命理 Skill · 项目交接文档（HANDOFF）
 
-> 更新时间：2026-08-17 19:48 · 当前版本 **v1.2.1**（标签未 bump，实际已含：农历/阳历双模式切换、合婚上下双区块布局、合婚时段模式 truesun 修复 + 测试脚本 toggle 适配、xiYong ratio 细分、五行补救文案强/弱区分、太极 logo、**输入侧晚子时/节气临界提示语、断语库 504→801**）
+> 更新时间：2026-08-17 19:51 · 当前版本 **v1.2.1**（标签未 bump，实际已含：农历/阳历双模式切换、合婚上下双区块布局、合婚时段模式 truesun 修复 + 测试脚本 toggle 适配、xiYong ratio 细分、五行补救文案强/弱区分、太极 logo、**输入侧晚子时/节气临界提示语、断语库 504→801**）
 > 项目性质：**Michael 个人独立研发项目**，与魅可科技（Meke）业务无任何关联，推广/发布按个人项目口径。
-> 发布状态：✅ **双平台均已上架**（2026-08-17 确认）——① SkillHub（腾讯）**已发布**（「生态杀手」分类，申诉通过；平台归一化显示 V1.0.0，见坑 #15）；② ClawHub（OpenClaw 官方市场）**已发布**（Productivity 分类，SkillSpector 扫描通过转 Published，v1.2.1 GitHub 自动同步版）
+> 发布状态：✅ **双平台均已上架**（2026-08-17 确认）——① SkillHub（腾讯）**已发布**（「生态杀手」分类，申诉通过；平台归一化显示 V1.0.0，见坑 #21）；② ClawHub（OpenClaw 官方市场）**已发布**（Productivity 分类，SkillSpector 扫描通过转 Published，v1.2.1 GitHub 自动同步版）
 > **给 Codex / 新会话**：先读同目录 `AI_CONTEXT.md`（冷启动文档），再读本文件。
 
 ---
@@ -13,7 +13,7 @@
 
 **引擎抽层实现**（commit `807ab4c`）：
 - `tools/build_ui.py` 的 TPL 内用 7 对 `// [ENGINE:BEGIN]` / `// [ENGINE:END]` 注释标记界定纯计算层（**不搬代码**，`ui/index.html` 行为不变，仅多无害注释）
-- 构建时同时产出 **`engine/engine.dist.js`**（189KB，UMD：浏览器 `window.BaziEngine` / Node `require` 双端可用），导出 paipan/matchRules/calcShenSha/applyDst/matchLiuYue/lunarToSolar/leapMonth 等约 101 个函数与数据表
+- 构建时同时产出 **`engine/engine.dist.js`**（247KB，UMD：浏览器 `window.BaziEngine` / Node `require` 双端可用），导出 paipan/matchRules/calcShenSha/applyDst/matchLiuYue/lunarToSolar/leapMonth 等约 101 个函数与数据表（含 801 条规则数据）
 - 新增回归 `node tools/test_engine.js`（28 项，独立库直测）+ `node tools/test_lunar.js`（27 项，农历模块验证）；原有 8 套回归不受影响
 - **C 端同步方法**：`python tools/build_ui.py` 后 `cp engine/engine.dist.js ../bazi-app/web/`
 - **边界规则**：引擎层 = 纯计算（无 DOM/CSS）；`fmtRule`/`analyzeHe`/所有 render*/run*/draw* 留在 UI 层（返回 HTML 的展示函数不进引擎库）；新增引擎函数时放进标记区内即可自动进入 dist
@@ -21,6 +21,11 @@
 ---
 
 ## 一、当前任务（进行中 / 待办）
+
+### 当前状态（2026-08-17 19:51 快照）
+- **无阻塞、无外部等待**：132 项任务清零 / 真人验收通过 / 双平台已上架 / 断语库 801 条 / 13 套回归全绿
+- **在途事项**：仅 bazi-app C 端全流程闭环（独立对话推进，本仓库无动作）；断语库 801→1000、MCP/API 化、商标注册均为后置
+- **遗留待清理**：~9 条旧规则引用 SHENSHA 表外神煞 → 0 命中（见下方「断语库扩充」段）
 
 ### ✅ 2026-08-17 断语库扩充 504→801 条（commit `bd7f5ab`）
 - 复用 `drafts/` 取材方法论（古籍摘录标出处），新增 297 条，覆盖 12 类主引擎规则：事业+44 / 性格+37 / 财运+29 / 用神喜忌+26 / 婚姻+22 / 十神组合+22 / 学业+22 / 神煞+22 / 健康+21 / 格局+18 / 六亲+18 / 五行生克+16
@@ -39,7 +44,7 @@
   3. 监听：主表单 hour/minute/year/month/day + 合婚 A/B 同名单控件 change 即刷新；农历模式跳过节气提示（农历日期不映射交节时刻）
   4. 实现位置：UI 层（ENGINE 标记区外），`engine/engine.dist.js` **无变化**，无需同步 bazi-app
 - 回归：13 套全绿（含新增逻辑验证 7 案例：立春前后 2h 触发 / 16h 不触发 / 清明前 4.7h 触发 / 缺省输入不抛错）
-- **新坑（第 19 条）**：`parseItem()` 返回 **[月,日,时,分]**（无年份，年份来自 `JIEQI.data` 的 key），写节气相关新函数时勿把 p[0] 当年份（曾致 `new Date` 得 Invalid Date → diff=NaN → 提示静默失效）
+- **新坑（第 26 条）**：`parseItem()` 返回 **[月,日,时,分]**（无年份，年份来自 `JIEQI.data` 的 key），写节气相关新函数时勿把 p[0] 当年份（曾致 `new Date` 得 Invalid Date → diff=NaN → 提示静默失效）
 
 ### ✅ 2026-08-16 审计修复（第一轮，已提交 `5a61801`）
 - 接手后核实真实状态：文档记录 `main=330ff03` 已过时，实际 HEAD=`0dc1a45`（本地=远程，已同步）；HANDOFF/AI_CONTEXT 滞后 7 个 UI commit（08-16 00:56~02:15）
@@ -75,24 +80,16 @@
 - 打包工具：`tools/build_release_zip.py`（永久脚本，每次发版跑一次）
 - **SKILL.md 清典籍名**（穷通宝鉴/子平真诠/滴天髓/渊海子平/千里命稿/神峰通考 → 「古代命理典籍」）——SkillHub 误判「内容涉政」，commit `de631a3`
 - **关键坑**：SkillHub 审核看的是 **ZIP 里根目录 SKILL.md**，不是项目源 `skill/SKILL.md`——之前只同步了打包目录 `skill/` 子目录漏了根，导致反复「涉政」。已 cp 同步 + 重打 ZIP 验证（ZIP 内根 SKILL.md 无典籍名）
-- SkillHub 时间线：20:09 提交「安全审核中」→ 审核未通过（内容涉政）→ 20:17 提交申诉（1/3 次）→ **2026-08-17 申诉通过、已上架**（「生态杀手」分类，平台归一化显示 V1.0.0 见坑 #15）
+- SkillHub 时间线：20:09 提交「安全审核中」→ 审核未通过（内容涉政）→ 20:17 提交申诉（1/3 次）→ **2026-08-17 申诉通过、已上架**（「生态杀手」分类，平台归一化显示 V1.0.0 见坑 #21）
 - **ClawHub 发布成功**（21:04）：clawhub.ai/skills 公开可见，一键安装 `npx clawhub@latest install bazi-engine`；**2026-08-17 SkillSpector 扫描通过转 Published**（Productivity 分类，v1.2.1 GitHub 自动同步版）
 
-### 发布前（就差这两步）
-1. **真人验收**（需 Michael 亲手操作，约 10 分钟）
-   - 打开 `ui/index.html` 排 2~3 个真实盘
-   - 重点看：四柱命盘表（日柱金边高亮）、手机窄屏（640px 响应式）、流日面板、六亲详解面板
-2. **提交发布**
-   - 生成图标：按 `发布物料.md` 中的图标提示词（可用 ImageGen）
-   - 按 `发布物料.md` 准备 SkillHub 提交材料（简介/示例对话/合规声明）
+> ✅ 发布前待办已全部完成（真人验收 2026-08-16 通过 / 图标与提交材料按 `发布物料.md` 准备 / 2026-08-13 收尾：check_conflicts.js 同步打包目录 + SKILL.md 登记 + `断语库.json.bak` 清理 + 对外 `README.md` + SKILL.md frontmatter 补 `tags`/`license: MIT`）
 
-> ✅ 发布前收尾（2026-08-13 已完成）：check_conflicts.js 已同步打包目录 + SKILL.md 登记；`断语库.json.bak` 旧备份已清理；新增对外 `README.md`；SKILL.md frontmatter 补 `tags`/`license`（MIT）。
-
-### 发布后增强（已记录，可后置）
+### 发布后增强（已清项并入 §四；剩余 2 项）
 - ✅ 晚子时 / 节气临界时刻的**输入侧**提示语（已完成 `53a3bd2`，2026-08-17）
 - ✅ 断语库扩充 504 → 800+（已完成 `bd7f5ab`，801 条，2026-08-17）
-- MCP/API 化（P2）
-- **bazi-app C 端全流程闭环**（引擎已同步 `bazi-app/web/engine.dist.js`，检查支付链路 虎皮椒 → 兑换码 → 报告生成）
+- MCP/API 化（P2，见 §四 第 6 项）
+- **bazi-app C 端全流程闭环**（见 §四 第 2 项，独立对话推进）
 
 ---
 
@@ -129,23 +126,24 @@
 - **edu_17~20 真孤儿复活**：补差异化 condition 使其重新参与主引擎匹配——edu_17 印星为用有力 / edu_18 食神多而有力 / edu_19 月干透印+伤官泄秀 / edu_20 身弱财多；edu_19 原与 combo_伤官_正印 条件相同会同盘重复，已加"月干+印为用有力"约束并改文案消除
 - 验证：新增 `tools/verify_edu_rules.js` 回归（edu 命中率 ≥1 次且 <60%、qinq_27~30 不进主渲染）；8 套既有回归 + 冲突检测全绿
 
-### 验证体系（12 套回归，全部 PASS：FAIL:0 WARN:0，2026-08-16 复跑确认）
+### 验证体系（13 套回归，全部 PASS：FAIL:0 WARN:0，2026-08-17 复跑确认）
 | 脚本 | 覆盖 |
 |------|------|
 | `test_ui.js` | UI 结构与渲染 |
 | `test_eval_state.js` | 引擎状态 |
 | `test_p1_fixes.js` | P1 修复回归 |
 | `verify_sleep_rules.js` | 沉睡规则接入 |
-| `verify_ux_e2e.js` | 端到端用户视角（A~G 组：输入容错/边界/报告质量/稳定性/完整性/**流日 F 组 12 项**/**六亲 G 组 8 项**） |
+| `verify_ux_e2e.js` | 端到端用户视角（A~G 组：输入容错/边界/报告质量/稳定性/完整性/**流日 F 组 12 项**/**六亲 G 组 8 项**；C3 主面板命中区间 30-70） |
 | `check_conflicts.js` | 反义断语同盘矛盾检测（40 对规则，1000 盘 0 冲突） |
 | `test_dst.js` | 夏令时窗口/边界校正（29 项） |
 | `test_liuri_v2.js` | 流日规则 v2（10 项） |
 | `test_liuyue_v2.js` | 流月规则 v2（10 项） |
 | `verify_edu_rules.js` | 空 condition 排除 + 学业规则复活回归（edu_17~20 命中率须 ≥1 次且 <60%，qinq_27~30 不进入主渲染） |
-| `test_engine.js` | 独立引擎库直测（28 项） |
+| `test_engine.js` | 独立引擎库直测（28 项；RULES 801 条断言） |
 | `test_lunar.js` | 农历转换模块（导出完整性/闰月判断/非闰月转换/闰月转换/日名映射/边界年份/排盘联动，27 项） |
+| `test_xiyong.js` | 喜用/忌用结构回归（10 盘验证 xiYong/jiYong 合理性，2026-08-16 新增） |
 
-> 另含 `audit_hit_distribution.js`（命中分布审查）、`check_dup_hits.js`（重复命中检测）——发布后仍可继续用于断语库维护。
+> 另含 `audit_hit_distribution.js`（命中分布审查：无 100%/>80% 命中规则）、`check_dup_hits.js`（重复命中检测）——断语库维护持续使用。
 
 ### 交付文档
 - `发布物料.md` — 6 大卖点 / 图标提示词 / 3 个示例对话 / 合规声明 / 渠道建议（SkillHub 优先）
@@ -192,27 +190,30 @@
 11. **流日/六亲面板是 toggle 开关（非幂等渲染）**：`runLiuDay`/`runLiuQin` 每次调用切换展开/收起，测试脚本连续调用第二次会触发「收起」判空——测试前须重置 `LIU_DAY_OPEN`/`LIU_QIN_OPEN`（它们是 eval 内 `let` 变量，外部必须经 `__resetPanels` 辅助函数访问，`globalThis.xxx` 访问不到）
 
 ### 构建/依赖类
-5. **Google Fonts `@import` 外链违反"单文件零外部依赖"承诺** —— UI 升级时删除，改用系统字体栈（Songti SC/STSong/SimSun + system-ui）
-6. **SKILL.md 实际位于 `skill/SKILL.md`（非项目根）** —— 同步打包时第一版 `cp` 失败，须用正确相对路径
-7. **断语库 JSON 每改必验** —— 用 `python json.load` 校验合法性 + 统计规则数，再重建 UI（断语数会反映在 build 输出里）
+12. **Google Fonts `@import` 外链违反"单文件零外部依赖"承诺** —— UI 升级时删除，改用系统字体栈（Songti SC/STSong/SimSun + system-ui）
+13. **SKILL.md 实际位于 `skill/SKILL.md`（非项目根）** —— 同步打包时第一版 `cp` 失败，须用正确相对路径
+14. **断语库 JSON 每改必验** —— 用 `python json.load` 校验合法性 + 统计规则数，再重建 UI（断语数会反映在 build 输出里）
 
 ### 需求/流程类
-8. **7 项功能核查中 #2 与 #4 重复（都是流月分析）** —— 先向用户澄清再动手，避免重复劳动
-9. **任务账目会滞留**：实际完成但状态未更新（本次理清 #27/41/59/66/68/69/70/71/72/75/74 共 11 个）—— 完成一项应立即 TaskUpdate
+15. **7 项功能核查中 #2 与 #4 重复（都是流月分析）** —— 先向用户澄清再动手，避免重复劳动
+16. **任务账目会滞留**：实际完成但状态未更新（本次理清 #27/41/59/66/68/69/70/71/72/75/74 共 11 个）—— 完成一项应立即 TaskUpdate
 
 ### SkillHub 发布类（2026-08-16 三次踩坑）
-10. **ZIP 不能嵌套外层目录**：`Compress-Archive -Path 整个目录` 会生成 `bazi-engine/` 外层，SkillHub 解压后看到 `bazi-engine/LICENSE` 报「文件路径不安全」。**正确：ZIP 内文件直接在根**（SKILL.md 在根）。教训：勿用 `-Path 目录`，用 `-Path 目录\*` 或 Python zipfile 逐文件写
-11. **SkillHub 不允许 LICENSE/LICENSE-DATA/README.en.md 类元文件**（报「文件路径不安全」「不允许的文件类型」）：GitHub 开源项目根必须保留，但**打包 ZIP 时排除**——用 `tools/build_release_zip.py`（EXCLUDE_PATTERNS），项目根文件不动
-12. **SkillHub 内容审核误判「涉政」**：命理典籍名（穷通宝鉴/三命通会/滴天髓/渊海子平/子平真诠/千里命稿/神峰通考）触发关键词扫描误判 → SKILL.md 中删除具体典籍名，改为「古代命理典籍」；**变更说明也勿写典籍名**
-13. **WorkBuddy 的 safe-delete（genie-trash）有 bug**：删文件报「Some operations were aborted」，os.remove/unlink 被拦截——用 bash `rm -f` 或 Python `os.remove`（绕过 sitecustomize shim）可删；旧 ZIP 无法覆盖时输出新文件名
-14. **`git reset --hard` 会丢 untracked 文件**（如 assets/screenshots/final/ 三张截图、SkillHub发布最终指引.md）：发布物归档后记得重新复制；乱操作后回滚用 reset 但先 `git stash`/备份 untracked
-15. **SKILL.md 版本被 SkillHub 归一化**：v1.2.1 在平台显示 v1.0.0，不影响功能，无需纠结
-16. **SkillHub 审核看的是 ZIP 内根目录 SKILL.md，不是项目源 skill/SKILL.md**：打包目录根 SKILL.md 与项目源是两个副本，改 SKILL.md 必须 `cp skill/SKILL.md 打包目录/SKILL.md`（根）**且** `打包目录/skill/SKILL.md`（子目录）——漏同步根目录会导致审核扫到旧版（本次「涉政」反复的根源）
-17. **SkillHub 对命理/玄学类内容审核严格**（典籍名可触发「内容涉政」误判）：规避 = SKILL.md 不写具体典籍名，用「古代命理典籍」；变更说明同样不写
-18. **ClawHub 是 SkillHub 之外的「免审核」发布通道**：OpenClaw 官方市场（clawhub.ai，中文镜像 mirror-cn.clawhub.com），无内容审核（可信/可疑标注制），发布即公开可见；上传用完整版 ZIP（可含 LICENSE）；与腾讯 SkillHub（skillhub.tencent.com）是**两个不同平台**，注意区分
-19. **`parseItem()` 返回 `[月,日,时,分]`，不含年份**（年份来自 `JIEQI.data` 的 key）：写节气相关新函数时，`new Date(yy, p[0]-1, p[1], p[2], p[3])` 才是正确构造；把 p[0] 当年份会得 Invalid Date → `getTime()=NaN` → 差值 NaN → 条件静默不触发（本次输入侧节气提示曾踩，静默失效无报错）
-20. **Python 改 JSON：`rules=[r for r in ...]` 生成新列表后必须回写 `data['rules']=rules`**：直接 `json.dump(data)` 写的是旧引用，修改静默丢失（本次扩充曾两次"改了没生效"，检查落盘用重新 load 验证条数）
-21. **`matchRules` 神煞键只认 `SHENSHA` 表内 24 项**：空亡（实为 `ctx.kongWang`）/咸池/元辰/天喜/魁罡/太极贵人/福星贵人/国印贵人/文昌贵人（表内叫"文昌"）均**不在表内**，`{神煞:"X"}` 条件永不命中（既有 9+ 条旧规则中招）；`evalState` 的"为喜用/为忌神"必须带 `位置:"日支"`、"为用神有力"必须带 `十神` 键，否则返回 false 静默失效
+17. **ZIP 不能嵌套外层目录**：`Compress-Archive -Path 整个目录` 会生成 `bazi-engine/` 外层，SkillHub 解压后看到 `bazi-engine/LICENSE` 报「文件路径不安全」。**正确：ZIP 内文件直接在根**（SKILL.md 在根）。教训：勿用 `-Path 目录`，用 `-Path 目录\*` 或 Python zipfile 逐文件写
+18. **SkillHub 不允许 LICENSE/LICENSE-DATA/README.en.md 类元文件**（报「文件路径不安全」「不允许的文件类型」）：GitHub 开源项目根必须保留，但**打包 ZIP 时排除**——用 `tools/build_release_zip.py`（EXCLUDE_PATTERNS），项目根文件不动
+19. **SkillHub 内容审核误判「涉政」**：命理典籍名（穷通宝鉴/三命通会/滴天髓/渊海子平/子平真诠/千里命稿/神峰通考）触发关键词扫描误判 → SKILL.md 中删除具体典籍名，改为「古代命理典籍」；**变更说明也勿写典籍名**
+20. **WorkBuddy 的 safe-delete（genie-trash）有 bug**：删文件报「Some operations were aborted」，os.remove/unlink 被拦截——用 bash `rm -f` 或 Python `os.remove`（绕过 sitecustomize shim）可删；旧 ZIP 无法覆盖时输出新文件名
+21. **SKILL.md 版本被 SkillHub 归一化**：v1.2.1 在平台显示 v1.0.0，不影响功能，无需纠结
+22. **SkillHub 审核看的是 ZIP 内根目录 SKILL.md，不是项目源 skill/SKILL.md**：打包目录根 SKILL.md 与项目源是两个副本，改 SKILL.md 必须 `cp skill/SKILL.md 打包目录/SKILL.md`（根）**且** `打包目录/skill/SKILL.md`（子目录）——漏同步根目录会导致审核扫到旧版（「涉政」反复的根源）
+23. **SkillHub 对命理/玄学类内容审核严格**（典籍名可触发「内容涉政」误判）：规避 = SKILL.md 不写具体典籍名，用「古代命理典籍」；变更说明同样不写
+24. **ClawHub 是 SkillHub 之外的「免审核」发布通道**：OpenClaw 官方市场（clawhub.ai，中文镜像 mirror-cn.clawhub.com），无内容审核（可信/可疑标注制），发布即公开可见；上传用完整版 ZIP（可含 LICENSE）；与腾讯 SkillHub（skillhub.tencent.com）是**两个不同平台**，注意区分
+25. **`git reset --hard` 会丢 untracked 文件**（如 assets/screenshots/final/ 三张截图、SkillHub发布最终指引.md）：发布物归档后记得重新复制；乱操作后回滚用 reset 但先 `git stash`/备份 untracked
+
+### 通用新增（2026-08-17，双项目协作/规则库）
+26. **`parseItem()` 返回 `[月,日,时,分]`，不含年份**（年份来自 `JIEQI.data` 的 key）：写节气相关新函数时，`new Date(yy, p[0]-1, p[1], p[2], p[3])` 才是正确构造；把 p[0] 当年份会得 Invalid Date → `getTime()=NaN` → 差值 NaN → 条件静默不触发（输入侧节气提示曾踩，静默失效无报错）
+27. **Python 改 JSON：`rules=[r for r in ...]` 生成新列表后必须回写 `data['rules']=rules`**：直接 `json.dump(data)` 写的是旧引用，修改静默丢失（断语库扩充曾两次"改了没生效"，检查落盘用重新 load 验证条数）
+28. **`matchRules` 神煞键只认 `SHENSHA` 表内 24 项**：空亡（实为 `ctx.kongWang`）/咸池/元辰/天喜/魁罡/太极贵人/福星贵人/国印贵人/文昌贵人（表内叫"文昌"）均**不在表内**，`{神煞:"X"}` 条件永不命中（既有 9+ 条旧规则中招）；`evalState` 的"为喜用/为忌神"必须带 `位置:"日支"`、"为用神有力"必须带 `十神` 键，否则返回 false 静默失效
+29. **双项目 git 边界**：bazi-project 与 bazi-app 分属两个工作区/两个对话，本仓库只负责引擎变更的「拷贝交付」（`cp engine/engine.dist.js ../bazi-app/web/`），**commit/push 一律留给 bazi-app 对话**；引擎变更必须 bump 版本 + 记入 `docs/ENGINE-CHANGES.md`（bazi-app 对话据此核对 MD5 对齐）
 
 ---
 
@@ -223,7 +224,7 @@
 - 打包目录：`C:\Users\34743\.workbuddy\skills\bazi-engine`
 - 构建命令：`python tools/build_ui.py`（输出 `ui/index.html` + `engine/engine.dist.js`）
 - **发布包命令：`python tools/build_release_zip.py`**（输出 `bazi-engine-v1.2.1.zip`，排除 LICENSE/LICENSE-DATA/README.en.md，文件在 ZIP 根）
-- 回归命令：`node tools/test_engine.js`（独立引擎库）+ `node tools/verify_ux_e2e.js`（其余 8 套同理：test_ui / test_dst / test_liuri_v2 / test_liuyue_v2 / test_eval_state / test_p1_fixes / verify_sleep_rules / verify_edu_rules）
+- 回归命令（13 套，全部必须 PASS）：`node tools/test_engine.js` + `node tools/test_lunar.js` + `node tools/test_ui.js` + `node tools/test_eval_state.js` + `node tools/test_p1_fixes.js` + `node tools/verify_sleep_rules.js` + `node tools/verify_ux_e2e.js` + `node tools/test_dst.js` + `node tools/test_liuri_v2.js` + `node tools/test_liuyue_v2.js` + `node tools/verify_edu_rules.js` + `node tools/test_xiyong.js` + `node tools/check_conflicts.js`；断语库维护另用 `audit_hit_distribution.js`（命中分布）
 - 同步命令：文件 cp 到打包目录后 md5sum 校验（README.md / README.en.md / SKILL.md / tools/build_ui.py / ui/index.html / tools/各测试脚本）
 - 命名约定：对外统一 "bazi-engine"（原名 bazi-master 因 SkillHub 同名竞品已弃用），个人项目口径，不挂钩魅可
 - 发布文档：`SkillHub-Submission-Kit.md`（提交母版）+ `SkillHub发布最终指引.md`（本次填表指引）+ `验收与截图清单_3案例.md`（回归验收模板）
