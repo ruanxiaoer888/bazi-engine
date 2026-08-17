@@ -24,10 +24,10 @@
 - **断语库**：`kb/04-rules-db/rules.json` — **504 条**（六亲30/流年30/流月20/流日5/合婚20 等），每条含 `suggestion` 建议字段
 - **UI**：`ui/index.html` 单文件离线，**零外部依赖**（无 Google Fonts），墨底 + 古铜金高端商务风，壹~玖中文序号徽章，内置 206 年节气
 - **引擎**：`engine/engine.dist.js`（189KB，UMD 双端，含 getRemedy/yongShenChong/农历模块）
-- **发布状态**：**ClawHub 已发布**（clawhub.ai/ruanxiaoer888/bazi-engine，公开可装）+ **SkillHub 申诉中**（被误判"涉政"→ 已清典籍名 + 修 ZIP 根 SKILL.md 同步，重提后再次被拒，已申诉 1/3 次）+ GitHub 开源
+- **发布状态**：**ClawHub 双版本已发布**（v1.0.0 手动 ZIP 版 + **v1.2.1 GitHub 自动同步版**——已绑定 `ruanxiaoer888/bazi-engine` 仓库，git push 后 ClawHub 自动拉新版本，无需手动上传）+ **SkillHub 申诉中**（被误判"涉政"→ 已清 SKILL.md/README.md 典籍名 + 修 ZIP 根 SKILL.md 同步，已申诉 1/3 次等回复；不通过则换 Coze 扣子/Dify）+ GitHub 开源
 - **真人验收**：✅ 已完成（3 案例全部通过，截图 `assets/screenshots/final/`）
 - **阻塞项**：**无技术阻塞**。唯一等待是 SkillHub 申诉回复（1~3 工作日）与 ClawHub Needs review 转正
-- **GitHub**：已推送，HEAD=`30d24b0`（2026-08-16 21:08），远程一致
+- **GitHub**：已推送，HEAD=`919656b`（2026-08-17），远程一致
 
 ## 3. 技术架构
 
