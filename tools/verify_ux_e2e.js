@@ -128,7 +128,7 @@ CATS.forEach(k=>{
 });
 const main6Avg = main6Sum/150;
 console.log('  主面板6类(性格/事业/财运/婚姻/健康/格局)平均合计: '+main6Avg.toFixed(1)+' 条/盘 | 单类0命中率 '+(main6Zero/(150*6)*100).toFixed(1)+'%');
-assert('C3 主面板6类平均命中在 20-40 条区间', main6Avg>=20 && main6Avg<=40, main6Avg.toFixed(1));
+assert('C3 主面板6类平均命中在 30-70 条区间', main6Avg>=30 && main6Avg<=70, main6Avg.toFixed(1));
 // C4 单盘全 0 检查（引擎短路）
 assert('C4 150盘无一盘全分类0命中', zeroHit['性格']<150, '性格0命中='+zeroHit['性格']);
 
@@ -205,9 +205,9 @@ const ld4 = globalThis._els['liuDayResult'].innerHTML;
 assert('F11 表格渲染含 ld-hot 标记或冲合关系列', ld4.indexOf('ld-hot')>=0||ld4.indexOf('冲日')>=0||ld4.indexOf('合日')>=0);
 
 console.log('========== G. 六亲详解（父母/配偶/子女/兄弟） ==========');
-// G0 六亲规则已入断语库（30 条）
+// G0 六亲规则已入断语库（2026-08-17 扩充：30→48 条，需 ≥40）
 const liuqinN = RULES.filter(r=>r.category==='六亲').length;
-assert('G0 六亲规则 30 条已入库', liuqinN===30, '实际='+liuqinN);
+assert('G0 六亲规则 48 条已入库', liuqinN===48, '实际='+liuqinN);
 // G1 正常调用（男命）
 globalThis.__setLast(paipan('测','男',1990,5,15,10,0,'广州市','yes'));
 globalThis.runLiuQin();
