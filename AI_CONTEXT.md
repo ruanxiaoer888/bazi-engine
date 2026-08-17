@@ -21,6 +21,7 @@
 - **农历模块**：引擎层新增 `lunarToSolar`/`leapMonth`/`leapDays`/`monthDays`/`lunarDayName` + `LUNAR_INFO` 数据表（1900-2099），与 bazi-app C 端实现完全一致
 - **农历/阳历双模式切换**：主表单 + 合婚 A/B 各自独立（`switchCal`/`switchHeCal`），农历输入自动 `lunarToSolar` 转公历
 - **合婚布局**：甲乙上下双区块（移除左右双栏），每人独立「是否校正真太阳时」下拉框（`hTruesunA/B`）；`readHe` 时段模式强制 `truesun:'no'`
+- **输入侧提示语**（2026-08-17）：主表单 + 合婚 A/B 填时间即时提示——晚子时（23 点，时柱按次日）+ 节气临界（距十二节交节 ≤6h 提示年/月柱切换敏感点，立春特判；农历模式跳过）
 - **断语库**：`kb/04-rules-db/rules.json` — **504 条**（六亲30/流年30/流月20/流日5/合婚20 等），每条含 `suggestion` 建议字段
 - **UI**：`ui/index.html` 单文件离线，**零外部依赖**（无 Google Fonts），墨底 + 古铜金高端商务风，壹~玖中文序号徽章，内置 206 年节气
 - **引擎**：`engine/engine.dist.js`（189KB，UMD 双端，含 getRemedy/yongShenChong/农历模块）
@@ -84,7 +85,7 @@ const dayName = BaziEngine.lunarDayName(15)                // '十五'
 1. **[确认] ClawHub SkillSpector 扫描**：Needs review → Published 即完成海外发布闭环
 2. **[协作] bazi-app C 端**：引擎已同步（bazi-app commit `e981ac9`），C 端部署/虎皮椒开通在另一个对话推进
 3. **[后置] 断语库扩充 504→800+**（复用 `drafts/` 取材方法论）→ 发布后迭代
-4. **[后置] 晚子时/节气临界**输入侧**提示语**（已知缺口，非阻塞；输出侧已有提示）
+4. ✅ ~~晚子时/节气临界**输入侧**提示语~~（已完成 `53a3bd2`，2026-08-17）
 5. **[后置] MCP/API 化**（P2 路线图）
 6. **[后置] 商标注册**（41/42 必选 + 9/45 防御，注册前代理检索规避「本初子午」近似）
 
@@ -119,6 +120,7 @@ const dayName = BaziEngine.lunarDayName(15)                // '十五'
 - **Google Fonts `@import` 外链违反"单文件零外部依赖"承诺**，已删除，勿加回
 - **SKILL.md 实际位于 `skill/SKILL.md`（非项目根）**：同步打包时第一版 `cp` 失败，用正确相对路径
 - **断语库 JSON 每改必验**：`python json.load` 校验合法性 + 统计规则数，再重建 UI
+- **`parseItem()` 返回 `[月,日,时,分]`（无年份，年份来自 `JIEQI.data` 的 key）**：写节气新函数用 `new Date(yy, p[0]-1, p[1], p[2], p[3])`；把 p[0] 当年份 → Invalid Date → diff=NaN → 条件静默失效（2026-08-17 输入侧节气提示曾踩，静默无报错）
 
 ### 流程
 - **任务账目会滞留**：完成一项立即更新任务状态，发布前对照 132 项清单核对
