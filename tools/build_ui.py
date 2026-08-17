@@ -625,6 +625,7 @@ TPL = r"""<!DOCTYPE html>
               <option value="亥">亥时（21:00-23:00）</option>
             </select>
           </div>
+          <div id="hTimeHintA" class="time-hint"></div>
         </div>
       </div>
       <div class="row">
@@ -683,6 +684,7 @@ TPL = r"""<!DOCTYPE html>
               <option value="亥">亥时（21:00-23:00）</option>
             </select>
           </div>
+          <div id="hTimeHintB" class="time-hint"></div>
         </div>
       </div>
       <div class="row">
@@ -1664,6 +1666,15 @@ function initSelects(){
   // 2026-08-16：liuDayun 的监听移到 renderResult 末尾（sel.onchange），避免空 select 监听不可靠
   const liuMonthYearEl=document.getElementById('liuMonthYear');
   if(liuMonthYearEl && liuMonthYearEl.addEventListener) liuMonthYearEl.addEventListener('change', function(){ if(LIU_YUE_OPEN){ LIU_YUE_OPEN=false; runLiuYue(); } });
+  // 2026-08-17：输入侧提示（晚子时/节气临界）——主表单 + 合婚 A/B 时间/日期变化时刷新
+  ['hour','minute','year','month','day'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el && el.addEventListener) el.addEventListener('change', updateTimeHint);
+  });
+  ['hHourA','hMinuteA','hYearA','hMonthA','hDayA','hHourB','hMinuteB','hYearB','hMonthB','hDayB'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el && el.addEventListener) el.addEventListener('change', function(){ updateHeTimeHint(id.slice(-1)); });
+  });
 }
 initSelects();
 toggleTimeMode();
@@ -1675,18 +1686,85 @@ function toggleTimeMode(){
   const hourEl=document.getElementById('hour');
   const minuteEl=document.getElementById('minute');
   const sc=document.getElementById('shichen');
-  const hint=document.getElementById('timeHint');
   if(mode==='exact'){
     hourEl.classList.remove('hidden');
     minuteEl.classList.remove('hidden');
     sc.classList.add('hidden');
-    if(hint) hint.textContent='填写出生钟表时间，系统将自动判断夏令时与真太阳时校正。';
   } else {
     hourEl.classList.add('hidden');
     minuteEl.classList.add('hidden');
     sc.classList.remove('hidden');
-    if(hint) hint.textContent='时辰本身即为真太阳时时段，系统将跳过夏令时与真太阳时校正。适用于按太阳/农活/作息估算的时间（如"早上9点多"→巳时）。';
   }
+  updateTimeHint();
+}
+
+// ===== 输入侧提示：晚子时 + 节气临界（2026-08-17）=====
+// 在 y±1 的十二节中找与出生时刻最近的交节时刻（parseItem 返回 [月,日,时,分]，年份取循环变量 yy）
+function findNearestJie(y,m,d,hh,mm){
+  const born=new Date(y,m-1,d,hh||0,mm||0).getTime();
+  let best=null;
+  for(let yy=y-1;yy<=y+1;yy++){
+    const arr=JIEQI.data[String(yy)];
+    if(!arr) continue;
+    JIE_ORDER.forEach((name,i)=>{
+      const p=parseItem(arr[i]);
+      const t=new Date(yy,p[0]-1,p[1],p[2],p[3]).getTime();
+      const diff=Math.abs(born-t);
+      if(!best||diff<best.diff) best={name,when:p,yy,diff,isLiChun:(name==='立春')};
+    });
+  }
+  return best;
+}
+function fmtJieTime(p,yy){ return yy+'-'+String(p[0]).padStart(2,'0')+'-'+String(p[1]).padStart(2,'0')+' '+String(p[2]).padStart(2,'0')+':'+String(p[3]).padStart(2,'0'); }
+// 节气临界提示文案：出生时刻距某节交节 ≤6 小时时返回提示，否则空串
+function jieWarnText(y,m,d,hh,mm){
+  if(!y||!m||!d||Number.isNaN(hh)) return '';
+  const near=findNearestJie(y,m,d,hh,mm);
+  if(near&&near.diff<=6*3600000){
+    return '出生时刻临近「'+near.name+'」交节（'+fmtJieTime(near.when,near.yy)+'，'+(near.isLiChun?'年柱与月柱':'月柱')+'在此刻切换），请确认出生钟表时间准确。';
+  }
+  return '';
+}
+// 主表单提示：模式说明 + 晚子时 + 节气临界（农历模式跳过节气提示，农历日期不映射交节时刻）
+function updateTimeHint(){
+  const hint=document.getElementById('timeHint');
+  if(!hint) return;
+  const mode=document.getElementById('timeMode').value;
+  let base=mode==='exact'
+    ? '填写出生钟表时间，系统将自动判断夏令时与真太阳时校正。'
+    : '时辰本身即为真太阳时时段，系统将跳过夏令时与真太阳时校正。适用于按太阳/农活/作息估算的时间（如"早上9点多"→巳时）。';
+  const warns=[];
+  if(mode==='exact'){
+    const h=+document.getElementById('hour').value;
+    const mm=+document.getElementById('minute').value||0;
+    if(h===23) warns.push('晚子时（23:00-23:59）：时柱按<b>次日</b>干支推算，请确认出生钟表时间无误。');
+    if(calMode!=='lunar'){
+      const jt=jieWarnText(+document.getElementById('year').value,+document.getElementById('month').value,+document.getElementById('day').value,h,mm);
+      if(jt) warns.push(jt);
+    }
+  }
+  hint.innerHTML=base+(warns.length?('<div style="color:#e05555;margin-top:2px">'+warns.join('<br>')+'</div>'):'');
+}
+// 合婚 A/B 提示（与主表单逻辑一致，读 h 前缀 id）
+function updateHeTimeHint(s){
+  const hint=document.getElementById('hTimeHint'+s);
+  if(!hint) return;
+  const mode=document.getElementById('hTimeMode'+s).value;
+  let base=mode==='exact'
+    ? '填写出生钟表时间，系统将自动判断夏令时与真太阳时校正。'
+    : '时辰本身即为真太阳时时段，系统将跳过夏令时与真太阳时校正。';
+  const warns=[];
+  if(mode==='exact'){
+    const h=+document.getElementById('hHour'+s).value;
+    const mm=+document.getElementById('hMinute'+s).value||0;
+    if(h===23) warns.push('晚子时（23:00-23:59）：时柱按<b>次日</b>干支推算，请确认出生钟表时间无误。');
+    const lunarMode=(s==='A'?hCalModeA:hCalModeB)==='lunar';
+    if(!lunarMode){
+      const jt=jieWarnText(+document.getElementById('hYear'+s).value,+document.getElementById('hMonth'+s).value,+document.getElementById('hDay'+s).value,h,mm);
+      if(jt) warns.push(jt);
+    }
+  }
+  hint.innerHTML=base+(warns.length?('<div style="color:#e05555;margin-top:2px">'+warns.join('<br>')+'</div>'):'');
 }
 
 function generate(){
@@ -2604,6 +2682,7 @@ function toggleHeTimeMode(s){
   const sc=document.getElementById('hShichen'+s);
   if(mode==='exact'){ hourEl.classList.remove('hidden'); minuteEl.classList.remove('hidden'); sc.classList.add('hidden'); }
   else { hourEl.classList.add('hidden'); minuteEl.classList.add('hidden'); sc.classList.remove('hidden'); }
+  updateHeTimeHint(s);
 }
 
 function runHe(){
