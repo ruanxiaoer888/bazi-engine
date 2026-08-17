@@ -12,7 +12,7 @@
 - **定位**：B 端专业四柱八字排盘引擎底座，面向**命理师**，开源（MIT），可嵌入/二次开发
 - **一句话**：输入出生信息 → 四柱八字 + 大运流年 + 流日/流月/流年深度 + 六亲详解 + 合婚评分，全程标注古籍出处
 - **项目性质**：Michael 个人独立研发项目，**与魅可科技（Meke）业务无任何关联**，推广/发布一律按个人项目口径
-- **双轨关系**：bazi-engine（B 端引擎底座）↔ 另仓 `bazi-app`（C 端「算了么」变现），引擎层共用，UI 各自独立
+- **双轨关系**：bazi-engine（B 端引擎底座）↔ 另仓 `bazi-app`（C 端「本初」变现），引擎层共用，UI 各自独立
 
 ## 2. 当前阶段（2026-08-16 21:37）
 
@@ -147,10 +147,10 @@ cp engine/engine.dist.js ../bazi-app/web/engine.dist.js
 
 ## 9. 相关仓库
 
-- **bazi-app**（C 端「算了么」）：`github.com/ruanxiaoer888/bazi-app`（Private）
+- **bazi-app**（C 端「本初」，原「算了么」因品牌冲突已改名）：`github.com/ruanxiaoer888/bazi-app`（Private）
   - 本地路径：`E:\michael\workBuddy\bazi-app`
-  - 状态：支付链路（虎皮椒 mock）+ 兑换码解锁已完成；阻塞在虎皮椒新通道未开通、未部署
-  - 冷启动文档：该仓 `AI_CONTEXT.md`（注意其第 9 节对 bazi-project 的状态描述以本文件为准）
+  - 状态：报告功能（25+ 板块）+ 海报分享 + 支付链路（虎皮椒 mock）+ 兑换码解锁均已完成；**待部署上线**（等 SSH+DNS），阻塞在虎皮椒新通道未开通
+  - 冷启动文档：该仓 `AI_CONTEXT.md` + `HANDOFF.md`（注意其第 9 节对 bazi-project 的状态描述以本文件为准）
 
 ---
 
