@@ -39,6 +39,7 @@
 | 引擎 | `engine/engine.dist.js` | 构建副产物，**不要手改**。UMD：浏览器 `window.BaziEngine` / Node `require` |
 | 知识库 | `kb/` | 01-basics / 02-rules / 03-classics / 04-rules-db / 05-reference |
 | 打包 | `~/.workbuddy/skills/bazi-engine/` | SkillHub 发布用打包目录，与源码 MD5 同步校验 |
+| 引擎变更记录 | `docs/ENGINE-CHANGES.md` | 权威记录（版本 + 变更 + dist MD5），bazi-app 对话据此对齐；引擎变更必须 bump 版本并追加记录 |
 | 发布材料 | `发布物料.md` + `SkillHub-Submission-Kit.md` | 卖点/图标提示词/示例对话/合规声明 + 提交包模板 |
 
 ### 引擎抽层机制（重要，commit `807ab4c`）
