@@ -226,6 +226,7 @@
 - 同步命令：文件 cp 到打包目录后 md5sum 校验（README.md / README.en.md / SKILL.md / tools/build_ui.py / ui/index.html / tools/各测试脚本）
 - 命名约定：对外统一 "bazi-engine"（原名 bazi-master 因 SkillHub 同名竞品已弃用），个人项目口径，不挂钩魅可
 - 发布文档：`SkillHub-Submission-Kit.md`（提交母版）+ `SkillHub发布最终指引.md`（本次填表指引）+ `验收与截图清单_3案例.md`（回归验收模板）
+- **引擎变更记录：`docs/ENGINE-CHANGES.md`**（权威记录：每次引擎变更 bump 版本 + 记 dist MD5，供 bazi-app 对话核对；2026-08-17 建立，首条 v1.2.1）
 - 历史文档：`docs/history/`（第七轮验收 / 发布物料 / 竞对分析，历史快照）
 - 截图素材：`assets/screenshots/final/`（3 张验收通过截图：01_paipan / 02_liuri / 03_hehun）
 - 发布平台：**ClawHub**（已发布，clawhub.ai/skills，npx clawhub@latest install bazi-engine）+ **SkillHub**（腾讯，申诉中）+ **GitHub**（开源仓库）
