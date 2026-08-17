@@ -24,7 +24,7 @@ Same birth data in, same chart out — every single time.
 - **Element remediation (五行补救)**: favorable gods, seasonal conditioning gods (穷通宝鉴), missing-element suggestions
 - **24 auspicious/inauspicious stars (神煞)** with hit-based display
 - **Three palaces (三式宫位)**: Tai Yuan, Ming Gong, Shen Gong
-- **Traceable readings**: 504 rules, each citing its classical source (三命通会 / 渊海子平 / 滴天髓 / 子平真诠 / 穷通宝鉴) plus a practical suggestion
+- **Traceable readings**: 801 rules, each citing its classical source (三命通会 / 渊海子平 / 滴天髓 / 子平真诠 / 穷通宝鉴) plus a practical suggestion
 
 ## Quick Start
 
@@ -52,7 +52,7 @@ Same birth data in, same chart out — every single time.
 
 ## Technical Notes
 
-- **Runtime**: `ui/index.html` — single file, zero external dependencies, 206 years of solar-term data + 504-rule database inlined
+- **Runtime**: `ui/index.html` — single file, zero external dependencies, 206 years of solar-term data + 801-rule database inlined
 - **Build**: `tools/build_ui.py` (Python) inlines solar terms + rules into the UI
 - **Verification**: 5 regression suites (`tools/test_ui.js` / `test_eval_state.js` / `test_p1_fixes.js` / `verify_sleep_rules.js` / `verify_ux_e2e.js`) covering input tolerance, boundary cases (incl. the 1895 data-start-year edge), report quality, output stability, and end-to-end user flows
 - **Quality tooling**: `audit_hit_distribution.js` (hit-distribution audit), `check_dup_hits.js` (duplicate-hit detection), `check_conflicts.js` (contradictory-rule detection)
@@ -63,7 +63,7 @@ Same birth data in, same chart out — every single time.
 skill/SKILL.md           Skill definition (guided interaction + analysis workflow)
 ui/index.html            Single-file offline UI
 tools/                   Build / test / quality-audit tooling
-kb/          Classical texts + rule handbooks + 504-rule database
+kb/          Classical texts + rule handbooks + 801-rule database
 ```
 
 ## Disclaimer
