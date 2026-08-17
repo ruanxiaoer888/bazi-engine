@@ -1,8 +1,8 @@
 # bazi-engine 八字命理 Skill · 项目交接文档（HANDOFF）
 
-> 更新时间：2026-08-17 19:3x · 当前版本 **v1.2.1**（标签未 bump，实际已含：农历/阳历双模式切换、合婚上下双区块布局、合婚时段模式 truesun 修复 + 测试脚本 toggle 适配、xiYong ratio 细分、五行补救文案强/弱区分、太极 logo、**输入侧晚子时/节气临界提示语、断语库 504→801**）
+> 更新时间：2026-08-17 19:48 · 当前版本 **v1.2.1**（标签未 bump，实际已含：农历/阳历双模式切换、合婚上下双区块布局、合婚时段模式 truesun 修复 + 测试脚本 toggle 适配、xiYong ratio 细分、五行补救文案强/弱区分、太极 logo、**输入侧晚子时/节气临界提示语、断语库 504→801**）
 > 项目性质：**Michael 个人独立研发项目**，与魅可科技（Meke）业务无任何关联，推广/发布按个人项目口径。
-> 发布状态：**双平台**——① SkillHub（腾讯）「安全审核中」→ 审核未通过（误判涉政）→ 已申诉（1/3 次），等待回复；② ClawHub（OpenClaw 官方市场）**已发布**（Needs review + SkillSpector by NVIDIA 扫描中，公开可见可安装）
+> 发布状态：✅ **双平台均已上架**（2026-08-17 确认）——① SkillHub（腾讯）**已发布**（「生态杀手」分类，申诉通过；平台归一化显示 V1.0.0，见坑 #15）；② ClawHub（OpenClaw 官方市场）**已发布**（Productivity 分类，SkillSpector 扫描通过转 Published，v1.2.1 GitHub 自动同步版）
 > **给 Codex / 新会话**：先读同目录 `AI_CONTEXT.md`（冷启动文档），再读本文件。
 
 ---
@@ -58,7 +58,7 @@
 - 引擎层影响：`yongShenChong` 在引擎标记区内（1196-1448），`engine.dist.js` 188KB → 189KB，**已同步到 bazi-app**（md5 一致）
 - 验收样本 1995-05-15 修复后：xiYong=`水、金、土`（3 个），jiYong=`火、木`（2 个）
 
-### ✅ 2026-08-16 真人验收 + 发布（已完成，SkillHub 审核中）
+### ✅ 2026-08-16 真人验收 + 发布（已完成，双平台 2026-08-17 均已上架）
 
 **真人验收（3 案例全部通过，截图存档 `assets/screenshots/final/`）**：
 1. **排盘总览**：男 / 1990-05-15 / 10:00 / 广州 / 真太阳时=是 → 四柱庚辰金边 + 夏令时/真太阳时双提示 + 喜用火木水 + 命局偏强文案
@@ -75,8 +75,8 @@
 - 打包工具：`tools/build_release_zip.py`（永久脚本，每次发版跑一次）
 - **SKILL.md 清典籍名**（穷通宝鉴/子平真诠/滴天髓/渊海子平/千里命稿/神峰通考 → 「古代命理典籍」）——SkillHub 误判「内容涉政」，commit `de631a3`
 - **关键坑**：SkillHub 审核看的是 **ZIP 里根目录 SKILL.md**，不是项目源 `skill/SKILL.md`——之前只同步了打包目录 `skill/` 子目录漏了根，导致反复「涉政」。已 cp 同步 + 重打 ZIP 验证（ZIP 内根 SKILL.md 无典籍名）
-- SkillHub 时间线：20:09 提交「安全审核中」→ 审核未通过（内容涉政）→ 20:17 提交申诉（1/3 次）→ 等回复（1~3 工作日）
-- **ClawHub 发布成功**（21:04）：clawhub.ai/skills 公开可见，状态「Needs review」（SkillSpector by NVIDIA 自动扫描待出），一键安装 `npx clawhub@latest install bazi-engine`
+- SkillHub 时间线：20:09 提交「安全审核中」→ 审核未通过（内容涉政）→ 20:17 提交申诉（1/3 次）→ **2026-08-17 申诉通过、已上架**（「生态杀手」分类，平台归一化显示 V1.0.0 见坑 #15）
+- **ClawHub 发布成功**（21:04）：clawhub.ai/skills 公开可见，一键安装 `npx clawhub@latest install bazi-engine`；**2026-08-17 SkillSpector 扫描通过转 Published**（Productivity 分类，v1.2.1 GitHub 自动同步版）
 
 ### 发布前（就差这两步）
 1. **真人验收**（需 Michael 亲手操作，约 10 分钟）
@@ -152,26 +152,27 @@
 
 ---
 
-## 三、卡住的问题（当前：SkillHub 申诉中，ClawHub 已通）
+## 三、卡住的问题（当前：无阻塞，双平台已上架）
 
 - ✅ 全部 132 项任务已清零
 - ✅ 真人验收 3 案例全部通过
-- ✅ **ClawHub 已发布**（Needs review 待 SkillSpector 扫描结果，一般几分钟~几小时转 Published）
-- 🔄 **SkillHub 审核被拒**（误判「内容涉政」）：已清理典籍名 + 修复 ZIP 根 SKILL.md 不同步 + 提交申诉（1/3 次），等官方回复（1~3 个工作日）；若申诉失败可换 Coze 扣子/Dify
-- 🔜 无技术性阻塞；晚子时提示语为已知非阻塞缺口
+- ✅ **ClawHub 已发布**（SkillSpector 扫描通过转 Published，Productivity 分类）
+- ✅ **SkillHub 已发布**（2026-08-17 申诉通过，误判「内容涉政」已纠正；「生态杀手」分类）
+- ✅ 晚子时/节气临界输入侧提示语已完成（`53a3bd2`）；断语库 504→801 已完成（`bd7f5ab`）
+- 🔜 无技术性阻塞，无发布阻塞
 
 ---
 
 ## 四、下一步计划（按优先级）
 
-0. **[等待] SkillHub 申诉回复**（1~3 工作日）→ 通过则上架；不通过可换 Coze 扣子（国内流量最大）
-1. **[确认] ClawHub SkillSpector 扫描结果** → 转「Published」即完成海外发布闭环
-2. **[推荐] bazi-app C 端全流程闭环** → 引擎已同步（含 801 条断语库），检查农历输入 → 排盘 → 虎皮椒支付 → 兑换码 → 报告生成全链路
+0. ✅ ~~SkillHub 申诉~~（2026-08-17 通过并上架）
+1. ✅ ~~ClawHub SkillSpector 扫描~~（已转 Published，海外发布闭环完成）
+2. **[推荐] bazi-app C 端全流程闭环** → 引擎已同步（含 801 条断语库），检查农历输入 → 排盘 → 虎皮椒支付 → 兑换码 → 报告生成全链路（bazi-app 独立对话推进，读 `docs/ENGINE-CHANGES.md` 对齐）
 3. ✅ ~~断语库扩充 504→800+~~（已完成 `bd7f5ab`，801 条，2026-08-17）
 4. ✅ ~~晚子时/节气临界**输入侧**提示语~~（已完成 `53a3bd2`，2026-08-17；输出侧原有提示保留）
-5. **[后置] 断语库 801→1000+**（路线图下一档；下次扩充建议先清 HANDOFF 记录的 ~9 条表外神煞旧死规则）
+5. **[后置] 断语库 801→1000+**（路线图下一档；下次扩充建议先清 ~9 条表外神煞旧死规则，见 §一 遗留）
 6. **[后置] MCP/API 化**（P2 路线图）
-6. **[后置] 商标注册**（41/42 必选 + 9/45 防御，注册前代理检索规避「本初子午」近似）
+7. **[后置] 商标注册**（41/42 必选 + 9/45 防御，注册前代理检索规避「本初子午」近似）
 
 ---
 
@@ -229,4 +230,4 @@
 - **引擎变更记录：`docs/ENGINE-CHANGES.md`**（权威记录：每次引擎变更 bump 版本 + 记 dist MD5，供 bazi-app 对话核对；2026-08-17 建立，首条 v1.2.1）
 - 历史文档：`docs/history/`（第七轮验收 / 发布物料 / 竞对分析，历史快照）
 - 截图素材：`assets/screenshots/final/`（3 张验收通过截图：01_paipan / 02_liuri / 03_hehun）
-- 发布平台：**ClawHub**（已发布，clawhub.ai/skills，npx clawhub@latest install bazi-engine）+ **SkillHub**（腾讯，申诉中）+ **GitHub**（开源仓库）
+- 发布平台：**SkillHub**（腾讯，已上架，「生态杀手」分类）+ **ClawHub**（已上架，clawhub.ai/skills，npx clawhub@latest install bazi-engine）+ **GitHub**（开源仓库）
