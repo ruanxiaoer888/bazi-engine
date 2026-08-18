@@ -51,7 +51,7 @@ assert('matchLiuDay 为函数', typeof BaziEngine.matchLiuDay==='function');
 console.log('== 时辰映射 & 数据表 ==');
 assert('SHI_CHEN_MAP 子时→0:00', BaziEngine.SHI_CHEN_MAP['子'][0]===0);
 assert('SHI_CHEN_MAP 亥时→22:00', BaziEngine.SHI_CHEN_MAP['亥'][0]===22);
-assert('RULES 共 813 条', BaziEngine.RULES.length===813, 'len='+BaziEngine.RULES.length);
+assert('RULES 共 853 条', BaziEngine.RULES.length===853, 'len='+BaziEngine.RULES.length);
 assert('JIEQI 覆盖 206 年', Object.keys(BaziEngine.JIEQI.data).length===206, 'len='+Object.keys(BaziEngine.JIEQI.data).length);
 assert('SHENSHA 24 项', BaziEngine.SHENSHA.length===24);
 assert('NAYIN 60 条', Object.keys(BaziEngine.NAYIN).length===60);

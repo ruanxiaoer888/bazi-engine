@@ -9834,6 +9834,513 @@
    "source": "《三命通会》孤辰 / 《渊海子平》十神类象",
    "confidence": "中",
    "suggestion": "享受独处，保持适度社交"
+  },
+  {
+   "id": "marriage_rz_m_偏印",
+   "category": "婚姻",
+   "condition": {
+    "性别": "男",
+    "十神": "偏印",
+    "位置": "日支"
+   },
+   "conclusion": "男命日支坐偏印，配偶聪明内敛、心思细腻，婚后宜多沟通以免误会积压。",
+   "source": "《三命通会》论六亲 / 《渊海子平》十神类象",
+   "confidence": "中",
+   "suggestion": "有话直说，忌猜心"
+  },
+  {
+   "id": "marriage_rz_m_偏财",
+   "category": "婚姻",
+   "condition": {
+    "性别": "男",
+    "十神": "偏财",
+    "位置": "日支"
+   },
+   "conclusion": "男命日支坐偏财，配偶能干会理财、人缘佳，感情需用心经营方长久。",
+   "source": "《三命通会》论六亲 / 《渊海子平》十神类象",
+   "confidence": "中",
+   "suggestion": "信任伴侣的财务安排，培养共同爱好"
+  },
+  {
+   "id": "marriage_rz_m_正官",
+   "category": "婚姻",
+   "condition": {
+    "性别": "男",
+    "十神": "正官",
+    "位置": "日支"
+   },
+   "conclusion": "男命日支坐正官，配偶端正自律、重规矩，婚后约束较多，宜相互体谅。",
+   "source": "《三命通会》论六亲 / 《渊海子平》十神类象",
+   "confidence": "中",
+   "suggestion": "尊重对方的原则，主动分担责任"
+  },
+  {
+   "id": "marriage_rz_f_偏印",
+   "category": "婚姻",
+   "condition": {
+    "性别": "女",
+    "十神": "偏印",
+    "位置": "日支"
+   },
+   "conclusion": "女命日支坐偏印，配偶内敛聪慧、想法独特，宜给彼此独立空间。",
+   "source": "《三命通会》论六亲 / 《渊海子平》十神类象",
+   "confidence": "中",
+   "suggestion": "欣赏差异，保留个人爱好"
+  },
+  {
+   "id": "marriage_rz_f_偏财",
+   "category": "婚姻",
+   "condition": {
+    "性别": "女",
+    "十神": "偏财",
+    "位置": "日支"
+   },
+   "conclusion": "女命日支坐偏财，配偶务实能挣、交游广，财来财去，家庭需立财规。",
+   "source": "《三命通会》论六亲 / 《渊海子平》十神类象",
+   "confidence": "中",
+   "suggestion": "共同记账理财，建立家庭目标"
+  },
+  {
+   "id": "marriage_rz_f_正官",
+   "category": "婚姻",
+   "condition": {
+    "性别": "女",
+    "十神": "正官",
+    "位置": "日支"
+   },
+   "conclusion": "女命日支坐正官，配偶稳重有担当、讲原则，婚姻主正，宜相敬如宾。",
+   "source": "《三命通会》论六亲 / 《渊海子平》十神类象",
+   "confidence": "中",
+   "suggestion": "遇事商量着来，彼此给足面子"
+  },
+  {
+   "id": "marriage_日支坐桃花",
+   "category": "婚姻",
+   "condition": {
+    "位置": "日支",
+    "状态": "桃花"
+   },
+   "conclusion": "日支坐桃花（墙内桃花），配偶容貌气质佳、夫妻感情甜蜜，但亦主异性缘旺，需自律守心。",
+   "source": "《三命通会》桃花篇 / 神煞组合解读",
+   "confidence": "中",
+   "suggestion": "珍惜眼前人，社交场合把握分寸"
+  },
+  {
+   "id": "marriage_女_官星一位",
+   "category": "婚姻",
+   "condition": {
+    "性别": "女",
+    "十神": "正官",
+    "状态": "一位得时"
+   },
+   "conclusion": "女命正官一位得时，夫星清纯有根，婚姻专一和美，宜早定正缘。",
+   "source": "《渊海子平》论妇人总诀",
+   "confidence": "中",
+   "suggestion": "正缘期把握，勿三心二意"
+  },
+  {
+   "id": "marriage_男_财星一位",
+   "category": "婚姻",
+   "condition": {
+    "性别": "男",
+    "十神": "正财",
+    "状态": "一位得时"
+   },
+   "conclusion": "男命正财一位得时，妻星清正，婚姻专一，妻贤内助之象。",
+   "source": "《渊海子平》论正财",
+   "confidence": "中",
+   "suggestion": "对伴侣专一，家庭为重"
+  },
+  {
+   "id": "marriage_女_伤官有制",
+   "category": "婚姻",
+   "condition": {
+    "性别": "女",
+    "十神": "伤官",
+    "状态": "有制化"
+   },
+   "conclusion": "女命伤官有制化，才华外露但有度，婚恋关系平稳，能驭婚姻于从容。",
+   "source": "《渊海子平》论妇人总诀",
+   "confidence": "中",
+   "suggestion": "发挥才华同时顾全伴侣感受"
+  },
+  {
+   "id": "marriage_男_财官双美",
+   "category": "婚姻",
+   "condition": {
+    "性别": "男",
+    "组合": [
+     "正财",
+     "正官"
+    ]
+   },
+   "conclusion": "男命财官双透，妻星与夫权两全，婚姻事业相得益彰，妻助夫贵。",
+   "source": "《三命通会》财官论",
+   "confidence": "中",
+   "suggestion": "家庭事业平衡经营"
+  },
+  {
+   "id": "marriage_女_官印相生",
+   "category": "婚姻",
+   "condition": {
+    "性别": "女",
+    "组合": [
+     "正官",
+     "正印"
+    ]
+   },
+   "conclusion": "女命官印相生，夫星得印相护，婚姻得长辈祝福，夫荣妻贵。",
+   "source": "《三命通会》官印相生",
+   "confidence": "中",
+   "suggestion": "珍惜家庭长辈的祝福与支持"
+  },
+  {
+   "id": "marriage_男_妻星天乙",
+   "category": "婚姻",
+   "condition": {
+    "性别": "男",
+    "神煞": "天乙贵人",
+    "十神": "正财"
+   },
+   "conclusion": "男命妻星逢天乙贵人，配偶贵气有福、能帮夫解厄，婚后运势多受益。",
+   "source": "《三命通会》天乙贵人 / 六亲",
+   "confidence": "中",
+   "suggestion": "善待伴侣，贵人就在身边"
+  },
+  {
+   "id": "marriage_女_夫星天乙",
+   "category": "婚姻",
+   "condition": {
+    "性别": "女",
+    "神煞": "天乙贵人",
+    "十神": "正官"
+   },
+   "conclusion": "女命夫星逢天乙贵人，配偶有贵气、遇事有贵人相助，婚姻得庇护。",
+   "source": "《三命通会》天乙贵人 / 六亲",
+   "confidence": "中",
+   "suggestion": "遇事夫妻同心，外援自来"
+  },
+  {
+   "id": "marriage_男_财星驿马",
+   "category": "婚姻",
+   "condition": {
+    "性别": "男",
+    "神煞": "驿马",
+    "十神": "偏财"
+   },
+   "conclusion": "男命偏财逢驿马，姻缘多与走动、异地相关，或聚少离多，宜以信守维系。",
+   "source": "《三命通会》驿马 / 六亲",
+   "confidence": "中",
+   "suggestion": "异地相处重承诺与定期团聚"
+  },
+  {
+   "id": "marriage_女_夫星驿马",
+   "category": "婚姻",
+   "condition": {
+    "性别": "女",
+    "神煞": "驿马",
+    "十神": "七杀"
+   },
+   "conclusion": "女命七杀逢驿马，姻缘多走动聚散，易异地婚恋，感情需主动经营。",
+   "source": "《三命通会》驿马 / 六亲",
+   "confidence": "中",
+   "suggestion": "异地恋重沟通频率与共同规划"
+  },
+  {
+   "id": "marriage_女_桃花正官",
+   "category": "婚姻",
+   "condition": {
+    "性别": "女",
+    "神煞": "桃花",
+    "十神": "正官"
+   },
+   "conclusion": "女命桃花配正官，正缘桃花，魅力与稳重兼具，婚恋机会正当且易成正果。",
+   "source": "《三命通会》桃花 / 官星",
+   "confidence": "中",
+   "suggestion": "正缘出现时把握，忌挑花眼"
+  },
+  {
+   "id": "marriage_男_桃花劫财",
+   "category": "婚姻",
+   "condition": {
+    "性别": "男",
+    "神煞": "桃花",
+    "十神": "劫财"
+   },
+   "conclusion": "男命桃花配劫财，情财两处易失，防因情破财、防三角纠纷，宜自律。",
+   "source": "《三命通会》桃花 / 劫财",
+   "confidence": "中",
+   "suggestion": "感情专一，金钱往来留凭据"
+  },
+  {
+   "id": "marriage_男_财印相生",
+   "category": "婚姻",
+   "condition": {
+    "性别": "男",
+    "组合": [
+     "正财",
+     "正印"
+    ]
+   },
+   "conclusion": "男命财印相生，妻星生印、家庭安稳，配偶贤惠顾家，家和万事兴。",
+   "source": "《渊海子平》财印相生",
+   "confidence": "中",
+   "suggestion": "感恩伴侣付出，主动顾家"
+  },
+  {
+   "id": "marriage_女_食神制杀",
+   "category": "婚姻",
+   "condition": {
+    "性别": "女",
+    "组合": [
+     "七杀",
+     "食神"
+    ]
+   },
+   "conclusion": "女命食神制杀，夫星受制有度，婚恋自主掌控，能驾驭感情节奏。",
+   "source": "《渊海子平》食神制杀",
+   "confidence": "中",
+   "suggestion": "主导感情节奏，也留温柔余地"
+  },
+  {
+   "id": "health_乙木弱",
+   "category": "健康",
+   "condition": {
+    "日主": "乙木",
+    "旺衰": "弱"
+   },
+   "conclusion": "乙木日主身弱，提示肝胆系统宜养护，注意情绪郁结，春季尤宜舒展。",
+   "source": "《黄帝内经》五行配五脏（命理参考）",
+   "confidence": "低",
+   "suggestion": "仅供参考，规律作息，不适请就医"
+  },
+  {
+   "id": "health_丁火弱",
+   "category": "健康",
+   "condition": {
+    "日主": "丁火",
+    "旺衰": "弱"
+   },
+   "conclusion": "丁火日主身弱，提示心血循环宜关注，注意用眼护心，忌熬夜耗神。",
+   "source": "《黄帝内经》五行配五脏（命理参考）",
+   "confidence": "低",
+   "suggestion": "仅供参考，劳逸结合，不适请就医"
+  },
+  {
+   "id": "health_己土弱",
+   "category": "健康",
+   "condition": {
+    "日主": "己土",
+    "旺衰": "弱"
+   },
+   "conclusion": "己土日主身弱，提示脾胃消化宜养护，饮食规律七分饱，忌生冷。",
+   "source": "《黄帝内经》五行配五脏（命理参考）",
+   "confidence": "低",
+   "suggestion": "仅供参考，饮食有节，不适请就医"
+  },
+  {
+   "id": "health_辛金弱",
+   "category": "健康",
+   "condition": {
+    "日主": "辛金",
+    "旺衰": "弱"
+   },
+   "conclusion": "辛金日主身弱，提示呼吸系统与皮肤宜呵护，注意空气质量与保湿。",
+   "source": "《黄帝内经》五行配五脏（命理参考）",
+   "confidence": "低",
+   "suggestion": "仅供参考，注意防护，不适请就医"
+  },
+  {
+   "id": "health_癸水弱",
+   "category": "健康",
+   "condition": {
+    "日主": "癸水",
+    "旺衰": "弱"
+   },
+   "conclusion": "癸水日主身弱，提示肾水与泌尿系统宜养护，注意保暖少熬夜。",
+   "source": "《黄帝内经》五行配五脏（命理参考）",
+   "confidence": "低",
+   "suggestion": "仅供参考，保暖护阳，不适请就医"
+  },
+  {
+   "id": "health_神煞_血刃",
+   "category": "健康",
+   "condition": {
+    "神煞": "血刃"
+   },
+   "conclusion": "命带血刃，提示防磕碰外伤与出血类意外，出行运动注意安全。",
+   "source": "《三命通会》血刃",
+   "confidence": "中",
+   "suggestion": "运动防护到位，外伤及时处理"
+  },
+  {
+   "id": "health_神煞_流霞",
+   "category": "健康",
+   "condition": {
+    "神煞": "流霞"
+   },
+   "conclusion": "命带流霞，提示防意外流血类事件，刀刃机械作业格外谨慎。",
+   "source": "《三命通会》流霞",
+   "confidence": "中",
+   "suggestion": "远离高危操作，安全第一"
+  },
+  {
+   "id": "health_神煞_勾绞",
+   "category": "健康",
+   "condition": {
+    "神煞": "勾绞"
+   },
+   "conclusion": "命带勾绞，提示易因口舌是非心绪郁结，宜疏解情绪、少缠斗。",
+   "source": "《三命通会》勾绞",
+   "confidence": "中",
+   "suggestion": "少争执多运动，情绪及时疏导"
+  },
+  {
+   "id": "health_神煞_岁破",
+   "category": "健康",
+   "condition": {
+    "神煞": "岁破"
+   },
+   "conclusion": "命带岁破，提示劳损与变动消耗，注意休息节奏，防过劳。",
+   "source": "《三命通会》岁破",
+   "confidence": "中",
+   "suggestion": "规律作息，给身体留恢复时间"
+  },
+  {
+   "id": "health_伤官见官",
+   "category": "健康",
+   "condition": {
+    "组合": [
+     "伤官",
+     "正官"
+    ]
+   },
+   "conclusion": "伤官见官同透，提示情绪张力大、易与人争执伤和气，宜修身养性。",
+   "source": "《渊海子平》伤官见官（命理参考）",
+   "confidence": "中",
+   "suggestion": "情绪管理为先，冲突时先深呼吸"
+  },
+  {
+   "id": "health_枭神夺食",
+   "category": "健康",
+   "condition": {
+    "组合": [
+     "偏印",
+     "食神"
+    ]
+   },
+   "conclusion": "偏印食神同透（枭神夺食象），提示饮食与情绪关联强，宜规律用餐、忌暴食节食。",
+   "source": "《渊海子平》枭神夺食（命理参考）",
+   "confidence": "中",
+   "suggestion": "三餐规律，心情好胃口才好"
+  },
+  {
+   "id": "health_财多身弱",
+   "category": "健康",
+   "condition": {
+    "十神": [
+     "正财",
+     "偏财"
+    ],
+    "状态": "身弱财多"
+   },
+   "conclusion": "身弱财多，提示易为财劳碌、身心透支，宜量力而行、劳逸结合。",
+   "source": "《渊海子平》财多身弱（命理参考）",
+   "confidence": "中",
+   "suggestion": "赚钱别透支身体，张弛有度"
+  },
+  {
+   "id": "health_杀印相生",
+   "category": "健康",
+   "condition": {
+    "组合": [
+     "七杀",
+     "正印"
+    ]
+   },
+   "conclusion": "杀印相生，压力能转化为成长养分，身心韧性强，宜持续锻炼巩固。",
+   "source": "《渊海子平》杀印相生（命理参考）",
+   "confidence": "中",
+   "suggestion": "压力大时靠运动与学习化解"
+  },
+  {
+   "id": "health_天乙_护体",
+   "category": "健康",
+   "condition": {
+    "神煞": "天乙贵人"
+   },
+   "conclusion": "命带天乙贵人，逢凶化吉，小病小痛多能自愈，遇健康问题亦易遇良医。",
+   "source": "《三命通会》天乙贵人",
+   "confidence": "中",
+   "suggestion": "身体不适及时就医，好运气也要好习惯"
+  },
+  {
+   "id": "health_月德_护体",
+   "category": "健康",
+   "condition": {
+    "神煞": "月德"
+   },
+   "conclusion": "命带月德，福气护身，健康运势平顺，宜保持良好作息惜福养生。",
+   "source": "《三命通会》月德",
+   "confidence": "中",
+   "suggestion": "福气来自规律生活，坚持锻炼"
+  },
+  {
+   "id": "health_华盖_养性",
+   "category": "健康",
+   "condition": {
+    "神煞": "华盖"
+   },
+   "conclusion": "命带华盖，心思细腻易思虑过度，宜以琴棋书画静心养性、疏解精神内耗。",
+   "source": "《三命通会》华盖",
+   "confidence": "中",
+   "suggestion": "培养安静爱好，冥想散步解压"
+  },
+  {
+   "id": "health_驿马_劳逸",
+   "category": "健康",
+   "condition": {
+    "神煞": "驿马"
+   },
+   "conclusion": "命带驿马，奔波走动多，宜注意旅途劳逸结合，防久坐久驾。",
+   "source": "《三命通会》驿马",
+   "confidence": "中",
+   "suggestion": "出差途中多活动，保证睡眠"
+  },
+  {
+   "id": "health_羊刃_防外伤",
+   "category": "健康",
+   "condition": {
+    "神煞": "羊刃"
+   },
+   "conclusion": "命带羊刃，刚烈好胜，提示防争执外伤与运动损伤，宜以柔克刚。",
+   "source": "《三命通会》羊刃",
+   "confidence": "中",
+   "suggestion": "运动热身到位，遇事退一步"
+  },
+  {
+   "id": "health_伤官_有制",
+   "category": "健康",
+   "condition": {
+    "十神": "伤官",
+    "状态": "有制化"
+   },
+   "conclusion": "伤官有制化，情绪宣泄有度，身心状态佳，宜保持表达与运动的平衡。",
+   "source": "《渊海子平》伤官有制（命理参考）",
+   "confidence": "中",
+   "suggestion": "保持输出渠道，身心更舒展"
+  },
+  {
+   "id": "health_七杀_有制",
+   "category": "健康",
+   "condition": {
+    "十神": "七杀",
+    "状态": "有制化"
+   },
+   "conclusion": "七杀有制化，压力得疏解、斗志有出口，健康运势稳中向好。",
+   "source": "《渊海子平》七杀有制（命理参考）",
+   "confidence": "中",
+   "suggestion": "化压力为训练动力，规律运动"
   }
  ],
  "usage_note": "分析时先排盘得日主/月令/十神/五行分布/格局/身强身弱/神煞/流年，逐条匹配 condition（字段按实际裁剪），命中即输出 conclusion 并标注 source。未命中规则的部分不强行断语，仅作趋势提示。健康类断语置信度低，须提示以医学为准。"
