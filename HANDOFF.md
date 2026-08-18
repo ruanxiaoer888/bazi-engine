@@ -2,7 +2,7 @@
 
 > 更新时间：2026-08-19 · 当前版本 **v1.3.1**（v1.3.0 定版后审计修复 patch：空亡断语修活 + wealth_kugu 换补；git tag `v1.3.0` 保留，实际已含：农历/阳历双模式切换、合婚上下双区块布局、合婚时段模式 truesun 修复 + 测试脚本 toggle 适配、xiYong ratio 细分、五行补救文案强/弱区分、太极 logo、输入侧晚子时/节气临界提示语、断语库 504→801、死规则清理 801→789 + 空亡断语修活、**断语库扩充 789→1000 并定版 v1.3.0、审计修复 v1.3.1**）
 > 项目性质：**Michael 个人独立研发项目**，与魅可科技（Meke）业务无任何关联，推广/发布按个人项目口径。
-> 发布状态：✅ **双平台均已上架**（2026-08-17 确认）——① SkillHub（腾讯）**已发布**（「生态杀手」分类，申诉通过；平台归一化显示 V1.0.0，见坑 #21）；② ClawHub（OpenClaw 官方市场）**已发布**（Productivity 分类，SkillSpector 扫描通过转 Published，v1.3.0 GitHub 自动同步版——绑定 `ruanxiaoer888/bazi-engine`，git push 自动拉新）
+> 发布状态：✅ **双平台均已上架**（2026-08-17 确认）——① SkillHub（腾讯）**已发布**（「生态杀手」分类，申诉通过；平台归一化显示 V1.0.0，见坑 #21）；② ClawHub（OpenClaw 官方市场）**已发布**（Productivity 分类，SkillSpector 扫描通过转 Published，v1.3.1 GitHub 自动同步版——绑定 `ruanxiaoer888/bazi-engine`，git push 自动拉新）
 > **给 Codex / 新会话**：先读同目录 `AI_CONTEXT.md`（冷启动文档），再读本文件。
 
 ---
@@ -23,9 +23,9 @@
 ## 一、当前任务（进行中 / 待办）
 
 ### 当前状态（2026-08-19 快照）
-- **无阻塞、无外部等待**：132 项任务清零 / 真人验收通过 / 双平台已上架 / **断语库 1000 条**（路线图达成）/ 13 套回归全绿
-- **在途事项**：仅 bazi-app C 端全流程闭环（独立对话推进，本仓库无动作）；MCP/API 化、商标注册为后置
-- **遗留待清理**：✅ 死规则已清（`cc5e405`）+ 断语库 789→1000 已完成（`338f981` 等 5 批，见下方「断语库扩充」段）
+- **本仓库无阻塞**：132 项任务清零 / 真人验收通过 / 双平台已上架 / **断语库 1000 条**（路线图达成）/ **v1.3.1 定版** / 13 套回归全绿 + CI 接入
+- **在途事项**：bazi-app C 端真实闭环剩 2 个外部阻塞（服务器四件套更新 + 虎皮椒通道，bazi-app 独立对话推进）；MCP/API 化、商标注册为后置
+- **遗留待清理**：✅ 全部已清（死规则 2 轮清理 + 空亡真修活 + 全项目审计，见下方各段）
 
 ### ✅ 2026-08-17 断语库扩充 504→801 条（commit `bd7f5ab`）
 - 复用 `drafts/` 取材方法论（古籍摘录标出处），新增 297 条，覆盖 12 类主引擎规则：事业+44 / 性格+37 / 财运+29 / 用神喜忌+26 / 婚姻+22 / 十神组合+22 / 学业+22 / 神煞+22 / 健康+21 / 格局+18 / 六亲+18 / 五行生克+16
@@ -51,6 +51,21 @@
 - **批次 5（用神+15/五行+12/十神组合+10/神煞+10/学业+5/六亲+5）**：含 10 干×调候×强弱细分、五行相生相克弱态、双财/食伤双透等；剔除 1 条 0 命中三神组合（combo_食神制杀_印 400 盘 0 命中），换补 shensha_龙德_正财
 - **质量红线**：每批 audit 无 100%/>80% 命中、抽查无 0 命中；check_conflicts 1000 盘 0 矛盾；13 套回归全绿；C3 主面板 6 类命中 52.6→66.1（30-70 内，主面板类增量受控）
 - **引擎影响**：dist 245→287KB，MD5 `CE99E451F5733376A56BDCE9F49D8ED4`，**已同步 bazi-app**（v1.2.3，见 `docs/ENGINE-CHANGES.md`）
+
+### ✅ 2026-08-19 全项目扫描审计 + v1.3.1 修复（commit `d0e940e`/`648755a`/`a93d584`）
+- **重大发现：空亡断语「两版皆死」**——v1.2.2 的「日支逢空亡」特判**永不命中**（60 甲子中旬空支总在下一旬，日支不可能坐本柱旬空；当时只把 100% 命中改成 0 命中，从一种死法换成另一种）。v1.3.1 改为「命局任一柱地支逢日柱旬空」→ **实测 44%（200 盘），真修活**
+- **`wealth_kugu` 0 命中**（正财偏财正印偏印四神同透几乎不可能）→ 换补 `wealth_财官印三宝`（正财正官正印三透，实测 1%），总数保持 1000
+- **build_ui.py 打印 bug**：size 按字符数（中文 3 字节）→ 改 UTF-8 字节口径（打印 400/287KB 实际 566/438KB，此前 dist 大小记录全部偏小 ~40%）
+- **audit_hit_distribution.js 新增 0 命中检测**（信息级，排除流年/流月/大运/合婚专用类）——防死规则再次潜伏（`combo_食神制杀_印` 曾靠手动深挖才发现）
+- **结构调整**：发布文档归档 `docs/history/`、7 个一次性脚本归档 `tools/archive/`、图标压缩 1399→147KB、kb 清理 WorkBuddy 专属路径、REGRESSION 文档改名 v1.3.0、新增 `.github/workflows/ci.yml`（build + JSON 校验 + 13 套回归 + audit）
+- **引擎影响**：dist MD5 `3E4E97B260C313B4D295F5696FD11EEC`（437KB），**已同步 bazi-app**（影响 C 端：否——仅 matchRules 层，见 `docs/ENGINE-CHANGES.md` v1.3.1）
+- 回归 13 套全绿（C3 66.1 不变、check_conflicts 0 矛盾、audit 无 100%/>80%）
+
+### ✅ 2026-08-19 bazi-app C 端闭环本地演练（18/18 通过，commit `e6aa341` 记录）
+- 本地启动 `../bazi-app/api/server.js`（mock 模式）全链路：下单（首单 ¥9.9）→ mock 支付 → PAID → 解锁 → 二单恢复 ¥19.9 → match/year SKU → 兑换码生成/兑换 → 防浪费（已解锁输入未用码不消耗、可转赠）→ 无效参数拒绝，**18/18 全通**
+- 页面冒烟 + 引擎一致性回归（8 盘 ctx 0 差异）均通过，结论 **v1.3.0/1.3.1 对 C 端零破坏**
+- 交付物：`docs/BAZI-APP-REGRESSION-v1.3.0.md`（回归清单）+ `docs/BAZI-APP-HANDOFF-v1.3.0.md`（启动指令，含一致性/冒烟/闭环结论），均已拷贝到 bazi-app
+- **剩余真实阻塞（需 Michael/bazi-app 对话操作）**：① 服务器四件套更新（线上仍旧版，缺 `/api/redeem`）② 虎皮椒通道（申请被拒，需换支付宝重提）
 
 ### ✅ 2026-08-17 新会话接手：输入侧晚子时/节气临界提示语（commit `53a3bd2`）
 - 接手核实：工作树干净，本地 HEAD=`941d749`=远程（`[gone]` 是本地引用缓存误报）；打包目录 MD5 一致
@@ -109,7 +124,7 @@
 
 ---
 
-## 二、已完成内容（截至 v1.2.1）
+## 二、已完成内容（截至 v1.3.1）
 
 ### 功能全景（132 项任务中 132 completed）
 | 模块 | 状态 |
@@ -134,8 +149,8 @@
 - **引擎**：`tools/build_ui.py` — Python 构建脚本，内联断语库 + 节气 + 全部 JS 逻辑
 - **知识库**：三命通会/渊海子平/滴天髓/子平真诠/穷通宝鉴全文梳理均已入库
 - **发布验证**：`python tools/build_release_zip.py` 产出发布 ZIP（自动排除 LICENSE/LICENSE-DATA/README.en.md，文件在 ZIP 根无嵌套）+ 关键产物 MD5 校验（`ui/index.html` / `engine/engine.dist.js` / `skill/SKILL.md` / `kb/04-rules-db/rules.json`）——平台无关，不依赖任何平台专属目录
-- **版本**：SKILL.md frontmatter 已加 `version: 1.2.1` + `tags` + `license: MIT`
-- **对外文档**：`README.md`（项目门面：功能/快速开始/示例对话/免责声明）+ `发布物料.md`（内部发布材料：卖点/图标提示词/渠道建议）
+- **版本**：SKILL.md frontmatter `version: 1.3.1` + `tags` + `license: MIT`；git tag `v1.3.0`（定版）
+- **对外文档**：`README.md`（项目门面：功能/快速开始/示例对话/免责声明）+ `docs/history/发布物料.md`（内部发布材料：卖点/图标提示词/渠道建议）
 
 ### 关键修复（2026-08-14 全面扫描）
 - **空 condition 规则无条件命中 bug**：71 条 condition 为 `{}` 的规则中，8 条（qinq_27~30 + edu_17~20）落入主渲染分类会**固定显示在每个命盘**（`for...in` 空对象后 `hit` 保持 true）。修复：`matchRules` 开头 `if(Object.keys(c).length===0){ hit=false; }` 排除（专用函数仍按 id 触发 dayun_*/liuyue_*/liuri_*/qinq_27~30/he_*）
@@ -166,14 +181,12 @@
 
 ---
 
-## 三、卡住的问题（当前：无阻塞，双平台已上架）
+## 三、卡住的问题
 
-- ✅ 全部 132 项任务已清零
-- ✅ 真人验收 3 案例全部通过
-- ✅ **ClawHub 已发布**（SkillSpector 扫描通过转 Published，Productivity 分类）
-- ✅ **SkillHub 已发布**（2026-08-17 申诉通过，误判「内容涉政」已纠正；「生态杀手」分类）
-- ✅ 晚子时/节气临界输入侧提示语已完成（`53a3bd2`）；断语库 504→801 已完成（`bd7f5ab`）
-- 🔜 无技术性阻塞，无发布阻塞
+- ✅ **本仓库无阻塞**：132 项任务清零 / 真人验收通过 / 双平台已上架 / 断语库 1000 条 / v1.3.1 定版 / 13 套回归全绿
+- 🔜 **bazi-app C 端真实闭环剩 2 个外部阻塞**（本地 mock 全链路已通，属部署/支付侧，需 bazi-app 对话推进）：
+  1. **服务器四件套更新**：线上 CentOS 仍是旧版（缺 `/api/redeem`、删除接口无鉴权、旧账号密码）——需上传 `web/index.html` + `web/admin.html` + `api/server.js` + `api/config.json` + **`web/paid/` 目录** → `pm2 restart benchu_api` → 新账号登录 → 重新生成兑换码
+  2. **虎皮椒真实通道**：支付宝通道首次申请被拒（「账号风险」），需换支付宝账号重提 → 通过后 `mock:false` + 真实支付验证一单（¥0.01）
 
 ---
 
@@ -181,12 +194,12 @@
 
 0. ✅ ~~SkillHub 申诉~~（2026-08-17 通过并上架）
 1. ✅ ~~ClawHub SkillSpector 扫描~~（已转 Published，海外发布闭环完成）
-2. **[推荐] bazi-app C 端全流程闭环** → 引擎已同步（v1.2.3，1000 条断语库，MD5 `CE99E451F5733376A56BDCE9F49D8ED4`），检查农历输入 → 排盘 → 虎皮椒支付 → 兑换码 → 报告生成全链路（bazi-app 独立对话推进，读 `docs/ENGINE-CHANGES.md` 对齐）
+2. **[推荐] bazi-app C 端真实闭环收尾** → 引擎已同步（v1.3.1，dist MD5 `3E4E97B260C313B4D295F5696FD11EEC`），本地 mock 全链路 18/18 已通 + 一致性/冒烟零破坏确认；剩**服务器四件套更新** + **虎皮椒通道**（bazi-app 独立对话推进，读 `docs/BAZI-APP-HANDOFF-v1.3.0.md` 启动）
 3. ✅ ~~断语库扩充 504→800+~~（已完成 `bd7f5ab`，801 条，2026-08-17）
 4. ✅ ~~晚子时/节气临界**输入侧**提示语~~（已完成 `53a3bd2`，2026-08-17；输出侧原有提示保留）
-5. ✅ ~~断语库 789→1000+~~（已完成 `338f981` 等 5 批次，2026-08-19，见 §一；下一步若续扩可考虑为元辰/魁罡/太极贵人等补 SHENSHA 算法后重新入库）
-6. **[后置] MCP/API 化**（P2 路线图）
-7. **[后置] 商标注册**（41/42 必选 + 9/45 防御，注册前代理检索规避「本初子午」近似）
+5. ✅ ~~断语库 789→1000+~~（已完成 `338f981` 等 5 批次 + 定版 v1.3.0 + 审计修复 v1.3.1，2026-08-19；若续扩可考虑为元辰/魁罡/太极贵人等补 SHENSHA 算法后重新入库）
+6. **[后置] MCP/API 化**（P2 路线图：为引擎提供 MCP 工具/HTTP API，供 B 端命理师/其他 agent 编程调用）
+7. **[后置] 商标注册**（41/42 必选 + 9/45 防御，注册前代理检索规避「本初子午」近似——注意这是 bazi-app 品牌，若做 C 端商标需核实）
 
 ---
 
@@ -234,6 +247,13 @@
 ### 环境类（2026-08-19，Git for Windows / ssh）
 30. **Git for Windows 的 MSYS2 运行时在部分环境崩溃（`CreateFileMapping ... Win32 error 5`）**：`D:\Program Files\Git\usr\bin\ssh.exe`（及经 shell 包装时 `sh.exe`）直接崩，git fetch/push 失败；但系统 OpenSSH（`C:\Windows\System32\OpenSSH\ssh.exe`，9.5）完全正常。**绕过方案**：设 `GIT_SSH=C:\Windows\System32\OpenSSH\ssh.exe`（用户环境变量）——git 直接 spawn 该程序、不经 MSYS shell（core.sshCommand 会经 sh 包装仍崩，勿用）。**注意**：dsh 等长驻宿主进程不会自动刷新环境变量，当前会话内远程操作需内联 `$env:GIT_SSH=...; git ...`，重启宿主后自动生效。系统 ssh 认证成功标志为输出 `Hi ruanxiaoer888! You've successfully authenticated`（exit 1 是 GitHub 无 shell 的正常返回，勿当失败）
 
+### 审计/规则库类（2026-08-19，v1.3.1 全项目审计）
+31. **「日支逢空亡」在 60 甲子中不可能出现**：旬空支（2 个）属于本旬 10 个日柱，但日支等于空支的日柱总在**下一旬**（甲子旬空戌亥，而日支戌/亥的日柱甲戌/乙亥属甲戌旬）——`ctx.kongWang.includes(日支)` 永不命中。空亡特判第一版「有空亡即命中」100% 被 audit 拦截后，第二版「日支逢空亡」0 命中，**两版皆死**；正确语义 =「命局任一柱地支逢日柱旬空」（实测 44%）。教训：修死规则必须验证命中率落入合理区间（0<命中<80%），不能只保证「不再 100%」
+32. **build_ui.py 的 size 打印用 `len(str)`（字符数）**：中文 UTF-8 占 3 字节，打印 400/287KB 实际文件 566/438KB，误导 dist 大小记录（历史文档 247KB 等均为字符口径）。改 `len(x.encode('utf-8'))`；Windows 下写入还含 CRLF（`\n`→`\r\n`），文件字节比 encode 再大 ~1%
+33. **PowerShell `>` 重定向是 UTF-16 编码**：`git show <commit>:<file> > tmp.js` 会写出 UTF-16 破坏 JS（字节数翻倍）。提取 git blob 到文件须用 `cmd /c "git show ... > file"`（字节流）或 `[IO.File]::WriteAllBytes`
+34. **audit 0 命中检测的小样本误报**：<1% 低命中规则（如「日主+旺衰」组合，实测 char_甲_强 0.9%）在 200 盘样本内可能 0 命中（概率 ~16%），属正常不是死规则——0 命中段定为**信息级**并排除专用触发类（流年/流月/大运/合婚：matchRules 主引擎本就不输出），大样本 2000 盘仍 0 才需深挖
+35. **GitHub Release 的「Release label」= Pre-release 标记**：稳定版必须选 None（否则不顶掉 Latest，ClawHub/访客仍拿旧版）；About 栏描述（如「504 条」）随版本同步更新，开源门面数字要与仓库一致
+
 ---
 
 ## 六、项目速查
@@ -245,7 +265,7 @@
 - 构建命令：`python tools/build_ui.py`（输出 `ui/index.html` + `engine/engine.dist.js`）
 - **发布包命令：`python tools/build_release_zip.py`**（输出 `bazi-engine-v1.3.0.zip`，排除 LICENSE/LICENSE-DATA/README.en.md，文件在 ZIP 根；可传版本号参数）
 - **发布验证（平台无关，替代旧打包目录同步）**：`python tools/build_release_zip.py` 产出 ZIP 后，md5sum 校验关键产物（`ui/index.html` / `engine/engine.dist.js` / `skill/SKILL.md` / `kb/04-rules-db/rules.json`）
-- 回归命令（13 套，全部必须 PASS）：`node tools/test_engine.js` + `node tools/test_lunar.js` + `node tools/test_ui.js` + `node tools/test_eval_state.js` + `node tools/test_p1_fixes.js` + `node tools/verify_sleep_rules.js` + `node tools/verify_ux_e2e.js` + `node tools/test_dst.js` + `node tools/test_liuri_v2.js` + `node tools/test_liuyue_v2.js` + `node tools/verify_edu_rules.js` + `node tools/test_xiyong.js` + `node tools/check_conflicts.js`；断语库维护另用 `audit_hit_distribution.js`（命中分布）
+- 回归命令（13 套，全部必须 PASS）：`node tools/test_engine.js` + `node tools/test_lunar.js` + `node tools/test_ui.js` + `node tools/test_eval_state.js` + `node tools/test_p1_fixes.js` + `node tools/verify_sleep_rules.js` + `node tools/verify_ux_e2e.js` + `node tools/test_dst.js` + `node tools/test_liuri_v2.js` + `node tools/test_liuyue_v2.js` + `node tools/verify_edu_rules.js` + `node tools/test_xiyong.js` + `node tools/check_conflicts.js`；断语库维护另用 `audit_hit_distribution.js`（命中分布 + 0 命中检测，`--sample=2000` 大样本判死规则）；CI 已接入 `.github/workflows/ci.yml`（push 自动跑 build + 13 套 + audit）
 - C 端同步：`cp engine/engine.dist.js ../bazi-app/web/` 并 commit（bazi-app 独立仓库/对话，仅拷贝交付，commit/push 留给 bazi-app 侧）
 - 命名约定：对外统一 "bazi-engine"（原名 bazi-master 因 SkillHub 同名竞品已弃用），个人项目口径，不挂钩魅可
 - 发布文档：`docs/history/SkillHub-Submission-Kit.md`（提交母版）+ `docs/history/SkillHub发布最终指引.md`（填表指引）+ `docs/history/验收与截图清单_3案例.md`（回归验收模板）
