@@ -3063,7 +3063,7 @@ with open(ROOT + r"\ui\index.html", "w", encoding="utf-8") as f:
     f.write(html)
 print(
     "index.html built, size=%dKB, jieqi years=%d, rules=%d"
-    % (len(html) // 1024, len(jieqi["data"]), len(rules))
+    % (len(html.encode("utf-8")) // 1024, len(jieqi["data"]), len(rules))
 )
 
 # ===== 抽取引擎层，生成独立可复用库 engine/engine.dist.js =====
@@ -3112,5 +3112,5 @@ with open(os.path.join(ROOT, "engine", "engine.dist.js"), "w", encoding="utf-8")
     f.write(dist)
 print(
     "engine/engine.dist.js built, size=%dKB, regions=%d"
-    % (len(dist) // 1024, len(regions))
+    % (len(dist.encode("utf-8")) // 1024, len(regions))
 )

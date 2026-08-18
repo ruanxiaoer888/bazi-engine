@@ -2,7 +2,7 @@
 
 > 更新时间：2026-08-19 · 当前版本 **v1.3.0**（断语库 1000 条里程碑·稳定版，git tag `v1.3.0`；实际已含：农历/阳历双模式切换、合婚上下双区块布局、合婚时段模式 truesun 修复 + 测试脚本 toggle 适配、xiYong ratio 细分、五行补救文案强/弱区分、太极 logo、输入侧晚子时/节气临界提示语、断语库 504→801、死规则清理 801→789 + 空亡断语修活、**断语库扩充 789→1000 并定版**）
 > 项目性质：**Michael 个人独立研发项目**，与魅可科技（Meke）业务无任何关联，推广/发布按个人项目口径。
-> 发布状态：✅ **双平台均已上架**（2026-08-17 确认）——① SkillHub（腾讯）**已发布**（「生态杀手」分类，申诉通过；平台归一化显示 V1.0.0，见坑 #21）；② ClawHub（OpenClaw 官方市场）**已发布**（Productivity 分类，SkillSpector 扫描通过转 Published，v1.2.1 GitHub 自动同步版）
+> 发布状态：✅ **双平台均已上架**（2026-08-17 确认）——① SkillHub（腾讯）**已发布**（「生态杀手」分类，申诉通过；平台归一化显示 V1.0.0，见坑 #21）；② ClawHub（OpenClaw 官方市场）**已发布**（Productivity 分类，SkillSpector 扫描通过转 Published，v1.3.0 GitHub 自动同步版——绑定 `ruanxiaoer888/bazi-engine`，git push 自动拉新）
 > **给 Codex / 新会话**：先读同目录 `AI_CONTEXT.md`（冷启动文档），再读本文件。
 
 ---
@@ -13,7 +13,7 @@
 
 **引擎抽层实现**（commit `807ab4c`）：
 - `tools/build_ui.py` 的 TPL 内用 7 对 `// [ENGINE:BEGIN]` / `// [ENGINE:END]` 注释标记界定纯计算层（**不搬代码**，`ui/index.html` 行为不变，仅多无害注释）
-- 构建时同时产出 **`engine/engine.dist.js`**（287KB，UMD：浏览器 `window.BaziEngine` / Node `require` 双端可用），导出 paipan/matchRules/calcShenSha/applyDst/matchLiuYue/lunarToSolar/leapMonth 等约 101 个函数与数据表（含 1000 条规则数据）
+- 构建时同时产出 **`engine/engine.dist.js`**（438KB，UMD：浏览器 `window.BaziEngine` / Node `require` 双端可用），导出 paipan/matchRules/calcShenSha/applyDst/matchLiuYue/lunarToSolar/leapMonth 等约 101 个函数与数据表（含 1000 条规则数据）
 - 新增回归 `node tools/test_engine.js`（28 项，独立库直测）+ `node tools/test_lunar.js`（27 项，农历模块验证）；原有 8 套回归不受影响
 - **C 端同步方法**：`python tools/build_ui.py` 后 `cp engine/engine.dist.js ../bazi-app/web/`
 - **边界规则**：引擎层 = 纯计算（无 DOM/CSS）；`fmtRule`/`analyzeHe`/所有 render*/run*/draw* 留在 UI 层（返回 HTML 的展示函数不进引擎库）；新增引擎函数时放进标记区内即可自动进入 dist
@@ -243,7 +243,7 @@
 - 源码目录：**当前工作区**（随平台而异，如 `E:\michael\DSHProjects\bazi-engine` 或 `E:\michael\workBuddy\bazi-project`）
 - GitHub 仓库：https://github.com/ruanxiaoer888/bazi-engine
 - 构建命令：`python tools/build_ui.py`（输出 `ui/index.html` + `engine/engine.dist.js`）
-- **发布包命令：`python tools/build_release_zip.py`**（输出 `bazi-engine-v1.2.1.zip`，排除 LICENSE/LICENSE-DATA/README.en.md，文件在 ZIP 根）
+- **发布包命令：`python tools/build_release_zip.py`**（输出 `bazi-engine-v1.3.0.zip`，排除 LICENSE/LICENSE-DATA/README.en.md，文件在 ZIP 根；可传版本号参数）
 - **发布验证（平台无关，替代旧打包目录同步）**：`python tools/build_release_zip.py` 产出 ZIP 后，md5sum 校验关键产物（`ui/index.html` / `engine/engine.dist.js` / `skill/SKILL.md` / `kb/04-rules-db/rules.json`）
 - 回归命令（13 套，全部必须 PASS）：`node tools/test_engine.js` + `node tools/test_lunar.js` + `node tools/test_ui.js` + `node tools/test_eval_state.js` + `node tools/test_p1_fixes.js` + `node tools/verify_sleep_rules.js` + `node tools/verify_ux_e2e.js` + `node tools/test_dst.js` + `node tools/test_liuri_v2.js` + `node tools/test_liuyue_v2.js` + `node tools/verify_edu_rules.js` + `node tools/test_xiyong.js` + `node tools/check_conflicts.js`；断语库维护另用 `audit_hit_distribution.js`（命中分布）
 - C 端同步：`cp engine/engine.dist.js ../bazi-app/web/` 并 commit（bazi-app 独立仓库/对话，仅拷贝交付，commit/push 留给 bazi-app 侧）
