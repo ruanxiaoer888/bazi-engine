@@ -1,7 +1,9 @@
-# AI 冷启动文档（给 Codex / 新会话）
+# AI 冷启动文档（通用版 · 任意 AI 平台 / 新会话）
 
 > 读我。本文件是 `HANDOFF.md` 的会话级补充，专门解决"换个 AI 怎么继续"的问题。
 > 任何新 AI 介入前，先读：1. 本文件 2. HANDOFF.md 3. `发布物料.md`（发布材料）
+>
+> **跨平台说明**：本项目会在多个 AI 平台间切换开发（WorkBuddy / DeepSeek Harness / Codex / 百度搭子等）。本文档**不含任何平台专属路径或目录**——工作区路径以你当前环境为准（如 `E:\michael\DSHProjects\bazi-engine` 或 `E:\michael\workBuddy\bazi-project`）；bazi-app 一律用相对路径 `../bazi-app` 表示，任何布局下都成立。
 
 ---
 
@@ -38,7 +40,7 @@
 | UI | `ui/index.html` | 单文件成品（唯一真源），打开即用，离线可用 |
 | 引擎 | `engine/engine.dist.js` | 构建副产物，**不要手改**。UMD：浏览器 `window.BaziEngine` / Node `require` |
 | 知识库 | `kb/` | 01-basics / 02-rules / 03-classics / 04-rules-db / 05-reference |
-| 打包 | `~/.workbuddy/skills/bazi-engine/` | SkillHub 发布用打包目录，与源码 MD5 同步校验 |
+| 发布 | `tools/build_release_zip.py` | 发布验证流程：打 ZIP（自动排除 LICENSE/LICENSE-DATA/README.en.md）+ 关键产物 MD5 校验，不依赖任何平台目录 |
 | 引擎变更记录 | `docs/ENGINE-CHANGES.md` | 权威记录（版本 + 变更 + dist MD5），bazi-app 对话据此对齐；引擎变更必须 bump 版本并追加记录 |
 | 发布材料 | `发布物料.md` + `SkillHub-Submission-Kit.md` | 卖点/图标提示词/示例对话/合规声明 + 提交包模板 |
 
@@ -144,8 +146,8 @@ node tools/test_dst.js           # 夏令时窗口/边界 29 项
 # 其余：test_ui / test_eval_state / test_p1_fixes / verify_sleep_rules /
 #       verify_liuri_v2(test_liuri_v2) / verify_liuyue_v2(test_liuyue_v2) / verify_edu_rules / check_conflicts
 
-# 同步到打包目录（发布前必做，md5 校验）
-#   ~/.workbuddy/skills/bazi-engine/  ← 复制 README/README.en/SKILL.md/tools/build_ui.py/ui/index.html/各测试脚本
+# 发布验证（替代旧打包目录同步，平台无关）：python tools/build_release_zip.py 产出 ZIP 后 md5sum 校验关键产物
+#   （ui/index.html / engine/engine.dist.js / skill/SKILL.md / kb/04-rules-db/rules.json）
 
 # C 端引擎同步
 cp engine/engine.dist.js ../bazi-app/web/engine.dist.js
@@ -154,7 +156,7 @@ cp engine/engine.dist.js ../bazi-app/web/engine.dist.js
 ## 9. 相关仓库
 
 - **bazi-app**（C 端「本初」，原「算了么」因品牌冲突已改名）：`github.com/ruanxiaoer888/bazi-app`（Private）
-  - 本地路径：`E:\michael\workBuddy\bazi-app`
+  - 本地路径：`../bazi-app`（相对于本仓库工作区，平台不同则位置不同）
   - 状态：报告功能（25+ 板块）+ 海报分享 + 支付链路（虎皮椒 mock）+ 兑换码解锁均已完成；**待部署上线**（等 SSH+DNS），阻塞在虎皮椒新通道未开通
   - 冷启动文档：该仓 `AI_CONTEXT.md` + `HANDOFF.md`（注意其第 9 节对 bazi-project 的状态描述以本文件为准）
 
