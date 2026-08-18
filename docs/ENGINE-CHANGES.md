@@ -17,7 +17,7 @@
 | 项 | 值 |
 |---|---|
 | dist MD5 | `CE99E451F5733376A56BDCE9F49D8ED4`（与 v1.2.3 相同） |
-| dist 大小 | 287KB（RULES 1000 条） |
+| dist 大小 | 438KB（RULES 1000 条；2026-08-19 起按文件实际字节计，此前记录为字符数口径） |
 | 影响 C 端 | 是（bazi-app 按 `docs/BAZI-APP-REGRESSION-v1.2.3.md` 回归后锁定 v1.3.0） |
 
 ---
