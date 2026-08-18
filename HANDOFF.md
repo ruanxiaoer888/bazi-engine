@@ -9,7 +9,7 @@
 
 ## 〇、双轨战略与引擎抽层（2026-08-15，重要架构决策）
 
-**战略**：bazi-engine 走 B 端专业引擎底座（面向命理师，开源）；另建 **`E:\michael\workBuddy\bazi-app`** 走 C 端轻量娱乐变现（大白话 + 付费报告）。
+**战略**：bazi-engine 走 B 端专业引擎底座（面向命理师，开源）；另建 **`../bazi-app`**（独立仓库/工作区）走 C 端轻量娱乐变现（大白话 + 付费报告）。
 
 **引擎抽层实现**（commit `807ab4c`）：
 - `tools/build_ui.py` 的 TPL 内用 7 对 `// [ENGINE:BEGIN]` / `// [ENGINE:END]` 注释标记界定纯计算层（**不搬代码**，`ui/index.html` 行为不变，仅多无害注释）
@@ -117,7 +117,7 @@
 - **UI**：`ui/index.html` — 单文件离线（**零外部依赖**，无 Google Fonts 外链），内置 206 年节气 + 801 条断语
 - **引擎**：`tools/build_ui.py` — Python 构建脚本，内联断语库 + 节气 + 全部 JS 逻辑
 - **知识库**：三命通会/渊海子平/滴天髓/子平真诠/穷通宝鉴全文梳理均已入库
-- **打包目录**：`~/.workbuddy/skills/bazi-engine/` — 已同步，MD5 全 MATCH，可独立运行
+- **发布验证**：`python tools/build_release_zip.py` 产出发布 ZIP（自动排除 LICENSE/LICENSE-DATA/README.en.md，文件在 ZIP 根无嵌套）+ 关键产物 MD5 校验（`ui/index.html` / `engine/engine.dist.js` / `skill/SKILL.md` / `kb/04-rules-db/rules.json`）——平台无关，不依赖任何平台专属目录
 - **版本**：SKILL.md frontmatter 已加 `version: 1.2.1` + `tags` + `license: MIT`
 - **对外文档**：`README.md`（项目门面：功能/快速开始/示例对话/免责声明）+ `发布物料.md`（内部发布材料：卖点/图标提示词/渠道建议）
 
@@ -202,7 +202,7 @@
 17. **ZIP 不能嵌套外层目录**：`Compress-Archive -Path 整个目录` 会生成 `bazi-engine/` 外层，SkillHub 解压后看到 `bazi-engine/LICENSE` 报「文件路径不安全」。**正确：ZIP 内文件直接在根**（SKILL.md 在根）。教训：勿用 `-Path 目录`，用 `-Path 目录\*` 或 Python zipfile 逐文件写
 18. **SkillHub 不允许 LICENSE/LICENSE-DATA/README.en.md 类元文件**（报「文件路径不安全」「不允许的文件类型」）：GitHub 开源项目根必须保留，但**打包 ZIP 时排除**——用 `tools/build_release_zip.py`（EXCLUDE_PATTERNS），项目根文件不动
 19. **SkillHub 内容审核误判「涉政」**：命理典籍名（穷通宝鉴/三命通会/滴天髓/渊海子平/子平真诠/千里命稿/神峰通考）触发关键词扫描误判 → SKILL.md 中删除具体典籍名，改为「古代命理典籍」；**变更说明也勿写典籍名**
-20. **WorkBuddy 的 safe-delete（genie-trash）有 bug**：删文件报「Some operations were aborted」，os.remove/unlink 被拦截——用 bash `rm -f` 或 Python `os.remove`（绕过 sitecustomize shim）可删；旧 ZIP 无法覆盖时输出新文件名
+20. **WorkBuddy 的 safe-delete（genie-trash）有 bug（仅 WorkBuddy 环境适用）**：删文件报「Some operations were aborted」，os.remove/unlink 被拦截——用 bash `rm -f` 或 Python `os.remove`（绕过 sitecustomize shim）可删；旧 ZIP 无法覆盖时输出新文件名。其他平台无此问题
 21. **SKILL.md 版本被 SkillHub 归一化**：v1.2.1 在平台显示 v1.0.0，不影响功能，无需纠结
 22. **SkillHub 审核看的是 ZIP 内根目录 SKILL.md，不是项目源 skill/SKILL.md**：打包目录根 SKILL.md 与项目源是两个副本，改 SKILL.md 必须 `cp skill/SKILL.md 打包目录/SKILL.md`（根）**且** `打包目录/skill/SKILL.md`（子目录）——漏同步根目录会导致审核扫到旧版（「涉政」反复的根源）
 23. **SkillHub 对命理/玄学类内容审核严格**（典籍名可触发「内容涉政」误判）：规避 = SKILL.md 不写具体典籍名，用「古代命理典籍」；变更说明同样不写
@@ -219,13 +219,15 @@
 
 ## 六、项目速查
 
-- 源码目录：`E:\michael\workBuddy\bazi-project`
+> 工作区路径随平台而异（WorkBuddy / DeepSeek Harness / Codex / 百度搭子等），下文一律用相对路径；bazi-app 为 `../bazi-app`（任何布局下成立）。
+
+- 源码目录：**当前工作区**（随平台而异，如 `E:\michael\DSHProjects\bazi-engine` 或 `E:\michael\workBuddy\bazi-project`）
 - GitHub 仓库：https://github.com/ruanxiaoer888/bazi-engine
-- 打包目录：`C:\Users\34743\.workbuddy\skills\bazi-engine`
 - 构建命令：`python tools/build_ui.py`（输出 `ui/index.html` + `engine/engine.dist.js`）
 - **发布包命令：`python tools/build_release_zip.py`**（输出 `bazi-engine-v1.2.1.zip`，排除 LICENSE/LICENSE-DATA/README.en.md，文件在 ZIP 根）
+- **发布验证（平台无关，替代旧打包目录同步）**：`python tools/build_release_zip.py` 产出 ZIP 后，md5sum 校验关键产物（`ui/index.html` / `engine/engine.dist.js` / `skill/SKILL.md` / `kb/04-rules-db/rules.json`）
 - 回归命令（13 套，全部必须 PASS）：`node tools/test_engine.js` + `node tools/test_lunar.js` + `node tools/test_ui.js` + `node tools/test_eval_state.js` + `node tools/test_p1_fixes.js` + `node tools/verify_sleep_rules.js` + `node tools/verify_ux_e2e.js` + `node tools/test_dst.js` + `node tools/test_liuri_v2.js` + `node tools/test_liuyue_v2.js` + `node tools/verify_edu_rules.js` + `node tools/test_xiyong.js` + `node tools/check_conflicts.js`；断语库维护另用 `audit_hit_distribution.js`（命中分布）
-- 同步命令：文件 cp 到打包目录后 md5sum 校验（README.md / README.en.md / SKILL.md / tools/build_ui.py / ui/index.html / tools/各测试脚本）
+- C 端同步：`cp engine/engine.dist.js ../bazi-app/web/` 并 commit（bazi-app 独立仓库/对话，仅拷贝交付，commit/push 留给 bazi-app 侧）
 - 命名约定：对外统一 "bazi-engine"（原名 bazi-master 因 SkillHub 同名竞品已弃用），个人项目口径，不挂钩魅可
 - 发布文档：`SkillHub-Submission-Kit.md`（提交母版）+ `SkillHub发布最终指引.md`（本次填表指引）+ `验收与截图清单_3案例.md`（回归验收模板）
 - **引擎变更记录：`docs/ENGINE-CHANGES.md`**（权威记录：每次引擎变更 bump 版本 + 记 dist MD5，供 bazi-app 对话核对；2026-08-17 建立，首条 v1.2.1）

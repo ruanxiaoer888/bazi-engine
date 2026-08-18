@@ -213,5 +213,5 @@ bazi-engine 是一款**确定性排盘 + 可追溯断语**的四柱八字命理�
 - [x] 已选定最终图标：`assets/icon_taiji_v1.png`（2026-08-14 确认）
 - [ ] 已复制 SkillHub 基础信息 + 详细描述 + 示例对话 + 合规声明
 - [ ] 已上传 1~3 张核心截图
-- [ ] `~/.workbuddy/skills/bazi-engine/` 打包目录为最终版本（build_ui.py / ui/index.html / README 等 MD5 全 MATCH）
+- [ ] 发布验证通过：`python tools/build_release_zip.py` 产出 ZIP + 关键产物（build_ui.py / ui/index.html / README / skill/SKILL.md / kb/04-rules-db/rules.json）MD5 校验一致（平台无关，不依赖任何平台目录）
 - [ ] 提交后保留发布截图/反馈，供 v1.2.x 迭代参考
