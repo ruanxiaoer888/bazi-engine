@@ -40,6 +40,31 @@ bazi-app 只消费引擎的 **`paipan` / `applyDst` / `SHI_CHEN_MAP`** 三个 AP
 
 ---
 
+## ✅ C 端闭环 API 全链路演练（2026-08-19，本地 mock 模式 18/18 通过）
+
+本地启动 `api/server.js`（mock:true，`config.json` 由 example 复制，8787 端口）跑通完整商业闭环：
+
+| 环节 | 结果 |
+|---|---|
+| /api/health | ✅ ok + mock |
+| 下单 report（新设备） | ✅ **首单 ¥9.9**（firstOrder 生效） |
+| mock-pay → status | ✅ PENDING→PAID |
+| unlock/check | ✅ 解锁 report |
+| 同设备二单 report | ✅ 恢复 ¥19.9（首单已用） |
+| match ¥29.9 / year ¥19.9 | ✅ 下单+支付+解锁 |
+| 无效 SKU / 缺 deviceId | ✅ 400 拒绝 |
+| admin 登录（username/password） | ✅ 24h 会话 token |
+| 生成兑换码（report×2 + match×1）+ 列表 | ✅ |
+| 新设备兑换码解锁 | ✅ |
+| 防兑换码浪费（已解锁输入未用码不消耗、可转赠） | ✅ |
+| 无效码拒绝 | ✅ |
+
+**注意**：admin 登录字段为 `username`/`password`（不是 user/pass）；`config.json` 未配置 adminUser/adminPass 时回退 `admin` / `CFG.adminToken`。测试发现 8787 曾被 WorkBuddy 旧实例占用（无 config 的残留进程），需先清理再起新实例。
+
+**结论：支付-解锁-兑换码商业链路本地全通**。剩余真实闭环阻塞（需 Michael 操作）：① 服务器四件套更新（线上仍旧版）；② 虎皮椒真实通道（申请被拒，需换支付宝重提）。
+
+---
+
 你是 bazi-app（C 端「本初」）的 AI 助手。现在接入 bazi-engine **v1.3.0**（断语库 1000 条里程碑稳定版）并完成回归锁定。
 
 ## 背景
