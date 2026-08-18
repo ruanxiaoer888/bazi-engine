@@ -205,9 +205,9 @@ const ld4 = globalThis._els['liuDayResult'].innerHTML;
 assert('F11 表格渲染含 ld-hot 标记或冲合关系列', ld4.indexOf('ld-hot')>=0||ld4.indexOf('冲日')>=0||ld4.indexOf('合日')>=0);
 
 console.log('========== G. 六亲详解（父母/配偶/子女/兄弟） ==========');
-// G0 六亲规则已入断语库（2026-08-19 扩充批次3：44→59 条，需 ≥40）
+// G0 六亲规则已入断语库（2026-08-19 扩充批次5：59→64 条，需 ≥40）
 const liuqinN = RULES.filter(r=>r.category==='六亲').length;
-assert('G0 六亲规则 59 条已入库', liuqinN===59, '实际='+liuqinN);
+assert('G0 六亲规则 64 条已入库', liuqinN===64, '实际='+liuqinN);
 // G1 正常调用（男命）
 globalThis.__setLast(paipan('测','男',1990,5,15,10,0,'广州市','yes'));
 globalThis.runLiuQin();

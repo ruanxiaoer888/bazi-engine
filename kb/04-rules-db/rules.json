@@ -11468,6 +11468,730 @@
    "source": "《子平真诠》偏财格",
    "confidence": "中",
    "suggestion": "低调理财，防劫防偷"
+  },
+  {
+   "id": "yongshen_甲木_弱_调候",
+   "category": "用神喜忌",
+   "condition": {
+    "日主": "甲木",
+    "状态": "调候",
+    "旺衰": "弱"
+   },
+   "conclusion": "甲木身弱又逢调候之需，寒木无根更需火暖，用神先论调候火，再论比劫帮扶。",
+   "source": "《穷通宝鉴》甲木调候",
+   "confidence": "中",
+   "suggestion": "环境与贵人扶持对你是刚需"
+  },
+  {
+   "id": "yongshen_丙火_弱_调候",
+   "category": "用神喜忌",
+   "condition": {
+    "日主": "丙火",
+    "状态": "调候",
+    "旺衰": "弱"
+   },
+   "conclusion": "丙火身弱逢调候，暑月需水润、寒月需木生，用神随季节转换而变。",
+   "source": "《穷通宝鉴》丙火调候",
+   "confidence": "中",
+   "suggestion": "顺应季节节奏调整状态"
+  },
+  {
+   "id": "yongshen_戊土_弱_调候",
+   "category": "用神喜忌",
+   "condition": {
+    "日主": "戊土",
+    "状态": "调候",
+    "旺衰": "弱"
+   },
+   "conclusion": "戊土身弱逢调候，燥土需水润、湿土需火暖，用神贵在调候平衡。",
+   "source": "《穷通宝鉴》戊土调候",
+   "confidence": "中",
+   "suggestion": "平衡是关键词，忌走极端"
+  },
+  {
+   "id": "yongshen_庚金_弱_调候",
+   "category": "用神喜忌",
+   "condition": {
+    "日主": "庚金",
+    "状态": "调候",
+    "旺衰": "弱"
+   },
+   "conclusion": "庚金身弱逢调候，火炼金需水济、金寒需火暖，用神需炼需养两相宜。",
+   "source": "《穷通宝鉴》庚金调候",
+   "confidence": "中",
+   "suggestion": "压力与滋养要平衡获取"
+  },
+  {
+   "id": "yongshen_壬水_弱_调候",
+   "category": "用神喜忌",
+   "condition": {
+    "日主": "壬水",
+    "状态": "调候",
+    "旺衰": "弱"
+   },
+   "conclusion": "壬水身弱逢调候，寒水需火暖、夏水需金生，用神以暖局为先。",
+   "source": "《穷通宝鉴》壬水调候",
+   "confidence": "中",
+   "suggestion": "先暖后养，节奏别乱"
+  },
+  {
+   "id": "yongshen_乙木_强_调候",
+   "category": "用神喜忌",
+   "condition": {
+    "日主": "乙木",
+    "状态": "调候",
+    "旺衰": "强"
+   },
+   "conclusion": "乙木身强逢调候，木旺需金修剪、寒暖需调，用神取官杀与火。",
+   "source": "《穷通宝鉴》乙木调候",
+   "confidence": "中",
+   "suggestion": "强木宜剪，规约促成长"
+  },
+  {
+   "id": "yongshen_丁火_强_调候",
+   "category": "用神喜忌",
+   "condition": {
+    "日主": "丁火",
+    "状态": "调候",
+    "旺衰": "强"
+   },
+   "conclusion": "丁火身强逢调候，火旺需水既济、燥烈需润，用神取水为要。",
+   "source": "《穷通宝鉴》丁火调候",
+   "confidence": "中",
+   "suggestion": "以柔济刚，补水润局"
+  },
+  {
+   "id": "yongshen_己土_强_调候",
+   "category": "用神喜忌",
+   "condition": {
+    "日主": "己土",
+    "状态": "调候",
+    "旺衰": "强"
+   },
+   "conclusion": "己土身强逢调候，土重需木疏、燥湿需调，用神取木与金水。",
+   "source": "《穷通宝鉴》己土调候",
+   "confidence": "中",
+   "suggestion": "疏土通脉，引入新变量"
+  },
+  {
+   "id": "yongshen_辛金_强_调候",
+   "category": "用神喜忌",
+   "condition": {
+    "日主": "辛金",
+    "状态": "调候",
+    "旺衰": "强"
+   },
+   "conclusion": "辛金身强逢调候，金强需火炼、寒金需暖，用神取火土相济。",
+   "source": "《穷通宝鉴》辛金调候",
+   "confidence": "中",
+   "suggestion": "烈火炼金，锤炼中见成色"
+  },
+  {
+   "id": "yongshen_癸水_强_调候",
+   "category": "用神喜忌",
+   "condition": {
+    "日主": "癸水",
+    "状态": "调候",
+    "旺衰": "强"
+   },
+   "conclusion": "癸水身强逢调候，水旺需土制、寒水需火暖，用神取火土。",
+   "source": "《穷通宝鉴》癸水调候",
+   "confidence": "中",
+   "suggestion": "堤岸火暖，收放有度"
+  },
+  {
+   "id": "yongshen_身强_食伤泄秀",
+   "category": "用神喜忌",
+   "condition": {
+    "旺衰": "强",
+    "组合": [
+     "食神"
+    ]
+   },
+   "conclusion": "身强喜食伤泄秀，才华有出口、能量得释放，宜多输出多表达。",
+   "source": "《子平真诠》食伤泄秀",
+   "confidence": "中",
+   "suggestion": "把能力亮出来，输出即修行"
+  },
+  {
+   "id": "yongshen_身强_财官为用",
+   "category": "用神喜忌",
+   "condition": {
+    "旺衰": "强",
+    "组合": [
+     "正财"
+    ]
+   },
+   "conclusion": "身强喜财官，担财任事有力，用神取财生官，务实进取得名利。",
+   "source": "《子平真诠》身旺喜财官",
+   "confidence": "中",
+   "suggestion": "勇担责任，名利随之"
+  },
+  {
+   "id": "yongshen_身弱_印比为用",
+   "category": "用神喜忌",
+   "condition": {
+    "旺衰": "弱",
+    "组合": [
+     "正印"
+    ]
+   },
+   "conclusion": "身弱喜印比，用神取印生身、比劫帮扶，宜借力学习与团队。",
+   "source": "《子平真诠》身弱喜印比",
+   "confidence": "中",
+   "suggestion": "抱团取暖，学习借力"
+  },
+  {
+   "id": "yongshen_身弱_官杀为忌",
+   "category": "用神喜忌",
+   "condition": {
+    "旺衰": "弱",
+    "组合": [
+     "正官"
+    ]
+   },
+   "conclusion": "身弱官杀为忌，压力逾重、责任难当，用神先制杀化杀再言进取。",
+   "source": "《子平真诠》身弱忌官杀",
+   "confidence": "中",
+   "suggestion": "先减负再增能，忌硬扛"
+  },
+  {
+   "id": "yongshen_寒月_身弱暖",
+   "category": "用神喜忌",
+   "condition": {
+    "状态": "调候",
+    "旺衰": "弱"
+   },
+   "conclusion": "寒暑月令身弱，调候需求加倍，寒月急需火暖、暑月急需水润，用神不可偏离。",
+   "source": "《穷通宝鉴》调候总论",
+   "confidence": "中",
+   "suggestion": "极端气候环境最影响你，主动调节"
+  },
+  {
+   "id": "wuxing_相生_弱_木",
+   "category": "五行生克",
+   "condition": {
+    "五行": "木",
+    "状态": "弱"
+   },
+   "conclusion": "木弱难生火，心有余而力不足，能量传递不畅，宜先补木再言生发。",
+   "source": "《滴天髓》五行生克",
+   "confidence": "中",
+   "suggestion": "先固本再输出"
+  },
+  {
+   "id": "wuxing_相生_弱_火",
+   "category": "五行生克",
+   "condition": {
+    "五行": "火",
+    "状态": "弱"
+   },
+   "conclusion": "火弱难生土，热情不足、后劲乏力，宜添火添温再图厚积。",
+   "source": "《滴天髓》五行生克",
+   "confidence": "中",
+   "suggestion": "先点燃热情再谈积累"
+  },
+  {
+   "id": "wuxing_相生_弱_土",
+   "category": "五行生克",
+   "condition": {
+    "五行": "土",
+    "状态": "弱"
+   },
+   "conclusion": "土弱难生金，根基不固则收获不稳，宜夯实基础再言成果。",
+   "source": "《滴天髓》五行生克",
+   "confidence": "中",
+   "suggestion": "打牢地基，成果才牢"
+  },
+  {
+   "id": "wuxing_相生_弱_金",
+   "category": "五行生克",
+   "condition": {
+    "五行": "金",
+    "状态": "弱"
+   },
+   "conclusion": "金弱难生水，规则不足则流通受阻，宜立规矩再求顺达。",
+   "source": "《滴天髓》五行生克",
+   "confidence": "中",
+   "suggestion": "先立规矩，再图流转"
+  },
+  {
+   "id": "wuxing_相生_弱_水",
+   "category": "五行生克",
+   "condition": {
+    "五行": "水",
+    "状态": "弱"
+   },
+   "conclusion": "水弱难生木，滋养不足则生长乏力，宜蓄水养源再谋生长。",
+   "source": "《滴天髓》五行生克",
+   "confidence": "中",
+   "suggestion": "先养资源，再谈扩张"
+  },
+  {
+   "id": "wuxing_相克_弱_木",
+   "category": "五行生克",
+   "condition": {
+    "五行": "木",
+    "状态": "弱"
+   },
+   "conclusion": "木弱受金克，根基脆弱易受制，宜强木自立方能抵御。",
+   "source": "《滴天髓》五行生克",
+   "confidence": "中",
+   "suggestion": "强自身，才有话语权"
+  },
+  {
+   "id": "wuxing_相克_弱_火",
+   "category": "五行生克",
+   "condition": {
+    "五行": "火",
+    "状态": "弱"
+   },
+   "conclusion": "火弱受水克，热情易被浇灭，宜固火防寒再言进取。",
+   "source": "《滴天髓》五行生克",
+   "confidence": "中",
+   "suggestion": "保护热情，抵御冷水"
+  },
+  {
+   "id": "wuxing_相克_弱_土",
+   "category": "五行生克",
+   "condition": {
+    "五行": "土",
+    "状态": "弱"
+   },
+   "conclusion": "土弱受木克，根基不稳易被动摇，宜厚土自固再谈担当。",
+   "source": "《滴天髓》五行生克",
+   "confidence": "中",
+   "suggestion": "稳住底盘，再扛责任"
+  },
+  {
+   "id": "wuxing_相克_弱_金",
+   "category": "五行生克",
+   "condition": {
+    "五行": "金",
+    "状态": "弱"
+   },
+   "conclusion": "金弱受火克，规则易被冲击，宜炼金成器再立规矩。",
+   "source": "《滴天髓》五行生克",
+   "confidence": "中",
+   "suggestion": "先有硬实力，再立规矩"
+  },
+  {
+   "id": "wuxing_相克_弱_水",
+   "category": "五行生克",
+   "condition": {
+    "五行": "水",
+    "状态": "弱"
+   },
+   "conclusion": "水弱受土克，流通易被堵塞，宜通渠疏浚再求润泽。",
+   "source": "《滴天髓》五行生克",
+   "confidence": "中",
+   "suggestion": "先疏通道，再谈润泽"
+  },
+  {
+   "id": "wuxing_流通_木火",
+   "category": "五行生克",
+   "condition": {
+    "五行": "木",
+    "状态": "中和"
+   },
+   "conclusion": "木行中和，生克平衡、流通顺畅，木火相生之象自然成局。",
+   "source": "《滴天髓》中和论",
+   "confidence": "中",
+   "suggestion": "保持平衡，顺势生发"
+  },
+  {
+   "id": "wuxing_流通_金水",
+   "category": "五行生克",
+   "condition": {
+    "五行": "金",
+    "状态": "中和"
+   },
+   "conclusion": "金行中和，收敛有度、流通有序，金水相涵之象从容有成。",
+   "source": "《滴天髓》中和论",
+   "confidence": "中",
+   "suggestion": "从容收放，张弛有度"
+  },
+  {
+   "id": "combo_伤官_偏财",
+   "category": "十神组合",
+   "condition": {
+    "组合": [
+     "伤官",
+     "偏财"
+    ]
+   },
+   "conclusion": "伤官生偏财，才艺变现多路，创意与投机嗅觉兼具，宜多线出击。",
+   "source": "《渊海子平》伤官生财",
+   "confidence": "中",
+   "suggestion": "创意多路变现，控制风险"
+  },
+  {
+   "id": "combo_偏印_比肩",
+   "category": "十神组合",
+   "condition": {
+    "组合": [
+     "偏印",
+     "比肩"
+    ]
+   },
+   "conclusion": "偏印比肩同透，孤军奋斗亦有技法傍身，独立钻研型人才。",
+   "source": "《渊海子平》偏印比肩",
+   "confidence": "中",
+   "suggestion": "独行侠路线，技术立身"
+  },
+  {
+   "id": "combo_劫财_正财",
+   "category": "十神组合",
+   "condition": {
+    "组合": [
+     "劫财",
+     "正财"
+    ]
+   },
+   "conclusion": "劫财夺正财，正当收入易被分夺，防合伙分利、财来财去。",
+   "source": "《渊海子平》劫财夺财",
+   "confidence": "中",
+   "suggestion": "财权分明，防抢防分"
+  },
+  {
+   "id": "combo_劫财_偏财",
+   "category": "十神组合",
+   "condition": {
+    "组合": [
+     "劫财",
+     "偏财"
+    ]
+   },
+   "conclusion": "劫财夺偏财，投机之财易被劫，防赌性误事、防人借机分利。",
+   "source": "《渊海子平》劫财夺财",
+   "confidence": "中",
+   "suggestion": "投机减量，落袋为安"
+  },
+  {
+   "id": "combo_食神_伤官",
+   "category": "十神组合",
+   "condition": {
+    "组合": [
+     "食神",
+     "伤官"
+    ]
+   },
+   "conclusion": "食伤同透，才艺双全、表达欲强，宜艺术创作，忌恃才傲物。",
+   "source": "《渊海子平》食伤组合",
+   "confidence": "中",
+   "suggestion": "双才并用，谦逊收尾"
+  },
+  {
+   "id": "combo_正财_偏财",
+   "category": "十神组合",
+   "condition": {
+    "组合": [
+     "正财",
+     "偏财"
+    ]
+   },
+   "conclusion": "财星双透，正偏财兼得，主业副业两线财源，理财须防分散。",
+   "source": "《渊海子平》财星双透",
+   "confidence": "中",
+   "suggestion": "双线开源，专注管理"
+  },
+  {
+   "id": "combo_正印_伤官",
+   "category": "十神组合",
+   "condition": {
+    "组合": [
+     "正印",
+     "伤官"
+    ]
+   },
+   "conclusion": "伤官佩印，才学相济，才华有学养托底，文理兼通之象。",
+   "source": "《渊海子平》伤官佩印",
+   "confidence": "中",
+   "suggestion": "以学养才，厚积薄发"
+  },
+  {
+   "id": "combo_伤官_劫财",
+   "category": "十神组合",
+   "condition": {
+    "组合": [
+     "伤官",
+     "劫财"
+    ]
+   },
+   "conclusion": "伤官劫财同透，才华与竞争心并存，易因冲动失财，宜谋定后动。",
+   "source": "《渊海子平》伤官劫财",
+   "confidence": "中",
+   "suggestion": "冲动是魔鬼，三思后行"
+  },
+  {
+   "id": "combo_偏印_劫财",
+   "category": "十神组合",
+   "condition": {
+    "组合": [
+     "偏印",
+     "劫财"
+    ]
+   },
+   "conclusion": "偏印劫财同透，偏门智慧配争夺心，易走捷径，宜守正防偏。",
+   "source": "《渊海子平》偏印劫财",
+   "confidence": "中",
+   "suggestion": "捷径少走，正道长青"
+  },
+  {
+   "id": "shensha_天乙_正财",
+   "category": "神煞",
+   "condition": {
+    "神煞": "天乙贵人",
+    "十神": "正财"
+   },
+   "conclusion": "天乙配正财，财路逢贵人，正当收入处多遇提携，财缘带贵气。",
+   "source": "《三命通会》天乙贵人 / 正财",
+   "confidence": "中",
+   "suggestion": "贵人指路，正财更稳"
+  },
+  {
+   "id": "shensha_天乙_七杀",
+   "category": "神煞",
+   "condition": {
+    "神煞": "天乙贵人",
+    "十神": "七杀"
+   },
+   "conclusion": "天乙化杀，压力危机处有贵人化解，以险化夷、转危为安。",
+   "source": "《三命通会》天乙贵人 / 七杀",
+   "confidence": "中",
+   "suggestion": "危局莫慌，贵人自来"
+  },
+  {
+   "id": "shensha_文昌_偏印",
+   "category": "神煞",
+   "condition": {
+    "神煞": "文昌",
+    "十神": "偏印"
+   },
+   "conclusion": "文昌配偏印，偏学文星，数理、玄学、冷门学问有灵性，宜深度钻研。",
+   "source": "《三命通会》文昌 / 偏印",
+   "confidence": "中",
+   "suggestion": "偏学深耕，自成一家"
+  },
+  {
+   "id": "shensha_文昌_正财",
+   "category": "神煞",
+   "condition": {
+    "神煞": "文昌",
+    "十神": "正财"
+   },
+   "conclusion": "文昌配正财，文财兼得，知识变现能力强，靠笔杆子吃饭亦富足。",
+   "source": "《三命通会》文昌 / 正财",
+   "confidence": "中",
+   "suggestion": "知识产品化，以文生财"
+  },
+  {
+   "id": "shensha_禄神_七杀",
+   "category": "神煞",
+   "condition": {
+    "神煞": "禄神",
+    "十神": "七杀"
+   },
+   "conclusion": "禄神配七杀，俸禄担重责，体制内攻坚岗有缘，位高责重亦安稳。",
+   "source": "《三命通会》禄神 / 七杀",
+   "confidence": "中",
+   "suggestion": "责任越大回报越稳"
+  },
+  {
+   "id": "shensha_将星_七杀",
+   "category": "神煞",
+   "condition": {
+    "神煞": "将星",
+    "十神": "七杀"
+   },
+   "conclusion": "将星配七杀，掌兵权之象，竞争性强的领导岗、军警安防类有缘。",
+   "source": "《三命通会》将星 / 七杀",
+   "confidence": "中",
+   "suggestion": "以威立信，注意刚极则折"
+  },
+  {
+   "id": "shensha_华盖_七杀",
+   "category": "神煞",
+   "condition": {
+    "神煞": "华盖",
+    "十神": "七杀"
+   },
+   "conclusion": "华盖配七杀，孤高掌权，独当一面的管理风格，宜专业权威路线。",
+   "source": "《三命通会》华盖 / 七杀",
+   "confidence": "中",
+   "suggestion": "专业立威，独行亦成"
+  },
+  {
+   "id": "shensha_驿马_七杀",
+   "category": "神煞",
+   "condition": {
+    "神煞": "驿马",
+    "十神": "七杀"
+   },
+   "conclusion": "驿马配七杀，奔波掌权，外派、出差、异地任职反得权柄。",
+   "source": "《三命通会》驿马 / 七杀",
+   "confidence": "中",
+   "suggestion": "主动争取外派机会"
+  },
+  {
+   "id": "shensha_红鸾_正印",
+   "category": "神煞",
+   "condition": {
+    "神煞": "红鸾",
+    "十神": "正印"
+   },
+   "conclusion": "红鸾配正印，婚喜文定，姻缘多经文书媒证（相亲、介绍、婚介）而成。",
+   "source": "《三命通会》红鸾 / 正印",
+   "confidence": "中",
+   "suggestion": "正缘或从介绍中来，把握"
+  },
+  {
+   "id": "shensha_桃花_正印",
+   "category": "神煞",
+   "condition": {
+    "神煞": "桃花",
+    "十神": "正印"
+   },
+   "conclusion": "桃花配正印，文雅魅力，气质型桃花缘，书卷气吸引异性。",
+   "source": "《三命通会》桃花 / 正印",
+   "confidence": "中",
+   "suggestion": "腹有诗书，魅力自成"
+  },
+  {
+   "id": "study_天乙_七杀",
+   "category": "学业",
+   "condition": {
+    "神煞": "天乙贵人",
+    "十神": "七杀"
+   },
+   "conclusion": "天乙化杀助学业，升学竞争关键处遇贵人指点，逢考多转机。",
+   "source": "《三命通会》天乙贵人 / 学业",
+   "confidence": "中",
+   "suggestion": "关键考试前多请教高人"
+  },
+  {
+   "id": "study_文昌_正财",
+   "category": "学业",
+   "condition": {
+    "神煞": "文昌",
+    "十神": "正财"
+   },
+   "conclusion": "文昌配正财，学以致用变现早，边学边赚，知识经济路线顺。",
+   "source": "《三命通会》文昌 / 学业",
+   "confidence": "中",
+   "suggestion": "用知识换收入，越学越富"
+  },
+  {
+   "id": "study_身弱_伤官_忌",
+   "category": "学业",
+   "condition": {
+    "旺衰": "弱",
+    "组合": [
+     "伤官"
+    ]
+   },
+   "conclusion": "身弱伤官，学习耗神易疲惫，宜劳逸结合，忌长时间硬撑。",
+   "source": "《子平真诠》身弱伤官",
+   "confidence": "中",
+   "suggestion": "分段学习，效率优先"
+  },
+  {
+   "id": "study_身强_正官",
+   "category": "学业",
+   "condition": {
+    "旺衰": "强",
+    "组合": [
+     "正官"
+    ]
+   },
+   "conclusion": "身强官星，自律上进、目标感强，升学考试按部就班能成。",
+   "source": "《子平真诠》身强官星",
+   "confidence": "中",
+   "suggestion": "定好目标，按计划执行"
+  },
+  {
+   "id": "study_金舆_正财",
+   "category": "学业",
+   "condition": {
+    "神煞": "金舆",
+    "十神": "正财"
+   },
+   "conclusion": "金舆配正财，赶考路上财用无虞，升学期间经济后盾稳。",
+   "source": "《三命通会》金舆 / 学业",
+   "confidence": "中",
+   "suggestion": "安心备考，后援无忧"
+  },
+  {
+   "id": "kin_祖上_比肩",
+   "category": "六亲",
+   "condition": {
+    "位置": "年干",
+    "十神": "比肩"
+   },
+   "conclusion": "年干透比肩，祖上兄弟众多、家业众分，白手传承靠自己。",
+   "source": "《渊海子平》宫位论",
+   "confidence": "中",
+   "suggestion": "自立更生，家业靠己创"
+  },
+  {
+   "id": "kin_祖上_七杀",
+   "category": "六亲",
+   "condition": {
+    "位置": "年干",
+    "十神": "七杀"
+   },
+   "conclusion": "年干透七杀，祖上闯荡打拼、白手起家，家风敢拼敢闯。",
+   "source": "《渊海子平》宫位论",
+   "confidence": "中",
+   "suggestion": "继承闯劲，规矩里求突破"
+  },
+  {
+   "id": "kin_父母_食神",
+   "category": "六亲",
+   "condition": {
+    "位置": "月干",
+    "十神": "食神"
+   },
+   "conclusion": "月干透食神，父母温和开明、重享乐福气，家教宽松有爱。",
+   "source": "《渊海子平》宫位论",
+   "confidence": "中",
+   "suggestion": "多回报父母，福气共享"
+  },
+  {
+   "id": "kin_手足_正财",
+   "category": "六亲",
+   "condition": {
+    "位置": "年干",
+    "十神": "正财"
+   },
+   "conclusion": "年干透正财，手足务实理财，兄弟姐妹经济上互相帮扶。",
+   "source": "《渊海子平》宫位论",
+   "confidence": "中",
+   "suggestion": "经济互助，账目清楚"
+  },
+  {
+   "id": "kin_子女_劫财",
+   "category": "六亲",
+   "condition": {
+    "位置": "时干",
+    "十神": "劫财"
+   },
+   "conclusion": "时干透劫财，子女独立好强、有主见，管教宜放养加引导。",
+   "source": "《渊海子平》宫位论",
+   "confidence": "中",
+   "suggestion": "尊重子女闯劲，把关方向"
+  },
+  {
+   "id": "shensha_龙德_正财",
+   "category": "神煞",
+   "condition": {
+    "神煞": "龙德",
+    "十神": "正财"
+   },
+   "conclusion": "龙德配正财，正当财路有贵人护航，守正经营反得意外之助，财缘清正。",
+   "source": "《三命通会》龙德 / 正财",
+   "confidence": "中",
+   "suggestion": "正道经营，贵人自来"
   }
  ],
  "usage_note": "分析时先排盘得日主/月令/十神/五行分布/格局/身强身弱/神煞/流年，逐条匹配 condition（字段按实际裁剪），命中即输出 conclusion 并标注 source。未命中规则的部分不强行断语，仅作趋势提示。健康类断语置信度低，须提示以医学为准。"
