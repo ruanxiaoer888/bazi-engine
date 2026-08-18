@@ -347,22 +347,6 @@
    "suggestion": "聚焦最旺的用神方向发力"
   },
   {
-   "id": "wealth_kugu",
-   "category": "财运",
-   "condition": {
-    "组合": [
-     "正财",
-     "偏财",
-     "正印",
-     "偏印"
-    ]
-   },
-   "conclusion": "库多则虚，马多则病——墓库、驿马过多反而财不聚、身奔波。",
-   "source": "《三命通会》五行太过原则",
-   "confidence": "低",
-   "suggestion": "宜开库（冲刑）或扎根，减少无谓奔波"
-  },
-  {
    "id": "wealth_jincai_1",
    "category": "财运",
    "condition": {
@@ -12192,6 +12176,21 @@
    "source": "《三命通会》龙德 / 正财",
    "confidence": "中",
    "suggestion": "正道经营，贵人自来"
+  },
+  {
+   "id": "wealth_财官印三宝",
+   "category": "财运",
+   "condition": {
+    "组合": [
+     "正财",
+     "正官",
+     "正印"
+    ]
+   },
+   "conclusion": "财官印三宝同透，财生官、官生印，财官印流通有情，名利双收之贵格，宜走正道积累。",
+   "source": "《子平真诠》财官印",
+   "confidence": "中",
+   "suggestion": "正途进取，财官印皆得"
   }
  ],
  "usage_note": "分析时先排盘得日主/月令/十神/五行分布/格局/身强身弱/神煞/流年，逐条匹配 condition（字段按实际裁剪），命中即输出 conclusion 并标注 source。未命中规则的部分不强行断语，仅作趋势提示。健康类断语置信度低，须提示以医学为准。"
