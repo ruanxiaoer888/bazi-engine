@@ -10837,6 +10837,637 @@
    "source": "《渊海子平》伤官生财",
    "confidence": "中",
    "suggestion": "把创意产品化，变现要趁早"
+  },
+  {
+   "id": "char_pos_比劫_月干",
+   "category": "性格",
+   "condition": {
+    "位置": "月干",
+    "十神": [
+     "比肩",
+     "劫财"
+    ]
+   },
+   "conclusion": "月干透比劫，性情豪爽仗义、朋友多，为人讲义气，忌冲动讲排场。",
+   "source": "《渊海子平》十神类象",
+   "confidence": "中",
+   "suggestion": "重情义也要有原则底线"
+  },
+  {
+   "id": "char_pos_财_月干",
+   "category": "性格",
+   "condition": {
+    "位置": "月干",
+    "十神": [
+     "正财",
+     "偏财"
+    ]
+   },
+   "conclusion": "月干透财，务实重实际、善于经营算计，为人精明，忌过于计较。",
+   "source": "《渊海子平》十神类象",
+   "confidence": "中",
+   "suggestion": "务实之余留些人情味"
+  },
+  {
+   "id": "char_pos_官_月干",
+   "category": "性格",
+   "condition": {
+    "位置": "月干",
+    "十神": [
+     "正官",
+     "七杀"
+    ]
+   },
+   "conclusion": "月干透官杀，自律有担当、责任感强，为人端正，压力自驱型。",
+   "source": "《渊海子平》十神类象",
+   "confidence": "中",
+   "suggestion": "责任心重，学会给自己松绑"
+  },
+  {
+   "id": "char_pos_印_月干",
+   "category": "性格",
+   "condition": {
+    "位置": "月干",
+    "十神": [
+     "正印",
+     "偏印"
+    ]
+   },
+   "conclusion": "月干透印，温厚好学、有书卷气，为人心地仁厚，忌思虑过多。",
+   "source": "《渊海子平》十神类象",
+   "confidence": "中",
+   "suggestion": "多实践落地，少空想内耗"
+  },
+  {
+   "id": "char_pos_食伤_月干",
+   "category": "性格",
+   "condition": {
+    "位置": "月干",
+    "十神": [
+     "食神",
+     "伤官"
+    ]
+   },
+   "conclusion": "月干透食伤，聪慧外露、表达力强、有才艺，为人活泼，忌锋芒过露。",
+   "source": "《渊海子平》十神类象",
+   "confidence": "中",
+   "suggestion": "才华外放也要学会藏锋"
+  },
+  {
+   "id": "char_乙_调候",
+   "category": "性格",
+   "condition": {
+    "日主": "乙木",
+    "状态": "调候"
+   },
+   "conclusion": "乙木逢调候之需，寒暖失衡时性情敏感易变，环境舒通则柔韧从容。",
+   "source": "《穷通宝鉴》乙木调候",
+   "confidence": "中",
+   "suggestion": "营造舒适环境，心情即运势"
+  },
+  {
+   "id": "char_丁_调候",
+   "category": "性格",
+   "condition": {
+    "日主": "丁火",
+    "状态": "调候"
+   },
+   "conclusion": "丁火逢调候之需，情志细腻易起伏，得暖局则温润明亮、待人热忱。",
+   "source": "《穷通宝鉴》丁火调候",
+   "confidence": "中",
+   "suggestion": "保持作息稳定，情绪更从容"
+  },
+  {
+   "id": "char_己_调候",
+   "category": "性格",
+   "condition": {
+    "日主": "己土",
+    "状态": "调候"
+   },
+   "conclusion": "己土逢调候之需，性情敦厚而多虑，得湿润之局则包容沉稳、有担当。",
+   "source": "《穷通宝鉴》己土调候",
+   "confidence": "中",
+   "suggestion": "少操心琐事，多培养爱好"
+  },
+  {
+   "id": "char_辛_调候",
+   "category": "性格",
+   "condition": {
+    "日主": "辛金",
+    "状态": "调候"
+   },
+   "conclusion": "辛金逢调候之需，心思玲珑而敏感，得润泽之局则精致通透、有原则。",
+   "source": "《穷通宝鉴》辛金调候",
+   "confidence": "中",
+   "suggestion": "敏感是天赋，学会过滤噪音"
+  },
+  {
+   "id": "char_癸_调候",
+   "category": "性格",
+   "condition": {
+    "日主": "癸水",
+    "状态": "调候"
+   },
+   "conclusion": "癸水逢调候之需，性情内敛多思，得温暖之局则灵动智慧、善解人意。",
+   "source": "《穷通宝鉴》癸水调候",
+   "confidence": "中",
+   "suggestion": "多晒太阳多社交，能量更足"
+  },
+  {
+   "id": "char_通用_中和",
+   "category": "性格",
+   "condition": {
+    "旺衰": "中和"
+   },
+   "conclusion": "命局中和，性情平稳包容、进退有度，是难得的身心平衡之象。",
+   "source": "《滴天髓》中和论",
+   "confidence": "中",
+   "suggestion": "保持平衡，发挥稳定优势"
+  },
+  {
+   "id": "char_shensha_天乙",
+   "category": "性格",
+   "condition": {
+    "神煞": "天乙贵人"
+   },
+   "conclusion": "命带天乙贵人，性情温厚善良、人缘好，天生有化解冲突的亲和力。",
+   "source": "《三命通会》天乙贵人",
+   "confidence": "中",
+   "suggestion": "贵人运旺，待人真诚即招贵"
+  },
+  {
+   "id": "char_shensha_文昌",
+   "category": "性格",
+   "condition": {
+    "神煞": "文昌"
+   },
+   "conclusion": "命带文昌，聪慧文雅、喜读书思考，谈吐有涵养，宜文墨之事。",
+   "source": "《三命通会》文昌",
+   "confidence": "中",
+   "suggestion": "保持阅读习惯，腹有诗书气自华"
+  },
+  {
+   "id": "char_shensha_禄神",
+   "category": "性格",
+   "condition": {
+    "神煞": "禄神"
+   },
+   "conclusion": "命带禄神，福禄自足、性情安稳，不争不抢亦有饭吃，宜守正。",
+   "source": "《三命通会》禄神",
+   "confidence": "中",
+   "suggestion": "知足常乐，稳中求进"
+  },
+  {
+   "id": "char_shensha_龙德",
+   "category": "性格",
+   "condition": {
+    "神煞": "龙德"
+   },
+   "conclusion": "命带龙德，性情端正大气、有贵气，临危不乱，遇事有主张。",
+   "source": "《三命通会》龙德",
+   "confidence": "中",
+   "suggestion": "遇事沉稳，权威自然建立"
+  },
+  {
+   "id": "char_shensha_亡神",
+   "category": "性格",
+   "condition": {
+    "神煞": "亡神"
+   },
+   "conclusion": "命带亡神，心思深沉、城府较深，易多思多虑，宜修炼豁达。",
+   "source": "《三命通会》亡神",
+   "confidence": "中",
+   "suggestion": "少猜疑多沟通，心宽路宽"
+  },
+  {
+   "id": "char_shensha_灾煞",
+   "category": "性格",
+   "condition": {
+    "神煞": "灾煞"
+   },
+   "conclusion": "命带灾煞，性情刚烈急躁、行动力强，忌冲动行事，宜三思后行。",
+   "source": "《三命通会》灾煞",
+   "confidence": "中",
+   "suggestion": "行动前默数十秒，稳字当头"
+  },
+  {
+   "id": "char_shensha_劫煞",
+   "category": "性格",
+   "condition": {
+    "神煞": "劫煞"
+   },
+   "conclusion": "命带劫煞，果断强势、不甘人后，竞争心强，宜化争斗为进取。",
+   "source": "《三命通会》劫煞",
+   "confidence": "中",
+   "suggestion": "化敌为友，竞争场上留余地"
+  },
+  {
+   "id": "char_shensha_勾绞",
+   "category": "性格",
+   "condition": {
+    "神煞": "勾绞"
+   },
+   "conclusion": "命带勾绞，心细如发、易纠结小事，口舌是非多，宜修炼豁达。",
+   "source": "《三命通会》勾绞",
+   "confidence": "中",
+   "suggestion": "抓大放小，远离是非圈"
+  },
+  {
+   "id": "char_shensha_流霞",
+   "category": "性格",
+   "condition": {
+    "神煞": "流霞"
+   },
+   "conclusion": "命带流霞，性情热烈外放、敢爱敢恨，宜收放有度，防乐极生悲。",
+   "source": "《三命通会》流霞",
+   "confidence": "中",
+   "suggestion": "情绪管理，喜乐有度"
+  },
+  {
+   "id": "career_七杀_时干",
+   "category": "事业",
+   "condition": {
+    "十神": "七杀",
+    "位置": "时干"
+   },
+   "conclusion": "时干透七杀，晚运掌实权，事业后期竞争压力大但位高权重，宜稳扎稳打。",
+   "source": "《三命通会》七杀 / 宫位",
+   "confidence": "中",
+   "suggestion": "中年积累实力，晚运自有权柄"
+  },
+  {
+   "id": "career_正财_月干",
+   "category": "事业",
+   "condition": {
+    "十神": "正财",
+    "位置": "月干"
+   },
+   "conclusion": "月干透正财，正当行业稳定财源，靠薪资与正业立身，宜勤恳积累。",
+   "source": "《三命通会》正财 / 宫位",
+   "confidence": "中",
+   "suggestion": "深耕主业，正财稳健"
+  },
+  {
+   "id": "career_偏财_年干",
+   "category": "事业",
+   "condition": {
+    "十神": "偏财",
+    "位置": "年干"
+   },
+   "conclusion": "年干透偏财，祖上经商或早年见财，商业嗅觉早熟，宜乘势而上。",
+   "source": "《三命通会》偏财 / 宫位",
+   "confidence": "中",
+   "suggestion": "早立商业思维，顺势起家"
+  },
+  {
+   "id": "career_食神_时干",
+   "category": "事业",
+   "condition": {
+    "十神": "食神",
+    "位置": "时干"
+   },
+   "conclusion": "时干透食神，晚运以技艺口碑生财，越老越吃香，宜深耕专业。",
+   "source": "《三命通会》食神 / 宫位",
+   "confidence": "中",
+   "suggestion": "专业立身，口碑长青"
+  },
+  {
+   "id": "career_劫财_年干",
+   "category": "事业",
+   "condition": {
+    "十神": "劫财",
+    "位置": "年干"
+   },
+   "conclusion": "年干透劫财，创业路上竞争激烈、易遇争财，宜早立规则防患。",
+   "source": "《三命通会》劫财 / 宫位",
+   "confidence": "中",
+   "suggestion": "股权规则先立，防患未然"
+  },
+  {
+   "id": "career_文昌",
+   "category": "事业",
+   "condition": {
+    "神煞": "文昌"
+   },
+   "conclusion": "命带文昌，文职文书运旺，文字、策划、教育、媒体类工作易出成绩。",
+   "source": "《三命通会》文昌",
+   "confidence": "中",
+   "suggestion": "往文字智力型岗位发展"
+  },
+  {
+   "id": "career_禄神",
+   "category": "事业",
+   "condition": {
+    "神煞": "禄神"
+   },
+   "conclusion": "命带禄神，食俸禄之象，体制内、大企业安稳职位有缘，端得稳饭碗。",
+   "source": "《三命通会》禄神",
+   "confidence": "中",
+   "suggestion": "稳定平台+持续增值"
+  },
+  {
+   "id": "career_龙德",
+   "category": "事业",
+   "condition": {
+    "神煞": "龙德"
+   },
+   "conclusion": "命带龙德，职场有贵人力挺，关键时刻有人撑腰，宜忠心干事。",
+   "source": "《三命通会》龙德",
+   "confidence": "中",
+   "suggestion": "跟对平台跟对人，忠心即机遇"
+  },
+  {
+   "id": "career_羊刃",
+   "category": "事业",
+   "condition": {
+    "神煞": "羊刃"
+   },
+   "conclusion": "命带羊刃，竞争性行业如鱼得水，军警、竞技、销售攻坚类岗位有利。",
+   "source": "《三命通会》羊刃",
+   "confidence": "中",
+   "suggestion": "用斗志拼业绩，注意分寸"
+  },
+  {
+   "id": "career_金舆",
+   "category": "事业",
+   "condition": {
+    "神煞": "金舆"
+   },
+   "conclusion": "命带金舆，车马交通之利，物流、运输、出行服务类行业有机缘。",
+   "source": "《三命通会》金舆",
+   "confidence": "中",
+   "suggestion": "交通出行行业可考虑"
+  },
+  {
+   "id": "career_格_偏财",
+   "category": "事业",
+   "condition": {
+    "格局": "偏财格"
+   },
+   "conclusion": "偏财格，商业头脑灵活、善于抓住机会，宜经商投资，忌贪多求快。",
+   "source": "《子平真诠》偏财格",
+   "confidence": "中",
+   "suggestion": "商机敏锐，落袋为安"
+  },
+  {
+   "id": "career_格_偏印",
+   "category": "事业",
+   "condition": {
+    "格局": "偏印格"
+   },
+   "conclusion": "偏印格，冷门专业与偏门行业有专长，咨询、玄学、技术研发类有缘。",
+   "source": "《子平真诠》偏印格",
+   "confidence": "中",
+   "suggestion": "差异化赛道，专精致胜"
+  },
+  {
+   "id": "career_身强财透",
+   "category": "事业",
+   "condition": {
+    "旺衰": "强",
+    "十神": [
+     "正财",
+     "偏财"
+    ]
+   },
+   "conclusion": "身强财透，担财有力，创业经商能担大财，宜主动开拓财源。",
+   "source": "《子平真诠》身旺财旺",
+   "confidence": "中",
+   "suggestion": "大胆开拓，财富靠担当"
+  },
+  {
+   "id": "career_身弱杀重",
+   "category": "事业",
+   "condition": {
+    "旺衰": "弱",
+    "十神": "七杀"
+   },
+   "conclusion": "身弱杀重，压力大、事务繁，宜借力而行，忌硬扛，先强身再担责。",
+   "source": "《子平真诠》杀重身轻",
+   "confidence": "中",
+   "suggestion": "先提升能力再揽重担"
+  },
+  {
+   "id": "career_dm_乙木_强",
+   "category": "事业",
+   "condition": {
+    "日主": "乙木",
+    "旺衰": "强"
+   },
+   "conclusion": "乙木身强，柔韧善借力成事，宜平台协作型发展，藤萝系甲可登高。",
+   "source": "《滴天髓》乙木",
+   "confidence": "中",
+   "suggestion": "善借平台与人脉，事半功倍"
+  },
+  {
+   "id": "pattern_正官_透印",
+   "category": "格局",
+   "condition": {
+    "格局": "正官格",
+    "组合": [
+     "正印"
+    ]
+   },
+   "conclusion": "正官格配印，官印相生、贵气纯粹，格局清正，宜走体制仕途。",
+   "source": "《子平真诠》正官格",
+   "confidence": "中",
+   "suggestion": "官印相生的贵气，走正道最稳"
+  },
+  {
+   "id": "pattern_偏财_食生",
+   "category": "格局",
+   "condition": {
+    "格局": "偏财格",
+    "组合": [
+     "食神"
+    ]
+   },
+   "conclusion": "偏财格得食神生，财有源头、格局流通，经商得法财源滚滚。",
+   "source": "《子平真诠》偏财格",
+   "confidence": "中",
+   "suggestion": "财源有根，善用技艺生财"
+  },
+  {
+   "id": "pattern_食神_制杀",
+   "category": "格局",
+   "condition": {
+    "格局": "食神格",
+    "组合": [
+     "七杀"
+    ]
+   },
+   "conclusion": "食神格制杀，以柔克刚、化险为夷，格局上乘，能驾驭压力成大器。",
+   "source": "《子平真诠》食神制杀",
+   "confidence": "中",
+   "suggestion": "化压力为专业实力"
+  },
+  {
+   "id": "pattern_伤官_透财",
+   "category": "格局",
+   "condition": {
+    "格局": "伤官格",
+    "组合": [
+     "正财"
+    ]
+   },
+   "conclusion": "伤官格生财，才华直接变现，格局流通有情，创意型事业有成。",
+   "source": "《子平真诠》伤官生财",
+   "confidence": "中",
+   "suggestion": "才华要产品化，趁热打铁"
+  },
+  {
+   "id": "pattern_从财_透官",
+   "category": "格局",
+   "condition": {
+    "格局": "从财格",
+    "组合": [
+     "正官"
+    ]
+   },
+   "conclusion": "从财格见官，财官顺从而从，格局清纯，宜依附大平台顺势而为。",
+   "source": "《子平真诠》从财格",
+   "confidence": "中",
+   "suggestion": "顺大势，借大船出海"
+  },
+  {
+   "id": "pattern_从杀_透印",
+   "category": "格局",
+   "condition": {
+    "格局": "从杀格",
+    "组合": [
+     "正印"
+    ]
+   },
+   "conclusion": "从杀格见印，杀印相生而从，格局顺遂，危局中反得权柄。",
+   "source": "《子平真诠》从杀格",
+   "confidence": "中",
+   "suggestion": "压力之下见机遇，顺势掌权"
+  },
+  {
+   "id": "pattern_从儿_透食",
+   "category": "格局",
+   "condition": {
+    "格局": "从儿格",
+    "组合": [
+     "食神"
+    ]
+   },
+   "conclusion": "从儿格见食神，秀气流通、从得其顺，才华尽展，宜创作表达。",
+   "source": "《子平真诠》从儿格",
+   "confidence": "中",
+   "suggestion": "尽情发挥表达与创作天赋"
+  },
+  {
+   "id": "pattern_建禄_财",
+   "category": "格局",
+   "condition": {
+    "格局": "建禄格",
+    "组合": [
+     "正财"
+    ]
+   },
+   "conclusion": "建禄格配财，身旺任财、白手起家，宜凭实力打拼创业。",
+   "source": "《子平真诠》建禄格",
+   "confidence": "中",
+   "suggestion": "白手起家的格局，敢拼敢创"
+  },
+  {
+   "id": "pattern_月劫_官",
+   "category": "格局",
+   "condition": {
+    "格局": "月劫格",
+    "组合": [
+     "正官"
+    ]
+   },
+   "conclusion": "月劫格见官，劫刃有制、格局转清，竞争激烈中反得贵气。",
+   "source": "《子平真诠》月劫格",
+   "confidence": "中",
+   "suggestion": "竞争场上守规矩，反得优势"
+  },
+  {
+   "id": "pattern_正官_忌伤",
+   "category": "格局",
+   "condition": {
+    "格局": "正官格",
+    "组合": [
+     "伤官"
+    ]
+   },
+   "conclusion": "正官格见伤官（伤官见官），贵气受损、易生是非，宜谨言慎行防官非。",
+   "source": "《子平真诠》正官格",
+   "confidence": "中",
+   "suggestion": "管住嘴，书面留痕防是非"
+  },
+  {
+   "id": "pattern_七杀_忌劫",
+   "category": "格局",
+   "condition": {
+    "格局": "七杀格",
+    "组合": [
+     "劫财"
+    ]
+   },
+   "conclusion": "七杀格见劫财，杀劫并旺、竞争惨烈，宜防小人争夺，先立规则。",
+   "source": "《子平真诠》七杀格",
+   "confidence": "中",
+   "suggestion": "规则先行，防争防夺"
+  },
+  {
+   "id": "pattern_正财_忌比",
+   "category": "格局",
+   "condition": {
+    "格局": "正财格",
+    "组合": [
+     "比肩"
+    ]
+   },
+   "conclusion": "正财格见比肩，比劫分财、财来易散，宜防合伙分利，先明账目。",
+   "source": "《子平真诠》正财格",
+   "confidence": "中",
+   "suggestion": "财权分明，合伙先立约"
+  },
+  {
+   "id": "pattern_正印_忌财",
+   "category": "格局",
+   "condition": {
+    "格局": "正印格",
+    "组合": [
+     "正财"
+    ]
+   },
+   "conclusion": "正印格见财（财星坏印），印被财破、学业贵气受损，宜专注勿逐利。",
+   "source": "《子平真诠》正印格",
+   "confidence": "中",
+   "suggestion": "先专后利，学业事业优先"
+  },
+  {
+   "id": "pattern_食神_忌枭",
+   "category": "格局",
+   "condition": {
+    "格局": "食神格",
+    "组合": [
+     "偏印"
+    ]
+   },
+   "conclusion": "食神格见偏印（枭神夺食），福气受夺、运势反复，宜防中途生变。",
+   "source": "《子平真诠》食神格",
+   "confidence": "中",
+   "suggestion": "重要计划防变数，留备手"
+  },
+  {
+   "id": "pattern_偏财_忌劫",
+   "category": "格局",
+   "condition": {
+    "格局": "偏财格",
+    "组合": [
+     "劫财"
+    ]
+   },
+   "conclusion": "偏财格见劫财，财逢劫夺、得而复失，宜防破财，钱不露白。",
+   "source": "《子平真诠》偏财格",
+   "confidence": "中",
+   "suggestion": "低调理财，防劫防偷"
   }
  ],
  "usage_note": "分析时先排盘得日主/月令/十神/五行分布/格局/身强身弱/神煞/流年，逐条匹配 condition（字段按实际裁剪），命中即输出 conclusion 并标注 source。未命中规则的部分不强行断语，仅作趋势提示。健康类断语置信度低，须提示以医学为准。"
