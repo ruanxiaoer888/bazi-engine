@@ -2874,21 +2874,6 @@
    "suggestion": "六亲关系重在平等沟通与相互尊重，命理仅为趋势参考"
   },
   {
-   "id": "kin_parent_cai",
-   "category": "六亲",
-   "condition": {
-    "十神": [
-     "正财",
-     "偏财"
-    ],
-    "状态": "旺"
-   },
-   "conclusion": "财星旺而坏印，古称父母缘薄或早年离家，现代多为务实独立、早立。",
-   "source": "《渊海子平》",
-   "confidence": "中",
-   "suggestion": "六亲关系重在平等沟通与相互尊重，命理仅为趋势参考"
-  },
-  {
    "id": "kin_sibling_jie",
    "category": "六亲",
    "condition": {
@@ -2915,21 +2900,6 @@
    },
    "conclusion": "食伤强，子女缘佳、子女聪慧有才，晚年得子女福。",
    "source": "《渊海子平》十神类象",
-   "confidence": "中",
-   "suggestion": "六亲关系重在平等沟通与相互尊重，命理仅为趋势参考"
-  },
-  {
-   "id": "kin_child_guan",
-   "category": "六亲",
-   "condition": {
-    "十神": [
-     "正官",
-     "七杀"
-    ],
-    "状态": "旺"
-   },
-   "conclusion": "官杀旺，子女管教严、望子成龙，亦主子女有出息。",
-   "source": "《渊海子平》",
    "confidence": "中",
    "suggestion": "六亲关系重在平等沟通与相互尊重，命理仅为趋势参考"
   },
@@ -2963,7 +2933,7 @@
    "id": "shensha_文昌贵人",
    "category": "神煞",
    "condition": {
-    "神煞": "文昌贵人"
+    "神煞": "文昌"
    },
    "conclusion": "命带文昌，聪明好学、文笔出众，利考试与学术研究，在年月则早慧。",
    "source": "《三命通会》文昌贵",
@@ -3103,17 +3073,6 @@
    "suggestion": "保持冷静，做好应急预案"
   },
   {
-   "id": "shensha_元辰",
-   "category": "神煞",
-   "condition": {
-    "神煞": "元辰"
-   },
-   "conclusion": "元辰（大耗）主破耗散财、事业反复，忌冲动投资创业，宜稳健理财。",
-   "source": "《三命通会》元辰论",
-   "confidence": "中",
-   "suggestion": "保守理财，落袋为安"
-  },
-  {
    "id": "shensha_空亡",
    "category": "神煞",
    "condition": {
@@ -3123,17 +3082,6 @@
    "source": "《三命通会》空亡篇",
    "confidence": "中",
    "suggestion": "以平常心待之，求稳不求快"
-  },
-  {
-   "id": "shensha_魁罡",
-   "category": "神煞",
-   "condition": {
-    "神煞": "魁罡"
-   },
-   "conclusion": "命带魁罡，刚强果断、聪明耿直、有权威气质；魁罡叠见入格主贵，破格则刚暴。",
-   "source": "《三命通会》魁罡论",
-   "confidence": "高",
-   "suggestion": "发挥决断力，注意刚柔并济"
   },
   {
    "id": "shensha_金舆",
@@ -3147,39 +3095,6 @@
    "suggestion": "享受生活的同时保持进取心"
   },
   {
-   "id": "shensha_太极贵人",
-   "category": "神煞",
-   "condition": {
-    "神煞": "太极贵人"
-   },
-   "conclusion": "命带太极贵人，聪慧过人、有学术研究天赋、喜神秘之学，宜文教科技领域。",
-   "source": "《三命通会》太极贵",
-   "confidence": "中",
-   "suggestion": "专心致志，在擅长领域深耕"
-  },
-  {
-   "id": "shensha_福星贵人",
-   "category": "神煞",
-   "condition": {
-    "神煞": "福星贵人"
-   },
-   "conclusion": "命带福星贵人，一生福泽深厚、衣食无忧、遇难有救，主安享人生。",
-   "source": "《三命通会》福星论",
-   "confidence": "高",
-   "suggestion": "惜福感恩，有余力则助人"
-  },
-  {
-   "id": "shensha_国印贵人",
-   "category": "神煞",
-   "condition": {
-    "神煞": "国印贵人"
-   },
-   "conclusion": "命带国印贵人，有公职官运之象，得官方权威认可，宜体制内或大平台发展。",
-   "source": "《三命通会》国印篇",
-   "confidence": "中",
-   "suggestion": "适合在稳定大平台积累资历"
-  },
-  {
    "id": "shensha_红鸾",
    "category": "神煞",
    "condition": {
@@ -3189,28 +3104,6 @@
    "source": "《三命通会》红鸾天喜",
    "confidence": "中",
    "suggestion": "婚姻恋爱运上扬，宜主动出击"
-  },
-  {
-   "id": "shensha_天喜",
-   "category": "神煞",
-   "condition": {
-    "神煞": "天喜"
-   },
-   "conclusion": "天喜星照，主喜庆吉事、添丁进口，流年逢则吉庆临门，宜顺势推进喜事。",
-   "source": "《三命通会》天喜篇",
-   "confidence": "中",
-   "suggestion": "好事宜趁吉星推动"
-  },
-  {
-   "id": "shensha_咸池",
-   "category": "神煞",
-   "condition": {
-    "神煞": "咸池"
-   },
-   "conclusion": "咸池（败神桃花）主情欲风流、酒色暗昧，宜以印星制化、修身养性。",
-   "source": "《三命通会》咸池论",
-   "confidence": "中",
-   "suggestion": "注意情感与欲望的平衡，修身养德"
   },
   {
    "id": "liunian_太岁值年",
@@ -3710,7 +3603,7 @@
    "id": "study_文昌配印",
    "category": "学业",
    "condition": {
-    "神煞": "文昌贵人",
+    "神煞": "文昌",
     "十神": "正印"
    },
    "conclusion": "文昌贵人配正印，为最佳学业配置——聪明+有师长庇佑，考试升学一帆风顺。",
@@ -3781,17 +3674,6 @@
    "source": "《三命通会》",
    "confidence": "中",
    "suggestion": "参加竞赛、在比较中进步"
-  },
-  {
-   "id": "study_学业_魁罡路",
-   "category": "学业",
-   "condition": {
-    "神煞": "魁罡"
-   },
-   "conclusion": "魁罡入命，悟性高但非死记硬背型，宜理解式学习与应用型考试。",
-   "source": "《三命通会》",
-   "confidence": "中",
-   "suggestion": "注重理解与应用，实战出真知"
   },
   {
    "id": "study_学业_驿马路",
@@ -3876,30 +3758,6 @@
    "source": "《渊海子平》",
    "confidence": "中",
    "suggestion": "母子关系需保持适度边界"
-  },
-  {
-   "id": "kin_六亲_财旺父远",
-   "category": "六亲",
-   "condition": {
-    "十神": "偏财",
-    "状态": "旺"
-   },
-   "conclusion": "财星过旺克印，古称父缘薄或早年离家，现代多为父亲事业繁忙、少陪伴。",
-   "source": "《渊海子平》",
-   "confidence": "中",
-   "suggestion": "理解父亲，主动建立联结"
-  },
-  {
-   "id": "kin_六亲_官杀旺子女",
-   "category": "六亲",
-   "condition": {
-    "十神": "七杀",
-    "状态": "旺"
-   },
-   "conclusion": "官杀（子女星）过旺，对子女期望高、管教严，古称\"克子\"，现代宜松紧适度。",
-   "source": "《渊海子平》",
-   "confidence": "中",
-   "suggestion": "对子女多些宽松与信任"
   },
   {
    "id": "kin_六亲_比劫多手足",
