@@ -20,7 +20,7 @@
 
 ## 快速开始
 
-直接打开 `ui/index.html`（单文件，浏览器即可运行，无需安装任何东西），或通过 WorkBuddy 调用本 Skill：
+直接打开 `ui/index.html`（单文件，浏览器即可运行，无需安装任何东西），或通过支持 Skill 的 AI 助手（WorkBuddy / DeepSeek Harness / Codex 等）调用本 Skill：
 
 1. 告诉我你的出生信息：姓名、生日（阳历或农历均可）、出生时间、性别、出生地
 2. 自动排盘并输出：四柱命盘 → 五行分析 → 大运流年 → 综合解读
