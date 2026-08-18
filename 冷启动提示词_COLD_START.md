@@ -20,7 +20,7 @@
 - 双轨战略：B 端引擎（本仓库，开源引流）+ C 端产品 `../bazi-app`（「本初」，付费变现，独立仓库/独立对话推进）
 - 技术栈：`ui/index.html` 单文件离线 UI（零依赖）+ `engine/engine.dist.js` UMD 引擎库（构建产物勿手改）+ `tools/build_ui.py` Python 构建 + `kb/` 知识库（31 文件，1000 条断语）
 
-**当前状态（2026-08-19，v1.2.2）**：
+**当前状态（2026-08-19，v1.3.0）**：
 - ✅ 功能全部完成（132 项任务清零），13 套回归全绿（test_engine/test_lunar/test_dst/test_ui/test_eval_state/test_p1_fixes/verify_sleep_rules/test_liuri_v2/test_liuyue_v2/verify_edu_rules/check_conflicts/verify_ux_e2e/test_xiyong）
 - ✅ 真人验收通过（3 案例：排盘 1990-05-15 / 流日 1996-02-22 / 合婚 1996-08-13+1973-03-02）
 - ✅ **双平台上架**：SkillHub 已发布（「生态杀手」分类，申诉通过）+ ClawHub 已发布（Productivity 分类，v1.2.1 GitHub 自动同步版，git push 自动拉新）

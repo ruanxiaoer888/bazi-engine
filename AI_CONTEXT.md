@@ -26,8 +26,8 @@
 - **输入侧提示语**（2026-08-17）：主表单 + 合婚 A/B 填时间即时提示——晚子时（23 点，时柱按次日）+ 节气临界（距十二节交节 ≤6h 提示年/月柱切换敏感点，立春特判；农历模式跳过）
 - **断语库**：`kb/04-rules-db/rules.json` — **1000 条**（事业112/性格97/神煞74/用神喜忌72/婚姻67/十神组合65/六亲64/健康62/学业61/财运57/格局56/五行生克48/流月45/流日50/流年30/合婚20/大运20），每条含 `suggestion` 建议字段；2026-08-19 清理 12 条死规则（801→789）+ 修活空亡（`cc5e405`）+ 5 批次扩充至 1000（`026bf4d`~`338f981`）
 - **UI**：`ui/index.html` 单文件离线，**零外部依赖**（无 Google Fonts），墨底 + 古铜金高端商务风，壹~玖中文序号徽章，内置 206 年节气
-- **引擎**：`engine/engine.dist.js`（287KB，UMD 双端，含 getRemedy/yongShenChong/农历模块 + 1000 条规则数据；v1.2.3 MD5 `CE99E451F5733376A56BDCE9F49D8ED4`）
-- **发布状态**：✅ **双平台均已上架（2026-08-17）**——① **SkillHub**：申诉通过已发布（「生态杀手」分类，平台归一化显示 V1.0.0，实际 v1.2.1）；② **ClawHub**：已发布（SkillSpector 转 Published，Productivity 分类，v1.2.1 GitHub 自动同步版——绑定 `ruanxiaoer888/bazi-engine`，git push 自动拉新）；③ GitHub 开源仓库
+- **引擎**：`engine/engine.dist.js`（438KB 字节，UMD 双端，含 getRemedy/yongShenChong/农历模块 + 1000 条规则数据；v1.3.0 MD5 `CE99E451F5733376A56BDCE9F49D8ED4`）
+- **发布状态**：✅ **双平台均已上架**——① **SkillHub**：申诉通过已发布（「生态杀手」分类，平台归一化显示 V1.0.0，实际 v1.3.0）；② **ClawHub**：已发布（SkillSpector 转 Published，Productivity 分类，v1.3.0 GitHub 自动同步版——绑定 `ruanxiaoer888/bazi-engine`，git push 自动拉新）；③ GitHub 开源仓库（Release v1.3.0 已发布）
 - **真人验收**：✅ 已完成（3 案例全部通过，截图 `assets/screenshots/final/`）
 - **阻塞项**：**无**。功能/验收/发布/扩库全部完成，无外部等待
 - **GitHub**：本地 HEAD=`cc5e405`（2026-08-19，死规则清理 commit），远程 `e2bb1f2`（本次 cc5e405 + 文档 commit 待推送）

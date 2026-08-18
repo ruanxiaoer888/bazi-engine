@@ -69,7 +69,7 @@ bazi-app 只消费引擎的 **`paipan` / `applyDst` / `SHI_CHEN_MAP`** 三个 AP
 
 ## 背景
 
-- bazi-engine v1.3.0 已定版：断语库 789→1000 条（+211），主面板 6 类平均命中 52.6→66.1 条/盘（+26%），dist 287KB
+- bazi-engine v1.3.0 已定版：断语库 789→1000 条（+211），主面板 6 类平均命中 52.6→66.1 条/盘（+26%），dist 438KB
 - 引擎文件已由 bazi-engine 侧拷贝交付到本仓库：`web/engine.dist.js`
 - 回归清单：本仓库根目录 `BAZI-APP-REGRESSION-v1.2.3.md`（适用 v1.3.0，dist 与 v1.2.3 完全相同，MD5 一致）
 
