@@ -10341,6 +10341,502 @@
    "source": "《渊海子平》七杀有制（命理参考）",
    "confidence": "中",
    "suggestion": "化压力为训练动力，规律运动"
+  },
+  {
+   "id": "study_伤官泄秀",
+   "category": "学业",
+   "condition": {
+    "旺衰": "强",
+    "组合": [
+     "伤官"
+    ]
+   },
+   "conclusion": "身强伤官泄秀，聪明外露、学习表达力强，应试善发挥，宜展示型学习。",
+   "source": "《子平真诠》伤官",
+   "confidence": "中",
+   "suggestion": "多上台演练，把知识讲出来"
+  },
+  {
+   "id": "study_食神_月干",
+   "category": "学业",
+   "condition": {
+    "十神": "食神",
+    "位置": "月干"
+   },
+   "conclusion": "月干透食神，学习有口福天分，寓学于乐，兴趣驱动效率高。",
+   "source": "《三命通会》食神 / 宫位",
+   "confidence": "中",
+   "suggestion": "用兴趣带学习，快乐出成绩"
+  },
+  {
+   "id": "study_偏印_时干",
+   "category": "学业",
+   "condition": {
+    "十神": "偏印",
+    "位置": "时干"
+   },
+   "conclusion": "时干透偏印，晚年好学不倦，偏门学问越老越精，宜终身学习。",
+   "source": "《三命通会》偏印 / 宫位",
+   "confidence": "中",
+   "suggestion": "保持学习习惯，技能越攒越厚"
+  },
+  {
+   "id": "study_七杀_月干",
+   "category": "学业",
+   "condition": {
+    "十神": "七杀",
+    "位置": "月干"
+   },
+   "conclusion": "月干透七杀，压力型学习体质，竞争环境反而出成绩，宜以赛促学。",
+   "source": "《三命通会》七杀 / 宫位",
+   "confidence": "中",
+   "suggestion": "多参加考试竞赛，压力即动力"
+  },
+  {
+   "id": "study_偏印_年干",
+   "category": "学业",
+   "condition": {
+    "十神": "偏印",
+    "位置": "年干"
+   },
+   "conclusion": "年干透偏印，祖辈文脉偏学之传，家族有特殊才艺或学术渊源。",
+   "source": "《三命通会》偏印 / 宫位",
+   "confidence": "中",
+   "suggestion": "挖掘家族技艺传承，继往开来"
+  },
+  {
+   "id": "study_dm_乙木",
+   "category": "学业",
+   "condition": {
+    "日主": "乙木"
+   },
+   "conclusion": "乙木日主，学习柔韧善借力，文科语言类易出彩，宜温故知新。",
+   "source": "《滴天髓》乙木 / 学业",
+   "confidence": "中",
+   "suggestion": "文科语言方向，稳扎稳打"
+  },
+  {
+   "id": "study_dm_丁火",
+   "category": "学业",
+   "condition": {
+    "日主": "丁火"
+   },
+   "conclusion": "丁火日主，学习细腻灵秀，文史哲与艺术类有悟性，宜走心学习。",
+   "source": "《滴天髓》丁火 / 学业",
+   "confidence": "中",
+   "suggestion": "文史艺术方向，静心钻研"
+  },
+  {
+   "id": "study_dm_戊土",
+   "category": "学业",
+   "condition": {
+    "日主": "戊土"
+   },
+   "conclusion": "戊土日主，学习扎实厚重，适合系统性强的理工科，厚积薄发。",
+   "source": "《滴天髓》戊土 / 学业",
+   "confidence": "中",
+   "suggestion": "理工系统方向，循序渐进"
+  },
+  {
+   "id": "study_dm_辛金",
+   "category": "学业",
+   "condition": {
+    "日主": "辛金"
+   },
+   "conclusion": "辛金日主，学习精细敏锐，数理逻辑与精细工艺类有天分，宜精进。",
+   "source": "《滴天髓》辛金 / 学业",
+   "confidence": "中",
+   "suggestion": "数理精细方向，精益求精"
+  },
+  {
+   "id": "study_dm_癸水",
+   "category": "学业",
+   "condition": {
+    "日主": "癸水"
+   },
+   "conclusion": "癸水日主，学习灵动机敏，善融会贯通，理科思维活、文科感觉好。",
+   "source": "《滴天髓》癸水 / 学业",
+   "confidence": "中",
+   "suggestion": "文理兼修，融会贯通"
+  },
+  {
+   "id": "study_甲木调候",
+   "category": "学业",
+   "condition": {
+    "日主": "甲木",
+    "状态": "调候"
+   },
+   "conclusion": "甲木逢调候之需（寒木向阳），冬季学习易困顿，宜暖光环境与激励式学习。",
+   "source": "《穷通宝鉴》甲木调候 / 学业",
+   "confidence": "中",
+   "suggestion": "改善学习环境，多晒太阳多鼓励"
+  },
+  {
+   "id": "study_学堂_伤官",
+   "category": "学业",
+   "condition": {
+    "神煞": "学堂",
+    "十神": "伤官"
+   },
+   "conclusion": "学堂配伤官，天赋外放、才思敏捷，宜创作型学习，考试要防粗心。",
+   "source": "《三命通会》学堂 / 伤官",
+   "confidence": "中",
+   "suggestion": "发挥创意，考试多检查"
+  },
+  {
+   "id": "study_驿马_食神",
+   "category": "学业",
+   "condition": {
+    "神煞": "驿马",
+    "十神": "食神"
+   },
+   "conclusion": "驿马配食神，游学求师之象，异地求学或访学中开眼界、长学问。",
+   "source": "《三命通会》驿马 / 食神",
+   "confidence": "中",
+   "suggestion": "争取交换游学机会"
+  },
+  {
+   "id": "study_金舆_正印",
+   "category": "学业",
+   "condition": {
+    "神煞": "金舆",
+    "十神": "正印"
+   },
+   "conclusion": "金舆配正印，赶考出行顺利，升学考试往返之路多有照应。",
+   "source": "《三命通会》金舆 / 正印",
+   "confidence": "中",
+   "suggestion": "考试出行早做准备，稳妥为上"
+  },
+  {
+   "id": "study_天乙_正印",
+   "category": "学业",
+   "condition": {
+    "神煞": "天乙贵人",
+    "十神": "正印"
+   },
+   "conclusion": "天乙配正印，学业贵人运强，关键考试遇良师益友点拨，升学有助。",
+   "source": "《三命通会》天乙贵人 / 正印",
+   "confidence": "中",
+   "suggestion": "多请教名师，关键期主动求助"
+  },
+  {
+   "id": "kin_祖上_伤官",
+   "category": "六亲",
+   "condition": {
+    "位置": "年干",
+    "十神": "伤官"
+   },
+   "conclusion": "年干透伤官，祖上多才艺能人，家风开放重才华，易代际突破。",
+   "source": "《渊海子平》宫位论",
+   "confidence": "中",
+   "suggestion": "继承祖上才华基因，大胆创新"
+  },
+  {
+   "id": "kin_祖上_正财",
+   "category": "六亲",
+   "condition": {
+    "位置": "年干",
+    "十神": "正财"
+   },
+   "conclusion": "年干透正财，祖上务实勤勉、家底殷实，家风勤俭传家。",
+   "source": "《渊海子平》宫位论",
+   "confidence": "中",
+   "suggestion": "传承勤俭家风，守业更兴业"
+  },
+  {
+   "id": "kin_父母_正官",
+   "category": "六亲",
+   "condition": {
+    "位置": "月干",
+    "十神": "正官"
+   },
+   "conclusion": "月干透正官，父母端正有威、重规矩，家教严格有度。",
+   "source": "《渊海子平》宫位论",
+   "confidence": "中",
+   "suggestion": "理解父母的期望，常报平安"
+  },
+  {
+   "id": "kin_父母_七杀",
+   "category": "六亲",
+   "condition": {
+    "位置": "月干",
+    "十神": "七杀"
+   },
+   "conclusion": "月干透七杀，父母管教严厉、期望高，早年压力大但磨砺成才。",
+   "source": "《渊海子平》宫位论",
+   "confidence": "中",
+   "suggestion": "把严管当磨刀石，成人后多和解"
+  },
+  {
+   "id": "kin_父母_偏财",
+   "category": "六亲",
+   "condition": {
+    "位置": "月干",
+    "十神": "偏财"
+   },
+   "conclusion": "月干透偏财，父亲（偏财为父）洒脱善经营，家境随父辈起伏。",
+   "source": "《渊海子平》宫位论",
+   "confidence": "中",
+   "suggestion": "理解父辈闯荡，财商早培养"
+  },
+  {
+   "id": "kin_父母_劫财",
+   "category": "六亲",
+   "condition": {
+    "位置": "月干",
+    "十神": "劫财"
+   },
+   "conclusion": "月干透劫财，父母劳碌或早年家财有争，家庭财事务必明晰。",
+   "source": "《渊海子平》宫位论",
+   "confidence": "中",
+   "suggestion": "家庭财务透明，避免误会"
+  },
+  {
+   "id": "kin_手足_食神",
+   "category": "六亲",
+   "condition": {
+    "位置": "年干",
+    "十神": "食神"
+   },
+   "conclusion": "年干透食神，手足温和有才，兄弟姐妹相处融洽、互相帮衬。",
+   "source": "《渊海子平》宫位论",
+   "confidence": "中",
+   "suggestion": "多聚多帮，手足是长线资源"
+  },
+  {
+   "id": "kin_手足_比肩",
+   "category": "六亲",
+   "condition": {
+    "位置": "年干",
+    "十神": "比肩"
+   },
+   "conclusion": "年干透比肩，手足相扶共进，兄弟姐妹同心，遇事多一个帮手。",
+   "source": "《渊海子平》宫位论",
+   "confidence": "中",
+   "suggestion": "手足多走动，互帮互助共成长"
+  },
+  {
+   "id": "kin_子女_正印",
+   "category": "六亲",
+   "condition": {
+    "位置": "时干",
+    "十神": "正印"
+   },
+   "conclusion": "时干透正印，子女文静孝顺、重学业，晚年得子女福荫。",
+   "source": "《渊海子平》宫位论",
+   "confidence": "中",
+   "suggestion": "重子女教育，陪伴是最好的投资"
+  },
+  {
+   "id": "kin_子女_七杀",
+   "category": "六亲",
+   "condition": {
+    "位置": "时干",
+    "十神": "七杀"
+   },
+   "conclusion": "时干透七杀，子女有主见、敢闯敢拼，管教宜松紧有度。",
+   "source": "《渊海子平》宫位论",
+   "confidence": "中",
+   "suggestion": "给子女空间，抓大放小"
+  },
+  {
+   "id": "kin_子女_比肩",
+   "category": "六亲",
+   "condition": {
+    "位置": "时干",
+    "十神": "比肩"
+   },
+   "conclusion": "时干透比肩，子女独立自主、朋友多，晚年子女常伴左右。",
+   "source": "《渊海子平》宫位论",
+   "confidence": "中",
+   "suggestion": "尊重子女独立性，常走动团聚"
+  },
+  {
+   "id": "kin_亲缘_禄神",
+   "category": "六亲",
+   "condition": {
+    "神煞": "禄神"
+   },
+   "conclusion": "命带禄神，亲缘带福，家中常有余禄荫及亲族，逢难有亲可依。",
+   "source": "《三命通会》禄神",
+   "confidence": "中",
+   "suggestion": "福及家人，常怀感恩"
+  },
+  {
+   "id": "kin_亲缘_天德",
+   "category": "六亲",
+   "condition": {
+    "神煞": "天德"
+   },
+   "conclusion": "命带天德，家族有德荫庇护，长辈积福子孙受益，亲缘和睦。",
+   "source": "《三命通会》天德",
+   "confidence": "中",
+   "suggestion": "传承家族善德，家和万事兴"
+  },
+  {
+   "id": "kin_亲缘_月德",
+   "category": "六亲",
+   "condition": {
+    "神煞": "月德"
+   },
+   "conclusion": "命带月德，母亲或女性长辈福泽深厚，家庭温暖有靠。",
+   "source": "《三命通会》月德",
+   "confidence": "中",
+   "suggestion": "多陪长辈，福气代代传"
+  },
+  {
+   "id": "kin_父母_官印相生",
+   "category": "六亲",
+   "condition": {
+    "组合": [
+     "正官",
+     "正印"
+    ]
+   },
+   "conclusion": "官印相生同透，父母有身份学识或公职背景，家教重礼义廉耻。",
+   "source": "《渊海子平》官印相生",
+   "confidence": "中",
+   "suggestion": "承父母教养，走正途成才"
+  },
+  {
+   "id": "combo_正财_正印",
+   "category": "十神组合",
+   "condition": {
+    "组合": [
+     "正财",
+     "正印"
+    ]
+   },
+   "conclusion": "财印同透，安稳生财不冒险，学养与财富并重，小富即安亦有成。",
+   "source": "《渊海子平》财印组合",
+   "confidence": "中",
+   "suggestion": "稳健理财，持续学习"
+  },
+  {
+   "id": "combo_食神_正财",
+   "category": "十神组合",
+   "condition": {
+    "组合": [
+     "食神",
+     "正财"
+    ]
+   },
+   "conclusion": "食神生财，技艺变现之路，靠本事吃饭，越专越有钱。",
+   "source": "《渊海子平》食神生财",
+   "confidence": "中",
+   "suggestion": "深耕一门技艺，口碑即财源"
+  },
+  {
+   "id": "combo_偏财_食神",
+   "category": "十神组合",
+   "condition": {
+    "组合": [
+     "偏财",
+     "食神"
+    ]
+   },
+   "conclusion": "食神生偏财，多路财源广进，投资眼光活，副业有意外之喜。",
+   "source": "《渊海子平》食神生财",
+   "confidence": "中",
+   "suggestion": "主副业并举，分散配置"
+  },
+  {
+   "id": "combo_正官_正财",
+   "category": "十神组合",
+   "condition": {
+    "组合": [
+     "正官",
+     "正财"
+    ]
+   },
+   "conclusion": "官财相生，名利双收之象，循规蹈矩中稳步晋升，财官两旺。",
+   "source": "《三命通会》财官论",
+   "confidence": "中",
+   "suggestion": "走正道积累，升职加薪可期"
+  },
+  {
+   "id": "combo_正官_比肩",
+   "category": "十神组合",
+   "condition": {
+    "组合": [
+     "正官",
+     "比肩"
+    ]
+   },
+   "conclusion": "官比同透，贵气中有同伴相携，职场有团队助力，合伙共进。",
+   "source": "《渊海子平》官比组合",
+   "confidence": "中",
+   "suggestion": "善用团队，共担共享"
+  },
+  {
+   "id": "combo_食神_劫财",
+   "category": "十神组合",
+   "condition": {
+    "组合": [
+     "食神",
+     "劫财"
+    ]
+   },
+   "conclusion": "食劫同透，财来财去，宜防朋友借财口舌，技艺在身不愁无米。",
+   "source": "《渊海子平》食劫组合",
+   "confidence": "中",
+   "suggestion": "钱财往来留凭证，凭手艺立身"
+  },
+  {
+   "id": "combo_伤官_比肩",
+   "category": "十神组合",
+   "condition": {
+    "组合": [
+     "伤官",
+     "比肩"
+    ]
+   },
+   "conclusion": "伤比同透，独立敢闯不服管，适合创业与自由职业，忌单打独斗过甚。",
+   "source": "《渊海子平》伤比组合",
+   "confidence": "中",
+   "suggestion": "敢闯敢试，适时借力"
+  },
+  {
+   "id": "combo_偏印_七杀",
+   "category": "十神组合",
+   "condition": {
+    "组合": [
+     "偏印",
+     "七杀"
+    ]
+   },
+   "conclusion": "偏印化杀（枭印化杀），以偏门智慧化解压力，绝处逢生之局。",
+   "source": "《渊海子平》枭印化杀",
+   "confidence": "中",
+   "suggestion": "压力大时靠非常规思路破局"
+  },
+  {
+   "id": "combo_正印_食神",
+   "category": "十神组合",
+   "condition": {
+    "组合": [
+     "正印",
+     "食神"
+    ]
+   },
+   "conclusion": "印食相配，慈智双全，学养深厚且乐于分享，师者之象。",
+   "source": "《渊海子平》印食组合",
+   "confidence": "中",
+   "suggestion": "适合教学分享，传道授业"
+  },
+  {
+   "id": "combo_伤官_正财",
+   "category": "十神组合",
+   "condition": {
+    "组合": [
+     "伤官",
+     "正财"
+    ]
+   },
+   "conclusion": "伤官生财，才华变现能力强，创意即财富，宜营销创意类发展。",
+   "source": "《渊海子平》伤官生财",
+   "confidence": "中",
+   "suggestion": "把创意产品化，变现要趁早"
   }
  ],
  "usage_note": "分析时先排盘得日主/月令/十神/五行分布/格局/身强身弱/神煞/流年，逐条匹配 condition（字段按实际裁剪），命中即输出 conclusion 并标注 source。未命中规则的部分不强行断语，仅作趋势提示。健康类断语置信度低，须提示以医学为准。"
