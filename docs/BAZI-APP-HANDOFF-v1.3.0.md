@@ -71,7 +71,7 @@ bazi-app 只消费引擎的 **`paipan` / `applyDst` / `SHI_CHEN_MAP`** 三个 AP
 
 - bazi-engine v1.3.0 已定版：断语库 789→1000 条（+211），主面板 6 类平均命中 52.6→66.1 条/盘（+26%），dist 438KB
 - 引擎文件已由 bazi-engine 侧拷贝交付到本仓库：`web/engine.dist.js`
-- 回归清单：本仓库根目录 `BAZI-APP-REGRESSION-v1.2.3.md`（适用 v1.3.0，dist 与 v1.2.3 完全相同，MD5 一致）
+- 回归清单：本仓库根目录 `BAZI-APP-REGRESSION-v1.3.0.md`（适用 v1.3.0，dist 与 v1.2.3 完全相同，MD5 一致）
 
 ## 执行步骤
 
@@ -82,7 +82,7 @@ bazi-app 只消费引擎的 **`paipan` / `applyDst` / `SHI_CHEN_MAP`** 三个 AP
    # 不一致 → 停下，找 bazi-engine 侧重新拷贝，不要继续
    ```
 
-2. **读回归清单** `BAZI-APP-REGRESSION-v1.2.3.md`，按清单逐项回归：
+2. **读回归清单** `BAZI-APP-REGRESSION-v1.3.0.md`，按清单逐项回归：
    - §0 版本核对（MD5）
    - §2 基础链路：农历/阳历双模式排盘、真太阳时开关、无空白面板
    - §3 面板级：预期命中量基准（实测 61~83 条/盘，同盘应落在 ±10 内）+ 每面板检查点 + 健康类合规抽查

@@ -1,0 +1,39 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Build (ui/index.html + engine/engine.dist.js)
+        run: python tools/build_ui.py
+      - name: JSON validity (rules.json)
+        run: python -c "import json; d=json.load(open('kb/04-rules-db/rules.json',encoding='utf-8')); print('rules.json OK,', len(d['rules']), 'rules')"
+      - name: 13 regressions
+        run: |
+          node tools/test_engine.js
+          node tools/test_lunar.js
+          node tools/test_ui.js
+          node tools/test_eval_state.js
+          node tools/test_p1_fixes.js
+          node tools/verify_sleep_rules.js
+          node tools/verify_ux_e2e.js
+          node tools/test_dst.js
+          node tools/test_liuri_v2.js
+          node tools/test_liuyue_v2.js
+          node tools/verify_edu_rules.js
+          node tools/test_xiyong.js
+          node tools/check_conflicts.js
+      - name: Hit distribution audit (100 charts)
+        run: node tools/audit_hit_distribution.js --sample=100
