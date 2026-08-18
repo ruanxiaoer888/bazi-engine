@@ -1,6 +1,6 @@
 # bazi-engine 八字命理 Skill · 项目交接文档（HANDOFF）
 
-> 更新时间：2026-08-19 · 当前版本 **v1.3.0**（断语库 1000 条里程碑·稳定版，git tag `v1.3.0`；实际已含：农历/阳历双模式切换、合婚上下双区块布局、合婚时段模式 truesun 修复 + 测试脚本 toggle 适配、xiYong ratio 细分、五行补救文案强/弱区分、太极 logo、输入侧晚子时/节气临界提示语、断语库 504→801、死规则清理 801→789 + 空亡断语修活、**断语库扩充 789→1000 并定版**）
+> 更新时间：2026-08-19 · 当前版本 **v1.3.1**（v1.3.0 定版后审计修复 patch：空亡断语修活 + wealth_kugu 换补；git tag `v1.3.0` 保留，实际已含：农历/阳历双模式切换、合婚上下双区块布局、合婚时段模式 truesun 修复 + 测试脚本 toggle 适配、xiYong ratio 细分、五行补救文案强/弱区分、太极 logo、输入侧晚子时/节气临界提示语、断语库 504→801、死规则清理 801→789 + 空亡断语修活、**断语库扩充 789→1000 并定版 v1.3.0、审计修复 v1.3.1**）
 > 项目性质：**Michael 个人独立研发项目**，与魅可科技（Meke）业务无任何关联，推广/发布按个人项目口径。
 > 发布状态：✅ **双平台均已上架**（2026-08-17 确认）——① SkillHub（腾讯）**已发布**（「生态杀手」分类，申诉通过；平台归一化显示 V1.0.0，见坑 #21）；② ClawHub（OpenClaw 官方市场）**已发布**（Productivity 分类，SkillSpector 扫描通过转 Published，v1.3.0 GitHub 自动同步版——绑定 `ruanxiaoer888/bazi-engine`，git push 自动拉新）
 > **给 Codex / 新会话**：先读同目录 `AI_CONTEXT.md`（冷启动文档），再读本文件。
@@ -248,7 +248,7 @@
 - 回归命令（13 套，全部必须 PASS）：`node tools/test_engine.js` + `node tools/test_lunar.js` + `node tools/test_ui.js` + `node tools/test_eval_state.js` + `node tools/test_p1_fixes.js` + `node tools/verify_sleep_rules.js` + `node tools/verify_ux_e2e.js` + `node tools/test_dst.js` + `node tools/test_liuri_v2.js` + `node tools/test_liuyue_v2.js` + `node tools/verify_edu_rules.js` + `node tools/test_xiyong.js` + `node tools/check_conflicts.js`；断语库维护另用 `audit_hit_distribution.js`（命中分布）
 - C 端同步：`cp engine/engine.dist.js ../bazi-app/web/` 并 commit（bazi-app 独立仓库/对话，仅拷贝交付，commit/push 留给 bazi-app 侧）
 - 命名约定：对外统一 "bazi-engine"（原名 bazi-master 因 SkillHub 同名竞品已弃用），个人项目口径，不挂钩魅可
-- 发布文档：`SkillHub-Submission-Kit.md`（提交母版）+ `SkillHub发布最终指引.md`（本次填表指引）+ `验收与截图清单_3案例.md`（回归验收模板）
+- 发布文档：`docs/history/SkillHub-Submission-Kit.md`（提交母版）+ `docs/history/SkillHub发布最终指引.md`（填表指引）+ `docs/history/验收与截图清单_3案例.md`（回归验收模板）
 - **引擎变更记录：`docs/ENGINE-CHANGES.md`**（权威记录：每次引擎变更 bump 版本 + 记 dist MD5，供 bazi-app 对话核对；2026-08-17 建立，首条 v1.2.1）
 - 历史文档：`docs/history/`（第七轮验收 / 发布物料 / 竞对分析，历史快照）
 - 截图素材：`assets/screenshots/final/`（3 张验收通过截图：01_paipan / 02_liuri / 03_hehun）

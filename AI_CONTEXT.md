@@ -18,7 +18,7 @@
 
 ## 2. 当前阶段（2026-08-19）
 
-- **版本**：v1.3.0（断语库 1000 条里程碑·稳定版，git tag `v1.3.0`；累计：全面扫描修复批次 + 农历模块同步 + 农历/阳历双模式切换 + 合婚上下布局 + 合婚时段模式修复 + xiYong ratio 细分 + 五行补救文案强/弱区分 + 太极 logo + 输入侧晚子时/节气临界提示语 + 断语库 504→801 + 死规则清理 801→789 + 空亡断语修活 + **断语库扩充 789→1000 并定版**）
+- **版本**：v1.3.1（v1.3.0 定版后审计修复：空亡断语修活 + wealth_kugu 换补；git tag `v1.3.0` 保留；累计：全面扫描修复批次 + 农历模块同步 + 农历/阳历双模式切换 + 合婚上下布局 + 合婚时段模式修复 + xiYong ratio 细分 + 五行补救文案强/弱区分 + 太极 logo + 输入侧晚子时/节气临界提示语 + 断语库 504→801 + 死规则清理 801→789 + 空亡断语修活 + **断语库扩充 789→1000 并定版 v1.3.0、审计修复 v1.3.1**）
 - **功能**：132 项任务**全部完成**（排盘/大运/流年/流月/流日/六亲/合婚/五行补救/神煞/调候用神/三式宫位/特殊格局）
 - **农历模块**：引擎层新增 `lunarToSolar`/`leapMonth`/`leapDays`/`monthDays`/`lunarDayName` + `LUNAR_INFO` 数据表（1900-2099），与 bazi-app C 端实现完全一致
 - **农历/阳历双模式切换**：主表单 + 合婚 A/B 各自独立（`switchCal`/`switchHeCal`），农历输入自动 `lunarToSolar` 转公历
@@ -26,7 +26,7 @@
 - **输入侧提示语**（2026-08-17）：主表单 + 合婚 A/B 填时间即时提示——晚子时（23 点，时柱按次日）+ 节气临界（距十二节交节 ≤6h 提示年/月柱切换敏感点，立春特判；农历模式跳过）
 - **断语库**：`kb/04-rules-db/rules.json` — **1000 条**（事业112/性格97/神煞74/用神喜忌72/婚姻67/十神组合65/六亲64/健康62/学业61/财运57/格局56/五行生克48/流月45/流日50/流年30/合婚20/大运20），每条含 `suggestion` 建议字段；2026-08-19 清理 12 条死规则（801→789）+ 修活空亡（`cc5e405`）+ 5 批次扩充至 1000（`026bf4d`~`338f981`）
 - **UI**：`ui/index.html` 单文件离线，**零外部依赖**（无 Google Fonts），墨底 + 古铜金高端商务风，壹~玖中文序号徽章，内置 206 年节气
-- **引擎**：`engine/engine.dist.js`（438KB 字节，UMD 双端，含 getRemedy/yongShenChong/农历模块 + 1000 条规则数据；v1.3.0 MD5 `CE99E451F5733376A56BDCE9F49D8ED4`）
+- **引擎**：`engine/engine.dist.js`（437KB 字节，UMD 双端，含 getRemedy/yongShenChong/农历模块 + 1000 条规则数据；v1.3.1 MD5 `3E4E97B260C313B4D295F5696FD11EEC`）
 - **发布状态**：✅ **双平台均已上架**——① **SkillHub**：申诉通过已发布（「生态杀手」分类，平台归一化显示 V1.0.0，实际 v1.3.0）；② **ClawHub**：已发布（SkillSpector 转 Published，Productivity 分类，v1.3.0 GitHub 自动同步版——绑定 `ruanxiaoer888/bazi-engine`，git push 自动拉新）；③ GitHub 开源仓库（Release v1.3.0 已发布）
 - **真人验收**：✅ 已完成（3 案例全部通过，截图 `assets/screenshots/final/`）
 - **阻塞项**：**无**。功能/验收/发布/扩库全部完成，无外部等待
@@ -42,7 +42,7 @@
 | 知识库 | `kb/` | 01-basics / 02-rules / 03-classics / 04-rules-db / 05-reference |
 | 发布 | `tools/build_release_zip.py` | 发布验证流程：打 ZIP（自动排除 LICENSE/LICENSE-DATA/README.en.md）+ 关键产物 MD5 校验，不依赖任何平台目录 |
 | 引擎变更记录 | `docs/ENGINE-CHANGES.md` | 权威记录（版本 + 变更 + dist MD5），bazi-app 对话据此对齐；引擎变更必须 bump 版本并追加记录 |
-| 发布材料 | `发布物料.md` + `SkillHub-Submission-Kit.md` | 卖点/图标提示词/示例对话/合规声明 + 提交包模板 |
+| 发布材料 | `docs/history/发布物料.md` + `docs/history/SkillHub-Submission-Kit.md` | 卖点/图标提示词/示例对话/合规声明 + 提交包模板 |
 
 ### 引擎抽层机制（重要，commit `807ab4c`）
 
