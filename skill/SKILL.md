@@ -5,7 +5,7 @@ description: >
   自动排出四柱八字与大运流年，并参照古代命理典籍进行专业分析。输出必须标注古籍出处，保证可追溯、可检验。
   适用场景：用户想算八字、看命盘、测运势、查合婚、补五行、看神煞、看流年，或提到"算命/四柱/命理/bazi/fortune"。
   即使只提"算命""八字"而未明确说用 skill，也应启用本 skill。
-version: 1.2.2
+version: 1.2.3
 tags: [八字, 命理, 四柱, 排盘, 运势, bazi, fortune]
 category: 传统文化/命理占卜
 platforms: [WorkBuddy, QClaw, ima]
@@ -48,7 +48,7 @@ license: MIT
 - `kb/03-classics/ziping-zhenquan.md` — 用神格局取法（古籍精要）
 - `kb/03-classics/yuanhai-geshi.md` — 内外十八格歌诀速查
 - `kb/03-classics/ditian-sui-zhushu.md` — 干支体象与命理通则
-- `kb/04-rules-db/rules.json` — 生产断语库（**789 条，suggestion 建议字段 100% 覆盖**，按 condition 匹配输出；含流日类别 liuri_01~05；手写种子 + `tools/gen_rules.py` 批量扩充）
+- `kb/04-rules-db/rules.json` — 生产断语库（**1000 条，suggestion 建议字段 100% 覆盖**，按 condition 匹配输出；含流日类别 liuri_01~05；手写种子 + `tools/gen_rules.py` 批量扩充）
 - `kb/04-rules-db/rules-template.json` — 断语库 schema 与示例（编写新规则时参考）
 - `kb/05-reference/viz-spec.md` — SVG 图表设计标准（排盘表/五行图/十神关系图等），含配色方案与渲染示例
 - `kb/05-reference/prompt-template.md` — 八字+紫微+面相+手相四法合一完整提示词（当前项目仅实现八字部分，余为未来扩展参考）
@@ -104,7 +104,7 @@ license: MIT
 ## 可视化输出（关键差异化能力）
 
 本 skill 支持生成可视化命盘报告。当用户需要"看盘/出报告/生成图片"时：
-- 直接打开 `ui/index.html`（单文件离线，已内置真实排盘引擎 + 789 条断语库（每条均含 suggestion 建议，**全量接入渲染**：大运/流年/流月/流日/合婚/六亲面板均输出规则评语，渲染层含同文案去重兜底）+ 206 年节气），可交互排盘、看流年、做合婚
+- 直接打开 `ui/index.html`（单文件离线，已内置真实排盘引擎 + 1000 条断语库（每条均含 suggestion 建议，**全量接入渲染**：大运/流年/流月/流日/合婚/六亲面板均输出规则评语，渲染层含同文案去重兜底）+ 206 年节气），可交互排盘、看流年、做合婚
 - 报告含：四柱表格（含纳音与十二长生）、藏干加权五行分布与身强身弱判定、
   神煞（24 项核心神煞速查表，按宫位分组、仅展示命局命中项）、五行补救建议（基于喜用神的 颜色/方位/数字/行业/饰品/饮食）、
   分维度解读卡片（性格/事业/财运/婚姻/健康/格局/用神/十神/六亲/学业/五行/大运，每段标注古籍出处与建议）、
