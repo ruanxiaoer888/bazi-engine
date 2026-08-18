@@ -5,7 +5,7 @@ description: >
   自动排出四柱八字与大运流年，并参照古代命理典籍进行专业分析。输出必须标注古籍出处，保证可追溯、可检验。
   适用场景：用户想算八字、看命盘、测运势、查合婚、补五行、看神煞、看流年，或提到"算命/四柱/命理/bazi/fortune"。
   即使只提"算命""八字"而未明确说用 skill，也应启用本 skill。
-version: 1.3.0
+version: 1.3.1
 tags: [八字, 命理, 四柱, 排盘, 运势, bazi, fortune]
 category: 传统文化/命理占卜
 platforms: [WorkBuddy, QClaw, ima]

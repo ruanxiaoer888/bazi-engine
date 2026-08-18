@@ -98,6 +98,15 @@ const conditionalRules = Object.keys(hitCount).filter(id => {
 });
 console.log(`有条件规则数: ${conditionalRules.length}（本类别内，不含无条件规则）`);
 
+// ---- 0 命中规则（信息级：样本内未命中 ≠ 死规则；2026-08-19 增强：combo_食神制杀_印 曾 400 盘 0 命中，手动深挖才发现）----
+// 排除专用触发类（流年/流月/大运/合婚：matchRules 主引擎不输出，天然 0 命中属正常）。
+// 注意：<1% 低命中规则（如「日主+旺衰」组合，实测 char_甲_强 0.9%/财官印三宝 1%）在小样本（200 盘）内
+// 可能 0 命中，属正常；若大样本（2000 盘）仍 0 命中才需 --rules= 深挖判定死规则。
+console.log('\n== 样本内 0 命中规则（信息级：低命中属正常，大样本仍 0 才需深挖）==');
+const zeroHitList = RULES.filter(r => activeCats.includes(r.category) && !['流年', '流月', '大运', '合婚'].includes(r.category) && r.condition && Object.keys(r.condition).length > 0 && !(r.id in hitCount));
+if (zeroHitList.length === 0) console.log('✅ 无 0 命中规则');
+else zeroHitList.forEach(r => console.log(`ℹ️  ${r.id} [${r.category}] cond=${JSON.stringify(r.condition)}`));
+
 // ---- 每盘平均命中 ----
 const per = charts.map(c => {
   let cnt = 0;

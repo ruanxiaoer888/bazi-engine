@@ -1378,9 +1378,10 @@ function matchRules(ctx){
         else if(v!==ctx.pattern) hit=false;
       }
       else if(k==='神煞'){
-        // 空亡不在 SHENSHA 表（24 项），ctx.kongWang 为日柱旬空（任何命局必有，须限定日支逢空亡才有区分度）
-        // 2026-08-19 清理死规则：第一版特判"有空亡即命中"→ 100% 命中（80/80），收紧为日支坐空亡
-        if(v==='空亡'){ if(!(ctx.kongWang&&ctx.kongWang.includes(ctx.pillars[2][1]))) hit=false; }
+        // 空亡不在 SHENSHA 表（24 项）。ctx.kongWang 为日柱旬空（2 地支）。
+        // 2026-08-19 修正：日支不可能逢本柱旬空（60 甲子中旬空支总在下一旬，曾致 0 命中死规则），
+        // 改为"命局任一柱地支逢日柱旬空"（≈50% 命中，年月主祖业/父母、日时主婚姻/晚景）。
+        if(v==='空亡'){ if(!(ctx.kongWang&&ctx.pillars.some(p=>ctx.kongWang.includes(p[1])))) hit=false; }
         else if(!ctx.shenSha || !ctx.shenSha.some(s=>s.name===v)) hit=false;
       }
       else if(k==='流年'||k==='流月'||k==='流日'){
