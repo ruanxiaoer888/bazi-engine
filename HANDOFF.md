@@ -1,6 +1,6 @@
 # bazi-engine 八字命理 Skill · 项目交接文档（HANDOFF）
 
-> 更新时间：2026-08-17 19:51 · 当前版本 **v1.2.1**（标签未 bump，实际已含：农历/阳历双模式切换、合婚上下双区块布局、合婚时段模式 truesun 修复 + 测试脚本 toggle 适配、xiYong ratio 细分、五行补救文案强/弱区分、太极 logo、**输入侧晚子时/节气临界提示语、断语库 504→801**）
+> 更新时间：2026-08-19 · 当前版本 **v1.2.2**（标签未 bump，实际已含：农历/阳历双模式切换、合婚上下双区块布局、合婚时段模式 truesun 修复 + 测试脚本 toggle 适配、xiYong ratio 细分、五行补救文案强/弱区分、太极 logo、输入侧晚子时/节气临界提示语、断语库 504→801、**死规则清理 801→789 + 空亡断语修活**）
 > 项目性质：**Michael 个人独立研发项目**，与魅可科技（Meke）业务无任何关联，推广/发布按个人项目口径。
 > 发布状态：✅ **双平台均已上架**（2026-08-17 确认）——① SkillHub（腾讯）**已发布**（「生态杀手」分类，申诉通过；平台归一化显示 V1.0.0，见坑 #21）；② ClawHub（OpenClaw 官方市场）**已发布**（Productivity 分类，SkillSpector 扫描通过转 Published，v1.2.1 GitHub 自动同步版）
 > **给 Codex / 新会话**：先读同目录 `AI_CONTEXT.md`（冷启动文档），再读本文件。
@@ -13,7 +13,7 @@
 
 **引擎抽层实现**（commit `807ab4c`）：
 - `tools/build_ui.py` 的 TPL 内用 7 对 `// [ENGINE:BEGIN]` / `// [ENGINE:END]` 注释标记界定纯计算层（**不搬代码**，`ui/index.html` 行为不变，仅多无害注释）
-- 构建时同时产出 **`engine/engine.dist.js`**（247KB，UMD：浏览器 `window.BaziEngine` / Node `require` 双端可用），导出 paipan/matchRules/calcShenSha/applyDst/matchLiuYue/lunarToSolar/leapMonth 等约 101 个函数与数据表（含 801 条规则数据）
+- 构建时同时产出 **`engine/engine.dist.js`**（245KB，UMD：浏览器 `window.BaziEngine` / Node `require` 双端可用），导出 paipan/matchRules/calcShenSha/applyDst/matchLiuYue/lunarToSolar/leapMonth 等约 101 个函数与数据表（含 789 条规则数据）
 - 新增回归 `node tools/test_engine.js`（28 项，独立库直测）+ `node tools/test_lunar.js`（27 项，农历模块验证）；原有 8 套回归不受影响
 - **C 端同步方法**：`python tools/build_ui.py` 后 `cp engine/engine.dist.js ../bazi-app/web/`
 - **边界规则**：引擎层 = 纯计算（无 DOM/CSS）；`fmtRule`/`analyzeHe`/所有 render*/run*/draw* 留在 UI 层（返回 HTML 的展示函数不进引擎库）；新增引擎函数时放进标记区内即可自动进入 dist
@@ -22,10 +22,10 @@
 
 ## 一、当前任务（进行中 / 待办）
 
-### 当前状态（2026-08-17 19:51 快照）
-- **无阻塞、无外部等待**：132 项任务清零 / 真人验收通过 / 双平台已上架 / 断语库 801 条 / 13 套回归全绿
-- **在途事项**：仅 bazi-app C 端全流程闭环（独立对话推进，本仓库无动作）；断语库 801→1000、MCP/API 化、商标注册均为后置
-- **遗留待清理**：~9 条旧规则引用 SHENSHA 表外神煞 → 0 命中（见下方「断语库扩充」段）
+### 当前状态（2026-08-19 快照）
+- **无阻塞、无外部等待**：132 项任务清零 / 真人验收通过 / 双平台已上架 / 断语库 789 条 / 13 套回归全绿
+- **在途事项**：仅 bazi-app C 端全流程闭环（独立对话推进，本仓库无动作）；断语库 789→1000、MCP/API 化、商标注册均为后置
+- **遗留待清理**：✅ 2026-08-19 已清（12 条死规则删除/修复，见下方「死规则清理」段；环境侧另见踩坑 #30 ssh）
 
 ### ✅ 2026-08-17 断语库扩充 504→801 条（commit `bd7f5ab`）
 - 复用 `drafts/` 取材方法论（古籍摘录标出处），新增 297 条，覆盖 12 类主引擎规则：事业+44 / 性格+37 / 财运+29 / 用神喜忌+26 / 婚姻+22 / 十神组合+22 / 学业+22 / 神煞+22 / 健康+21 / 格局+18 / 六亲+18 / 五行生克+16
@@ -35,6 +35,13 @@
 - **engine.dist.js 因 RULES 内联变大 189→247KB，已同步 bazi-app**（commit `4a6416e`）
 - 打包目录已同步（ui/index.html + kb/rules.json + 测试脚本，MD5 全 MATCH）
 - **遗留（既有缺陷，未本次处理）**：约 9 条旧规则引用 SHENSHA 表外神煞（shensha_元辰/空亡/魁罡/太极贵人/福星贵人/国印贵人/天喜/咸池/文昌贵人、study_文昌配印/学业_魁罡路、kin_六亲_财旺父远 等"状态:旺"无五行键死规则）→ 0 命中，属发布前既有问题，建议下轮统一清理
+
+### ✅ 2026-08-19 死规则清理 + 空亡断语修活（commit `cc5e405`，v1.2.2）
+- **断语库 801→789**：删除 12 条永不命中死规则——7 条 SHENSHA 表外神煞（元辰/魁罡/太极贵人/福星贵人/国印贵人/天喜/咸池：咸池与桃花同盘矛盾，其余引擎未实现算法）+ `study_学业_魁罡路` + 4 条「状态:旺」六亲（`evalState` 无'旺'分支 → default false；且 kin_parent_cai/kin_六亲_财旺父远、kin_child_guan/kin_六亲_官杀旺子女 两对语义重复）
+- **修复 2 条**：`shensha_文昌贵人`/`study_文昌配印` 神煞名「文昌贵人」→ 表内「文昌」（表内叫文昌，表外名永不命中）
+- **修活 `shensha_空亡`**：`matchRules` 神煞分支特判 `ctx.kongWang` 且**限定日支逢空亡**——第一版「有空亡即命中」100% 命中（80/80）被 audit 拦截，收紧后约 16% 正常
+- **引擎影响**：`matchRules` 在 ENGINE 标记区内 → dist 247→245KB，MD5 `FEC924A713D83E38B3BDF81E4A055AA1`，**已同步 bazi-app**（拷贝交付，见 `docs/ENGINE-CHANGES.md` v1.2.2）
+- **回归 13 套全绿**（断言同步：test_engine RULES 801→789、verify_ux_e2e G0 六亲 48→44；audit 无 100% 命中；check_conflicts 1000 盘 0 矛盾）
 
 ### ✅ 2026-08-17 新会话接手：输入侧晚子时/节气临界提示语（commit `53a3bd2`）
 - 接手核实：工作树干净，本地 HEAD=`941d749`=远程（`[gone]` 是本地引用缓存误报）；打包目录 MD5 一致
@@ -113,8 +120,8 @@
 | **合婚上下双区块布局**：移除 `.two-col` 左右双栏，改为甲乙上下独立区块 + 金色虚线分隔；每人独立「是否校正真太阳时」下拉框（`hTruesunA/B`），`readHe` 支持按人分别校正 | ✅ 2026-08-16 |
 
 ### 关键资产
-- **断语库**：`kb/04-rules-db/rules.json` — **801 条**（事业96 / 性格77 / 财运57 / 用神喜忌57 / 六亲48 / 流日50 / 十神组合48 / 婚姻47 / 神煞46 / 流月45 / 格局41 / 健康41 / 学业42 / 五行生克36 / 流年30 / 大运20 / 合婚20），每条含 `suggestion` 建议字段，全量接入渲染
-- **UI**：`ui/index.html` — 单文件离线（**零外部依赖**，无 Google Fonts 外链），内置 206 年节气 + 801 条断语
+- **断语库**：`kb/04-rules-db/rules.json` — **789 条**（事业97 / 性格77 / 财运57 / 用神喜忌57 / 六亲44 / 流日50 / 十神组合46 / 婚姻47 / 神煞39 / 流月45 / 格局41 / 健康42 / 学业41 / 五行生克36 / 流年30 / 大运20 / 合婚20），每条含 `suggestion` 建议字段，全量接入渲染
+- **UI**：`ui/index.html` — 单文件离线（**零外部依赖**，无 Google Fonts 外链），内置 206 年节气 + 789 条断语
 - **引擎**：`tools/build_ui.py` — Python 构建脚本，内联断语库 + 节气 + 全部 JS 逻辑
 - **知识库**：三命通会/渊海子平/滴天髓/子平真诠/穷通宝鉴全文梳理均已入库
 - **发布验证**：`python tools/build_release_zip.py` 产出发布 ZIP（自动排除 LICENSE/LICENSE-DATA/README.en.md，文件在 ZIP 根无嵌套）+ 关键产物 MD5 校验（`ui/index.html` / `engine/engine.dist.js` / `skill/SKILL.md` / `kb/04-rules-db/rules.json`）——平台无关，不依赖任何平台专属目录
@@ -139,7 +146,7 @@
 | `test_liuri_v2.js` | 流日规则 v2（10 项） |
 | `test_liuyue_v2.js` | 流月规则 v2（10 项） |
 | `verify_edu_rules.js` | 空 condition 排除 + 学业规则复活回归（edu_17~20 命中率须 ≥1 次且 <60%，qinq_27~30 不进入主渲染） |
-| `test_engine.js` | 独立引擎库直测（28 项；RULES 801 条断言） |
+| `test_engine.js` | 独立引擎库直测（28 项；RULES 789 条断言） |
 | `test_lunar.js` | 农历转换模块（导出完整性/闰月判断/非闰月转换/闰月转换/日名映射/边界年份/排盘联动，27 项） |
 | `test_xiyong.js` | 喜用/忌用结构回归（10 盘验证 xiYong/jiYong 合理性，2026-08-16 新增） |
 
@@ -165,10 +172,10 @@
 
 0. ✅ ~~SkillHub 申诉~~（2026-08-17 通过并上架）
 1. ✅ ~~ClawHub SkillSpector 扫描~~（已转 Published，海外发布闭环完成）
-2. **[推荐] bazi-app C 端全流程闭环** → 引擎已同步（含 801 条断语库），检查农历输入 → 排盘 → 虎皮椒支付 → 兑换码 → 报告生成全链路（bazi-app 独立对话推进，读 `docs/ENGINE-CHANGES.md` 对齐）
+2. **[推荐] bazi-app C 端全流程闭环** → 引擎已同步（v1.2.2，789 条断语库，MD5 `FEC924A713D83E38B3BDF81E4A055AA1`），检查农历输入 → 排盘 → 虎皮椒支付 → 兑换码 → 报告生成全链路（bazi-app 独立对话推进，读 `docs/ENGINE-CHANGES.md` 对齐）
 3. ✅ ~~断语库扩充 504→800+~~（已完成 `bd7f5ab`，801 条，2026-08-17）
 4. ✅ ~~晚子时/节气临界**输入侧**提示语~~（已完成 `53a3bd2`，2026-08-17；输出侧原有提示保留）
-5. **[后置] 断语库 801→1000+**（路线图下一档；下次扩充建议先清 ~9 条表外神煞旧死规则，见 §一 遗留）
+5. **[后置] 断语库 789→1000+**（路线图下一档；表外神煞旧死规则已于 2026-08-19 清理（`cc5e405`），扩充前无需再清；可考虑为元辰/魁罡/太极贵人等补算法后重新入库）
 6. **[后置] MCP/API 化**（P2 路线图）
 7. **[后置] 商标注册**（41/42 必选 + 9/45 防御，注册前代理检索规避「本初子午」近似）
 
@@ -214,6 +221,9 @@
 27. **Python 改 JSON：`rules=[r for r in ...]` 生成新列表后必须回写 `data['rules']=rules`**：直接 `json.dump(data)` 写的是旧引用，修改静默丢失（断语库扩充曾两次"改了没生效"，检查落盘用重新 load 验证条数）
 28. **`matchRules` 神煞键只认 `SHENSHA` 表内 24 项**：空亡（实为 `ctx.kongWang`）/咸池/元辰/天喜/魁罡/太极贵人/福星贵人/国印贵人/文昌贵人（表内叫"文昌"）均**不在表内**，`{神煞:"X"}` 条件永不命中（既有 9+ 条旧规则中招）；`evalState` 的"为喜用/为忌神"必须带 `位置:"日支"`、"为用神有力"必须带 `十神` 键，否则返回 false 静默失效
 29. **双项目 git 边界**：bazi-project 与 bazi-app 分属两个工作区/两个对话，本仓库只负责引擎变更的「拷贝交付」（`cp engine/engine.dist.js ../bazi-app/web/`），**commit/push 一律留给 bazi-app 对话**；引擎变更必须 bump 版本 + 记入 `docs/ENGINE-CHANGES.md`（bazi-app 对话据此核对 MD5 对齐）
+
+### 环境类（2026-08-19，Git for Windows / ssh）
+30. **Git for Windows 的 MSYS2 运行时在部分环境崩溃（`CreateFileMapping ... Win32 error 5`）**：`D:\Program Files\Git\usr\bin\ssh.exe`（及经 shell 包装时 `sh.exe`）直接崩，git fetch/push 失败；但系统 OpenSSH（`C:\Windows\System32\OpenSSH\ssh.exe`，9.5）完全正常。**绕过方案**：设 `GIT_SSH=C:\Windows\System32\OpenSSH\ssh.exe`（用户环境变量）——git 直接 spawn 该程序、不经 MSYS shell（core.sshCommand 会经 sh 包装仍崩，勿用）。**注意**：dsh 等长驻宿主进程不会自动刷新环境变量，当前会话内远程操作需内联 `$env:GIT_SSH=...; git ...`，重启宿主后自动生效。系统 ssh 认证成功标志为输出 `Hi ruanxiaoer888! You've successfully authenticated`（exit 1 是 GitHub 无 shell 的正常返回，勿当失败）
 
 ---
 
