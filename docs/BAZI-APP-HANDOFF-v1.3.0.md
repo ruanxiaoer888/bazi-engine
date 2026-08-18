@@ -6,6 +6,20 @@
 
 ---
 
+## ✅ 一致性回归已由 bazi-engine 侧完成（2026-08-19，结论：零破坏）
+
+bazi-app 只消费引擎的 **`paipan` / `applyDst` / `SHI_CHEN_MAP`** 三个 API（已 grep `web/index.html` 确认，未用 matchRules/RULES）。bazi-engine 侧已对旧基线（bazi-app commit `4a6416e` 锁定的 v1.2.1 dist）与 v1.3.0 做了逐盘对比：
+
+| 对比项 | 结果 |
+|---|---|
+| 8 盘 paipan ctx 全字段（四柱/五行/强弱/喜用/格局/神煞/大运/空亡等） | **完全一致（0 差异）** |
+| applyDst（夏令时窗口内外 7 例） | 全部一致 |
+| SHI_CHEN_MAP / getRemedy / lunarToSolar | 全部一致 |
+
+**结论：C 端报告渲染逻辑无需任何改动**，dist 升级为纯数据/逻辑无破坏替换。bazi-app 侧只需做页面冒烟 + 记录锁定（见下）。
+
+---
+
 你是 bazi-app（C 端「本初」）的 AI 助手。现在接入 bazi-engine **v1.3.0**（断语库 1000 条里程碑稳定版）并完成回归锁定。
 
 ## 背景
