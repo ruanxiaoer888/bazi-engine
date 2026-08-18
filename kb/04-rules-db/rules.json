@@ -1,6 +1,6 @@
 {
  "schema_version": "4.0",
- "description": "八字断语库（生产版 v4）— 结构化规则 504 条。新增类别：神煞/流年/合婚/五行生克。字段：触发条件(condition)、断语结论(conclusion)、古籍出处(source)、置信度(confidence)、建议(suggestion)。condition 支持：日主/旺衰/十神/五行/状态/性别/位置/组合/格局/神煞/流年。",
+ "description": "八字断语库（生产版 v4.1）— 结构化规则 789 条（2026-08-19 清理 12 条表外神煞/无实现死规则，801→789）。字段：触发条件(condition)、断语结论(conclusion)、古籍出处(source)、置信度(confidence)、建议(suggestion)。condition 支持：日主/旺衰/十神/五行/状态/性别/位置/组合/格局/神煞/流年。",
  "rules": [
   {
    "id": "char_jia",

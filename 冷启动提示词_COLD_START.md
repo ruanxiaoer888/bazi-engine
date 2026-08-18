@@ -18,18 +18,18 @@
 **项目背景（一句话）**：
 - bazi-engine = 确定性四柱八字排盘引擎（开源 MIT），输入出生信息 → 四柱/大运/流年/流日/六亲/合婚/五行补救，全程标注古籍出处
 - 双轨战略：B 端引擎（本仓库，开源引流）+ C 端产品 `../bazi-app`（「本初」，付费变现，独立仓库/独立对话推进）
-- 技术栈：`ui/index.html` 单文件离线 UI（零依赖）+ `engine/engine.dist.js` UMD 引擎库（构建产物勿手改）+ `tools/build_ui.py` Python 构建 + `kb/` 知识库（31 文件，801 条断语）
+- 技术栈：`ui/index.html` 单文件离线 UI（零依赖）+ `engine/engine.dist.js` UMD 引擎库（构建产物勿手改）+ `tools/build_ui.py` Python 构建 + `kb/` 知识库（31 文件，789 条断语）
 
-**当前状态（2026-08-17，v1.2.1）**：
+**当前状态（2026-08-19，v1.2.2）**：
 - ✅ 功能全部完成（132 项任务清零），13 套回归全绿（test_engine/test_lunar/test_dst/test_ui/test_eval_state/test_p1_fixes/verify_sleep_rules/test_liuri_v2/test_liuyue_v2/verify_edu_rules/check_conflicts/verify_ux_e2e/test_xiyong）
 - ✅ 真人验收通过（3 案例：排盘 1990-05-15 / 流日 1996-02-22 / 合婚 1996-08-13+1973-03-02）
 - ✅ **双平台上架**：SkillHub 已发布（「生态杀手」分类，申诉通过）+ ClawHub 已发布（Productivity 分类，v1.2.1 GitHub 自动同步版，git push 自动拉新）
-- ✅ 断语库 504→801 条扩充完成（`bd7f5ab`）；输入侧晚子时/节气临界提示语完成（`53a3bd2`）
-- 🔜 无阻塞：下一步优先 bazi-app C 端闭环（独立对话）；断语库 801→1000、MCP/API 化、商标注册为后置
+- ✅ 断语库 504→801 条扩充完成（`bd7f5ab`）；输入侧晚子时/节气临界提示语完成（`53a3bd2`）；死规则清理 801→789 + 空亡修活完成（`cc5e405`，2026-08-19）
+- 🔜 无阻塞：下一步优先 bazi-app C 端闭环（独立对话）；断语库 789→1000、MCP/API 化、商标注册为后置
 
 **接手后任务（按优先级，详见 HANDOFF 第四节）**：
 1. bazi-app C 端全流程闭环（独立对话推进，读 `docs/ENGINE-CHANGES.md` 对齐引擎）
-2. 断语库扩充 801→1000+（先清 ~9 条表外神煞旧死规则）
+2. 断语库扩充 789→1000+（表外神煞旧死规则已于 2026-08-19 清理（`cc5e405`））
 3. MCP/API 化（P2 路线图）
 4. 商标注册（41/42 必选 + 9/45 防御，注册前代理检索规避「本初子午」近似——注意这是 bazi-app 的品牌，若做 C 端商标需核实）
 
