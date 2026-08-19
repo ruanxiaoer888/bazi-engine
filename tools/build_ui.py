@@ -1551,7 +1551,7 @@ function selFill(sel, opts, placeholder){
   }
   sel.innerHTML=html;
 }
-function selYear(id){ const sel=document.getElementById(id); if(!sel) return; const a=[]; const curYear=new Date().getFullYear(); for(let i=curYear;i>=1895;i--) a.push({v:i,l:i+'年'}); selFill(sel, a, '年份'); if(!sel.value) sel.value=String(curYear); }
+function selYear(id, lo, hi){ const sel=document.getElementById(id); if(!sel) return; const a=[]; const curYear=new Date().getFullYear(); const top=hi||curYear, bot=lo||1895; for(let i=top;i>=bot;i--) a.push({v:i,l:i+'年'}); selFill(sel, a, '年份'); if(!sel.value) sel.value=String(top); }
 function selMonth(id){ const a=[]; for(let i=1;i<=12;i++) a.push({v:i,l:i+'月'}); selFill(document.getElementById(id), a, '月份'); }
 function selDay(id, yId, mId){
   const sel=document.getElementById(id);
@@ -1574,6 +1574,7 @@ function switchCal(mode){
   document.querySelectorAll('#calToggle button').forEach(b=>{ b.classList.toggle('active', b.dataset.cal===mode); });
   document.getElementById('dateLabel').textContent = (mode==='lunar'?'农历':'阳历') + '生日';
   document.getElementById('year').value='';
+  selYear('year', mode==='lunar'?1900:1895, mode==='lunar'?2099:undefined); // 农历数据表仅覆盖 1900-2099，越界会静默算错（2026-08-19 审计修复）
   fillDateOptions();
 }
 function switchHeCal(side, mode){
@@ -1583,6 +1584,7 @@ function switchHeCal(side, mode){
   document.querySelectorAll('#hCalToggle'+side+' button').forEach(b=>{ b.classList.toggle('active', b.dataset.cal===mode); });
   document.getElementById('hDateLabel'+side).textContent = (mode==='lunar'?'农历':'阳历') + '生日';
   document.getElementById('hYear'+side).value='';
+  selYear('hYear'+side, mode==='lunar'?1900:1895, mode==='lunar'?2099:undefined); // 同主表单：农历限 1900-2099
   fillHeDateOptions(side);
 }
 function fillDateOptions(){
@@ -1780,6 +1782,7 @@ function generate(){
   let m;
   let lunarInput=null;
   if(calMode==='lunar'){
+    if(y<1900||y>2099){alert('农历生日仅支持 1900-2099 年（农历数据表范围），请更换年份或改选阳历');return;}
     if(!y||!mVal||!d){alert('请填写完整农历生日');return;}
     const isLeap=mVal.endsWith('l');
     const lm=+mVal.replace('l','');
@@ -2711,6 +2714,7 @@ function readHe(s){
   let m;
   const mode = s==='A'?hCalModeA:hCalModeB;
   if(mode==='lunar'){
+    if(y<1900||y>2099){alert('请填写'+s+'方农历生日：仅支持 1900-2099 年，或改选阳历');return null;}
     if(!y||!mVal||!d){alert('请填写'+s+'方完整农历生日');return null;}
     const isLeap=mVal.endsWith('l');
     const lm=+mVal.replace('l','');
@@ -3060,7 +3064,7 @@ function varVal(k){
 html = TPL.replace("__JIEQI__", json.dumps(jieqi, ensure_ascii=False)).replace(
     "__RULES__", json.dumps(rules, ensure_ascii=False)
 )
-with open(ROOT + r"\ui\index.html", "w", encoding="utf-8") as f:
+with open(os.path.join(ROOT, "ui", "index.html"), "w", encoding="utf-8") as f:
     f.write(html)
 print(
     "index.html built, size=%dKB, jieqi years=%d, rules=%d"
