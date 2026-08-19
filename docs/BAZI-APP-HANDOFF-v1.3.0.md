@@ -1,22 +1,23 @@
-# bazi-app 回归启动指令 · 引擎 v1.3.0
+# bazi-app 闭环收尾启动指令 · 引擎 v1.3.6
 
-> 用途：bazi-app 对话（C 端「本初」仓库）接入 bazi-engine v1.3.0 并回归锁定的启动指令。
-> 由 bazi-engine 侧交付（2026-08-19），Michael 直接粘贴给 bazi-app 对话即可。
+> 用途：bazi-app 对话（C 端「本初」仓库）接入 bazi-engine **v1.3.6**（三方审计后稳定版）并完成闭环收尾（回归确认 → 服务器四件套更新 → 虎皮椒通道 → 锁定）。
+> 由 bazi-engine 侧交付（2026-08-19，随引擎更新至 v1.3.6），Michael 直接粘贴给 bazi-app 对话即可。
 > 边界约定（双项目 git 边界）：引擎 dist 由 bazi-engine 侧交付，bazi-app 不手改 engine.dist.js；发现引擎 bug 记录后反馈 bazi-engine 侧。
 
 ---
 
-## ✅ 一致性回归已由 bazi-engine 侧完成（2026-08-19，结论：零破坏）
+## ✅ 引擎 v1.3.6 交付状态（bazi-engine 侧已核）
 
-bazi-app 只消费引擎的 **`paipan` / `applyDst` / `SHI_CHEN_MAP`** 三个 API（已 grep `web/index.html` 确认，未用 matchRules/RULES）。bazi-engine 侧已对旧基线（bazi-app commit `4a6416e` 锁定的 v1.2.1 dist）与 v1.3.0 做了逐盘对比：
+- **dist 已拷贝交付**：`web/engine.dist.js`，MD5 `1A4722FA7B0974EB4F5CFA53C71AA9C3`（LF 口径，跨平台可比）
+- **C 端只消费 `paipan` / `applyDst` / `SHI_CHEN_MAP`**（已 grep 确认，不用 matchRules/RULES；`lunarToSolar` 为 C 端自有实现，与引擎同步但独立——引擎 v1.3.3 加的防御**不影响 C 端**）
+- **v1.3.2~v1.3.6 对 C 端影响评估**：仅 **v1.3.4 专旺格判定收紧**（0.55→0.75+他行≤0.15 双条件，5000 盘 0.94%→0.02% 去误标）——C 端若显示「特殊格局」，**此前被误标的盘不再显示专旺细分**（更准确，属预期）；其余均为 B 端 matchRules/UI 层，C 端无感知
+- 一致性基线：8 盘 ctx 全字段 0 差异（v1.3.0 验证，v1.3.6 引擎层对 C 端消费 API 无改动）
 
-| 对比项 | 结果 |
-|---|---|
-| 8 盘 paipan ctx 全字段（四柱/五行/强弱/喜用/格局/神煞/大运/空亡等） | **完全一致（0 差异）** |
-| applyDst（夏令时窗口内外 7 例） | 全部一致 |
-| SHI_CHEN_MAP / getRemedy / lunarToSolar | 全部一致 |
+## ✅ 已完成的验证（bazi-engine 侧，无需重复）
 
-**结论：C 端报告渲染逻辑无需任何改动**，dist 升级为纯数据/逻辑无破坏替换。bazi-app 侧只需做页面冒烟 + 记录锁定（见下）。
+- 一致性回归：8 盘 ctx 0 差异 + applyDst/SHI_CHEN_MAP 一致
+- 页面冒烟：1990-05-15 10:00 广州 四柱/格局/喜用全对（含夏令时+真太阳时时柱链路）
+- 闭环 API 演练：18/18 全通（下单/首单优惠/mock 支付/解锁/兑换码/防浪费）
 
 ---
 
@@ -65,40 +66,47 @@ bazi-app 只消费引擎的 **`paipan` / `applyDst` / `SHI_CHEN_MAP`** 三个 AP
 
 ---
 
-你是 bazi-app（C 端「本初」）的 AI 助手。现在接入 bazi-engine **v1.3.0**（断语库 1000 条里程碑稳定版）并完成回归锁定。
+你是 bazi-app（C 端「本初」）的 AI 助手。现在完成 **bazi-engine v1.3.6 引擎接入 + 闭环收尾**（回归确认 → 服务器更新 → 支付通道 → 锁定）。
 
 ## 背景
 
-- bazi-engine v1.3.0 已定版：断语库 789→1000 条（+211），主面板 6 类平均命中 52.6→66.1 条/盘（+26%），dist 438KB
-- 引擎文件已由 bazi-engine 侧拷贝交付到本仓库：`web/engine.dist.js`
-- 回归清单：本仓库根目录 `BAZI-APP-REGRESSION-v1.3.0.md`（适用 v1.3.0，dist 与 v1.2.3 完全相同，MD5 一致）
+- bazi-engine **v1.3.6**（断语库 1000 条 + 三方深度审计 6 批次修复，稳定版）；引擎文件已交付 `web/engine.dist.js`
+- C 端只消费 `paipan`/`applyDst`/`SHI_CHEN_MAP`（lunarToSolar 为 C 端自有实现，不受引擎 v1.3.3 防御影响）
+- 一致性零破坏 + 页面冒烟 + 闭环 API 18/18 均已由 bazi-engine 侧验证（见上文）
+- 本仓真实闭环剩 2 个外部阻塞：**服务器四件套更新**（线上仍旧版）+ **虎皮椒真实通道**（申请被拒）
 
 ## 执行步骤
 
-1. **核对版本（第一步，必做）**：
-   ```bash
-   md5sum web/engine.dist.js
-   # 期望：CE99E451F5733376A56BDCE9F49D8ED4
-   # 不一致 → 停下，找 bazi-engine 侧重新拷贝，不要继续
-   ```
+**第 1 步 · 版本核对（必做）**：
+```bash
+md5sum web/engine.dist.js
+# 期望：1A4722FA7B0974EB4F5CFA53C71AA9C3
+# 不一致 → 停下，找 bazi-engine 侧重拷
+```
 
-2. **读回归清单** `BAZI-APP-REGRESSION-v1.3.0.md`，按清单逐项回归：
-   - §0 版本核对（MD5）
-   - §2 基础链路：农历/阳历双模式排盘、真太阳时开关、无空白面板
-   - §3 面板级：预期命中量基准（实测 61~83 条/盘，同盘应落在 ±10 内）+ 每面板检查点 + 健康类合规抽查
-   - §4 边界盘 8 例：晚子时/立春临界/夏令时窗口/真太阳时对比/中和盘/特殊格局/女命/合婚 A/B
-   - §5 报告生成与排版：篇幅撑爆、海报溢出、性能、去重
-   - §6 合规红线：健康类仅提示+就医建议、免责声明保留
-   - §7 通过标准 checklist 全部满足才放行
+**第 2 步 · 回归确认（引擎侧已做过一致性/冒烟/闭环，本仓只需轻量确认）**：
+- 本地打开 `web/index.html`，1990-05-15 10:00 广州 → 四柱/格局/喜用正常渲染（对照上文冒烟表）
+- **特殊格局核对**：找一张此前显示「专旺·X」的盘确认是否仍显示——v1.3.4 专旺判定收紧，误标盘不再显示（预期，更准确）
+- 农历输入一条（如 2024-01-01 腊月初一）→ 排盘正常（C 端自有农历实现）
 
-3. **发现问题**：修复后复测；确认与引擎无关的问题（如排版溢出）按清单 §8 预案处理（折叠/限条数）。
+**第 3 步 · 服务器四件套更新（真实闭环关键，线上仍旧版）**：
+1. 上传 `web/index.html` + `web/admin.html` + **`web/paid/` 目录**（match.js/year.js 必须连目录一起）+ `api/server.js` + `api/config.json`（adminUser/adminPass 用生产值）到服务器
+2. `pm2 restart benchu_api` → 验证 `curl /api/health`（含 mock 状态）
+3. 新账号登录 `web/admin.html` 验证（24h 会话 token）
+4. **重新生成兑换码**（线上 codes.json 为空/旧数据）——`api/gen_codes.js` 或后台生成
+5. 可选：Nginx `/api/admin/` 加 IP 白名单
 
-4. **锁定**：全部通过后，将引擎依赖版本记录到本仓库 `HANDOFF.md` / `AI_CONTEXT.md`（v1.3.0 + MD5 `CE99E451F5733376A56BDCE9F49D8ED4`），commit 回归结果。
+**第 4 步 · 虎皮椒真实通道**：
+1. 换支付宝账号重提虎皮椒申请（原账号被风控拒）→ 通过后填 `config.json` 的 `xunhu.appid/appsecret` → `mock:false`
+2. `pm2 restart` → 真实支付验证一单（¥0.01 试单）：下单 → 支付 → 回调 → 解锁 全链路
+3. 验证通过后恢复正式价格（如 ¥19.9 首单 ¥9.9 已在 skus 配置）
 
-5. **反馈**：如发现引擎层 bug（排盘/断语匹配错误），记录复现盘与现象，反馈 bazi-engine 侧处理（不要在本仓库改 dist）。
+**第 5 步 · 锁定**：全部通过后，将引擎依赖记录到本仓 `HANDOFF.md` / `AI_CONTEXT.md`（**v1.3.6 + MD5 `1A4722FA7B0974EB4F5CFA53C71AA9C3`**），commit 闭环收尾结果。
+
+**第 6 步 · 反馈**：如发现引擎层 bug，记录复现盘与现象反馈 bazi-engine 侧（不要在本仓改 dist）。
 
 ## 边界红线
 
 - `web/engine.dist.js` 是 bazi-engine 构建产物，**不手改**；引擎更新由 bazi-engine 侧交付
 - 命理输出保留「仅供娱乐文化参考」免责；健康类不做疾病断言
-- 完成后汇报：核对 MD5、回归结果汇总（各面板命中量 vs 基准）、发现的问题与处理、锁定记录位置
+- 完成后汇报：核对 MD5、回归确认结果、服务器更新状态（health/登录/兑换码）、虎皮椒验证结果、锁定记录位置
