@@ -25,3 +25,6 @@ for(let si=0; si<10; si++){
   }
 }
 console.log(`\n共 ${total} 盘，成对规则 ${pairs.length*2} 条，矛盾命中 ${conflicts} 次`);
+// 门禁退出码（2026-08-19 修复：此前冲突>0 也恒 exit 0，CI 中不失败）
+if (conflicts > 0) process.exit(1);
+process.exit(0);
