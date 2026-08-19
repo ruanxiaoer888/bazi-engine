@@ -2225,15 +2225,19 @@ function runLiuYue(){
   const ty=+document.getElementById('liuMonthYear').value;
   if(isNaN(ty)||!Number.isInteger(ty)||ty<1900||ty>2100){alert('请输入有效年份（1900-2100）');return;}
   const monthNames=['正月(寅)','二月(卯)','三月(辰)','四月(巳)','五月(午)','六月(未)','七月(申)','八月(酉)','九月(戌)','十月(亥)','十一月(子)','十二月(丑)'];
-  const midDays=[4,5,5,5,6,6,7,8,8,8,7,6];
-  const refMs=[2,3,4,5,6,7,8,9,10,11,12,1]; // 每月取参考日的阳历月份
+  // 2026-08-19 引擎审计 M1：改用 12 节精确时刻判月柱（替代固定参考日 midDays/refMs——临界月曾系统性错一月，
+  // 如 1902 小寒 01-06 13:51 > 原参考 12:00）。JIEQI.data[year] 即 12 节时刻数组（立春/惊蛰/…/大雪/小寒），
+  // 每月节按索引一一对应；十二月小寒在次年 1 月（jy=ty+1）
+  const JIECI=[0,1,2,3,4,5,6,7,8,9,10,11];
+  const yg0=yearGZ(ty,6,1,12,0); // ty 年年干（12 个月均在 ty 立春 ~ ty+1 立春之间，年柱不换）
   let out=[`<h3 style="font-size:16px;color:var(--gold);margin-bottom:12px">${ty} 年十二流月分析</h3>`];
   out.push('<table class="month-table"><thead><tr><th>月令</th><th>月柱</th><th>纳音</th><th>十神</th><th>与命局合冲</th><th>月运简述</th></tr></thead><tbody>');
   for(let i=0;i<12;i++){
-    const rm=refMs[i], rd=midDays[i];
-    const yg=yearGZ(ty,rm,rd,12,0);
-    if(!yg){out.push(`<tr><td><b>${monthNames[i]}</b></td><td colspan="5" style="color:var(--muted)">数据不足</td></tr>`);continue;}
-    const mgz=monthGZ(ty,rm,rd,12,0,yg[0]);
+    const jidx=JIECI[i], jy=(i===11)?ty+1:ty; // 十二月小寒在次年 1 月
+    const jarr=JIEQI.data[String(jy)];
+    if(!jarr||!yg0){out.push(`<tr><td><b>${monthNames[i]}</b></td><td colspan="5" style="color:var(--muted)">数据不足</td></tr>`);continue;}
+    const jp=parseItem(jarr[jidx]); // [月,日,时,分]（坑 #26：无年份，年份用 jy）
+    const mgz=monthGZ(jy,jp[0],jp[1],jp[2],jp[3],yg0[0]);
     if(!mgz){out.push(`<tr><td><b>${monthNames[i]}</b></td><td colspan="5" style="color:var(--muted)">数据不足</td></tr>`);continue;}
     const mg=mgz[0], mz=mgz[1];
     const nayin=NAYIN[mgz]||'';
@@ -2750,6 +2754,13 @@ function analyzeHe(A,B){
   else if(CHONG[gzA]===gzB){ sc+=2; desc+='日支相冲（'+gzA+gzB+'），婚姻宫动，需高度包容；'; }
   else if(XING_PAIRS.some(pr=>(pr[0]===gzA&&pr[1]===gzB)||(pr[0]===gzB&&pr[1]===gzA))){ sc+=3; desc+='日支相刑（'+gzA+gzB+'），潜在摩擦；'; }
   else { sc+=5; desc+='日支无冲合，平稳；'; }
+  // 2026-08-19 引擎审计 M2：维度 1 原最高 17（五合10+六合7），总分天花板 92，「天生佳偶≥85」几乎不可达。
+  // 扩充两子项至 25 可触达：日柱纳音相生 +5、日支三合局 +3（评分更细，评级语义不变）
+  const nayinA=NAYIN_WX[dgzA]||'', nayinB=NAYIN_WX[dgzB]||'';
+  if(nayinA&&nayinB&&WX_SK[nayinA]&&WX_SK[nayinA].生===nayinB){ sc+=5; desc+='日柱纳音相生（'+NAYIN[dgzA]+'→'+NAYIN[dgzB]+'），底蕴相济；'; }
+  else if(nayinA&&nayinB&&WX_SK[nayinB]&&WX_SK[nayinB].生===nayinA){ sc+=5; desc+='日柱纳音相生（'+NAYIN[dgzB]+'→'+NAYIN[dgzA]+'），底蕴相济；'; }
+  const sanhePair=SANHE.find(s=>gzA!==gzB&&s.includes(gzA)&&s.includes(gzB));
+  if(sanhePair){ sc+=3; desc+='日支三合（'+gzA+gzB+'合'+wxOfSanhe(sanhePair)+'局），三合共鸣；'; }
   sc=Math.min(sc,25);
   dims.push({name:'日柱关系',max:25,sc:sc,desc:desc});
   // 2. 五行互补（25）
