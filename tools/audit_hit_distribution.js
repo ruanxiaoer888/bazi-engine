@@ -139,3 +139,10 @@ if (watchRules) {
     console.log(`  命中率: ${hit}/${total} (${(hit / total * 100).toFixed(0)}%)`);
   });
 }
+
+// ---- 门禁退出码（2026-08-19 修复：此前恒 exit 0，CI 中发现问题不失败）----
+if (bad > 0 || over80.length > 0) {
+  console.log(`\n❌ 门禁未过：100% 命中规则 ${bad} 条 / >80% 规则 ${over80.length} 条（CI 应失败）`);
+  process.exit(1);
+}
+process.exit(0);
