@@ -1097,7 +1097,11 @@ function paipan(name,gender,y,m,d,hh,mm,place,truesun){
   else if(ratio<0.4) strength='弱';
   else strength='中和';
   const maxWx=Math.max.apply(null, WX_NAMES.map(w=>five[w]));
-  if(maxWx>0.55*total) special.zhuanwang=true;
+  // 2026-08-19 引擎审计 M3：原 0.55 过宽（普通身强盘易误标专旺，连锁污染格局/喜用/断语），
+  // 收紧为 主导行 ≥0.75 总量 + 最强他行 ≤0.15 双条件（传统专旺：该行绝对主导、异行极弱）
+  const domWxName=WX_NAMES.find(w=>five[w]===maxWx);
+  const othersMax=Math.max.apply(null, WX_NAMES.filter(w=>w!==domWxName).map(w=>five[w]));
+  if(maxWx>0.75*total && othersMax<=0.15*total) special.zhuanwang=true;
   if(support<0.18*total) special.cong=true;
   const monthZhi=pillars[1][1], dayZhi=pillars[2][1];
   // 调候用神：日干×月令季节 → 调候五行（来源：《穷通宝鉴》）
@@ -1748,7 +1752,7 @@ function updateTimeHint(){
   if(mode==='exact'){
     const h=+document.getElementById('hour').value;
     const mm=+document.getElementById('minute').value||0;
-    if(h===23) warns.push('晚子时（23:00-23:59）：时柱按<b>次日</b>干支推算，请确认出生钟表时间无误。');
+    if(h===23) warns.push('晚子时（23:00-23:59）：本引擎流派为「日柱不换、时柱按次日日干遁」——时柱按<b>次日</b>干支推算，请确认出生钟表时间无误；若与真太阳时校正叠加跨日，时柱可能回翻，属流派约定。');
     if(calMode!=='lunar'){
       const jt=jieWarnText(+document.getElementById('year').value,+document.getElementById('month').value,+document.getElementById('day').value,h,mm);
       if(jt) warns.push(jt);
@@ -1768,7 +1772,7 @@ function updateHeTimeHint(s){
   if(mode==='exact'){
     const h=+document.getElementById('hHour'+s).value;
     const mm=+document.getElementById('hMinute'+s).value||0;
-    if(h===23) warns.push('晚子时（23:00-23:59）：时柱按<b>次日</b>干支推算，请确认出生钟表时间无误。');
+    if(h===23) warns.push('晚子时（23:00-23:59）：本引擎流派为「日柱不换、时柱按次日日干遁」——时柱按<b>次日</b>干支推算，请确认出生钟表时间无误；若与真太阳时校正叠加跨日，时柱可能回翻，属流派约定。');
     const lunarMode=(s==='A'?hCalModeA:hCalModeB)==='lunar';
     if(!lunarMode){
       const jt=jieWarnText(+document.getElementById('hYear'+s).value,+document.getElementById('hMonth'+s).value,+document.getElementById('hDay'+s).value,h,mm);
