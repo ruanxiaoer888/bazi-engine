@@ -706,6 +706,8 @@ const WU_HE = {甲:'己',己:'甲',乙:'庚',庚:'乙',丙:'辛',辛:'丙',丁:'
 // 天干相冲（用于反吟/天克地冲判定）
 // 天干相冲（传统只有四组：甲庚/乙辛/丙壬/丁癸，戊己同为土不冲）
 const WU_CHONG = {甲:'庚',庚:'甲',乙:'辛',辛:'乙',丙:'壬',壬:'丙',丁:'癸',癸:'丁'};
+// 2026-08-19 引擎审计 🟢-8：天干顺序常量全局化（原在 matchLiuDay/matchLiuYue 各定义一份）
+const GAN_ORDER=['甲','乙','丙','丁','戊','己','庚','辛','壬','癸'];
 // 纳音（六十甲子）
 const NAYIN = {'甲子':'海中金','乙丑':'海中金','丙寅':'炉中火','丁卯':'炉中火','戊辰':'大林木','己巳':'大林木','庚午':'路旁土','辛未':'路旁土','壬申':'剑锋金','癸酉':'剑锋金','甲戌':'山头火','乙亥':'山头火','丙子':'涧下水','丁丑':'涧下水','戊寅':'城头土','己卯':'城头土','庚辰':'白蜡金','辛巳':'白蜡金','壬午':'杨柳木','癸未':'杨柳木','甲申':'泉中水','乙酉':'泉中水','丙戌':'屋上土','丁亥':'屋上土','戊子':'霹雳火','己丑':'霹雳火','庚寅':'松柏木','辛卯':'松柏木','壬辰':'长流水','癸巳':'长流水','甲午':'沙中金','乙未':'沙中金','丙申':'山下火','丁酉':'山下火','戊戌':'平地木','己亥':'平地木','庚子':'壁上土','辛丑':'壁上土','壬寅':'金箔金','癸卯':'金箔金','甲辰':'覆灯火','乙巳':'覆灯火','丙午':'天河水','丁未':'天河水','戊申':'大驿土','己酉':'大驿土','庚戌':'钗钏金','辛亥':'钗钏金','壬子':'桑柘木','癸丑':'桑柘木','甲寅':'大溪水','乙卯':'大溪水','丙辰':'沙中土','丁巳':'沙中土','戊午':'天上火','己未':'天上火','庚申':'石榴木','辛酉':'石榴木','壬戌':'大海水','癸亥':'大海水'};
 const NAYIN_WX = {}; for(const k in NAYIN){ NAYIN_WX[k]=NAYIN[k].slice(-1); }
@@ -1068,7 +1070,6 @@ function paipan(name,gender,y,m,d,hh,mm,place,truesun){
   if(maxWx>0.55*total) special.zhuanwang=true;
   if(support<0.18*total) special.cong=true;
   const monthZhi=pillars[1][1], dayZhi=pillars[2][1];
-  if(['亥','子','丑','巳','午','未'].includes(monthZhi)) special.tiaohou=true;
   // 调候用神：日干×月令季节 → 调候五行（来源：《穷通宝鉴》）
   const seasonMap={寅:'春',卯:'春',辰:'春',巳:'夏',午:'夏',未:'夏',申:'秋',酉:'秋',戌:'秋',亥:'冬',子:'冬',丑:'冬'};
   const season=seasonMap[monthZhi]||'春';
@@ -1276,11 +1277,11 @@ function evalState(st, c, ctx){
       return !!ctx.special.cong&&ctx.strength==='弱';
     }
     case '用神被冲克合': {
-      if(ctx.xiYong.length>=5) return false; // 中和命局喜忌无定论，不存在明确用神
+      if(ctx.xiYong.length===0) return false; // 中和命局喜忌无定论，不存在明确用神（2026-08-19：原 length>=5 永不成立，改正）
       return yongShenChong(ctx);
     }
     case '用神假': {
-      if(ctx.xiYong.length>=5) return false; // 中和命局用神本就"皆有可假皆可"，不判为假
+      if(ctx.xiYong.length===0) return false; // 中和命局用神本就"皆有可假皆可"，不判为假
       const maxXi=Math.max(...ctx.xiYong.map(w=>ctx.five[w]||0));
       return maxXi<avg*0.6; // 喜用五行全弱，用神虚浮无力
     }
@@ -1488,13 +1489,17 @@ function leapMonth(y){return LUNAR_INFO[y-1900]&0xf;}
 function leapDays(y){return leapMonth(y)?((LUNAR_INFO[y-1900]&0x10000)?30:29):0;}
 function monthDays(y,m){return(LUNAR_INFO[y-1900]&(0x10000>>m))?30:29;}
 function lunarToSolar(lYear,lMonth,lDay,isLeap){
+  // 2026-08-19 引擎审计 M6：公共 API 输入防御（UI 层已限制，导出库需自防）
+  if(!(lYear>=1900&&lYear<=2099)||!(lMonth>=1&&lMonth<=12)||!(lDay>=1&&lDay<=30)) return null;
+  const leap=leapMonth(lYear);
+  if(isLeap&&leap!==lMonth) return null; // 声称闰月但该月非闰 → 非法
+  if(lDay>monthDays(lYear,lMonth)) return null; // 超过当月天数（小月 29 天）
   let offset=0;
   for(let i=1900;i<lYear;i++){
     let yd=348;
     for(let j=1;j<=12;j++) yd+=(LUNAR_INFO[i-1900]&(0x10000>>j))?1:0;
     yd+=leapDays(i); offset+=yd;
   }
-  const leap=leapMonth(lYear);
   for(let i=1;i<lMonth;i++){offset+=monthDays(lYear,i); if(i===leap) offset+=leapDays(lYear);}
   if(isLeap) offset+=monthDays(lYear,lMonth);
   offset+=lDay-1;
@@ -2144,10 +2149,11 @@ function runLiu(){
   if(HAI_PAIRS.some(pr=>(pr[0]===lz&&pr[1]===ctx.pillars[2][1])||(pr[0]===ctx.pillars[2][1]&&pr[1]===lz))) liuRules.push(findRule('liu_28'));
   if([JIANGXING[ctx.pillars[0][1]],JIANGXING[ctx.pillars[2][1]]].includes(lz)) liuRules.push(findRule('liu_29'));
   if([HUAGAI[ctx.pillars[0][1]],HUAGAI[ctx.pillars[2][1]]].includes(lz)) liuRules.push(findRule('liu_30'));
-  // 喜用神
+  // 喜用神（2026-08-19 引擎审计 M7：非喜用≠克用神，改三分支——喜用/忌用/平运；中和盘喜忌空则不推）
   const liuIsXiYong=ctx.xiYong.includes(GAN_WX[ltg])||ctx.xiYong.includes(ZHI_WX[lz]);
+  const liuIsJiYong=ctx.jiYong.includes(GAN_WX[ltg])||ctx.jiYong.includes(ZHI_WX[lz]);
   if(liuIsXiYong) liuRules.push(findRule('liunian_流年生用神'));
-  else liuRules.push(findRule('liunian_流年克用神'));
+  else if(liuIsJiYong) liuRules.push(findRule('liunian_流年克用神'));
   // 输出去重
   const seen={}; const unique=liuRules.filter(r=>r&&!seen[r.id]&&(seen[r.id]=true));
   if(unique.length){
@@ -2356,7 +2362,6 @@ function runLiuDay(){
 function matchLiuDay(ctx, g, z, ten, rels, kong, isXi, isJi){
   const out=[];
   const ri=ctx.pillars[2], zi=ri[1], riGan=ri[0];
-  const GAN_ORDER=['甲','乙','丙','丁','戊','己','庚','辛','壬','癸'];
   // 1) 基础五条（通用骨架，保留）
   if(CHONG[z]===zi) out.push(findRule('liuri_01'));
   if(LIUHE.some(pr=>pr.includes(z)&&pr.includes(zi))) out.push(findRule('liuri_02'));
@@ -2552,7 +2557,6 @@ function matchLiuYue(ctx, mgz, mTen, rels){
     out.push(findRule('liuyue_chong_'+key));
   }
   // v2-C) 天干五合（流月干合日干，按 GAN_ORDER 顺序键）
-  const GAN_ORDER=['甲','乙','丙','丁','戊','己','庚','辛','壬','癸'];
   if(WU_HE[mg]===ctx.pillars[2][0]){
     const key=[mg,ctx.pillars[2][0]].sort((a,b)=>GAN_ORDER.indexOf(a)-GAN_ORDER.indexOf(b)).join('');
     out.push(findRule('liuyue_wuhe_'+key));
