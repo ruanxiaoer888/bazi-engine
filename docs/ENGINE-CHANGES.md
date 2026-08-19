@@ -10,6 +10,26 @@
 
 ---
 
+## v1.3.2（2026-08-19 · 三方审计修复批次）
+
+> 引擎逻辑 / UI 功能视觉 / 构建工具链 三路并行审计（子代理）后的修复。
+
+| 项 | 值 |
+|---|---|
+| dist MD5 | `AFB7FE8191D3C475600FAB6B4F4E9A2D` |
+| dist 大小 | 437KB（RULES 1000 条不变） |
+| 影响 C 端 | **否**（改 matchLiuDay 流日规则与构建路径；C 端只消费 paipan/applyDst/SHI_CHEN_MAP，不受影响） |
+
+**变更内容**：
+1. **🔴 流日「天克地冲」判定方向错误**（引擎审计 R1）：`liuri_tkdc` 原用五行克关系（`GAN_WX[g]===WX_SK[...].克`）判定天克，与全引擎其余三处（dayun_04/liuyue_10/liunian_天克地冲日）的 `WU_CHONG` 天干相冲标准不一致——甲木日主遇庚午（真甲庚冲+子午冲）**漏判**、庚金日主遇乙子（乙庚五合，实为天合地冲）**误判**。修复为 `WU_CHONG[g]===riGan || WU_CHONG[riGan]===g`，双向验证通过（含反向场景）。
+2. **跨平台构建 bug**（工具链审计 S3）：`open(ROOT + r"\ui\index.html")` 反斜杠拼接在 Linux/Mac 上写错位置（含反斜杠怪文件名），git 旧产物使 CI 全程测旧代码（假绿）；改 `os.path.join(ROOT,"ui","index.html")`。
+3. **CI 门禁恒绿修复**（工具链审计 S2）：`audit_hit_distribution.js` 发现 100%/>80% 命中规则时 `process.exit(1)`（此前恒 exit 0）；`check_conflicts.js` 矛盾>0 时 `process.exit(1)`。
+4. **农历年份越界 P0**（UI 审计 🔴-1）：年份下拉 1895 起但 `LUNAR_INFO` 仅 1900-2099 → 选 1895-1899/2100 农历静默算错命盘。UI 层修复：`selYear` 加范围参数、切农历重建年份(1900-2099)、`generate`/`readHe` 农历分支校验+提示。
+
+**bazi-app 注意事项**：C 端不受影响（matchLiuDay 未被消费）；dist 已拷贝交付（MD5 `AFB7FE8191D3C475600FAB6B4F4E9A2D`，可选替换）。
+
+---
+
 ## v1.3.1（2026-08-19 · 审计修复）
 
 > 全项目扫描审计发现的死规则修复。v1.3.0 定版后 patch 版。

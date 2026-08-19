@@ -894,7 +894,9 @@ function matchLiuDay(ctx, g, z, ten, rels, kong, isXi, isJi){
   const cs=calcChangSheng(ctx.dayMaster, z);
   if(cs) out.push(findRule('liuri_cs_'+cs));
   // 8) 天克地冲（G组：流日干支与日柱干支同冲同克）
-  if(CHONG[z]===zi && GAN_WX[g]===WX_SK[GAN_WX[riGan]].克) out.push(findRule('liuri_tkdc'));
+  // 2026-08-19 修复（引擎审计 R1）：原用五行克关系 GAN_WX[g]===WX_SK[...].克 判定，与全引擎其余三处
+  // （dayun_04/liuyue_10/liunian_天克地冲日）的 WU_CHONG 天干相冲标准不一致——甲庚冲漏判、乙庚五合误判。
+  if(CHONG[z]===zi && (WU_CHONG[g]===riGan || WU_CHONG[riGan]===g)) out.push(findRule('liuri_tkdc'));
   // 9) 伏吟（H组：流日支与日支相同）
   if(z===zi) out.push(findRule('liuri_fuyin'));
   const seen={}; return out.filter(r=>r&&!seen[r.id]&&(seen[r.id]=true));
