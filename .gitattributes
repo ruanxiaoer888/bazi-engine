@@ -1,0 +1,9 @@
+# 构建产物强制 LF（2026-08-19 审计修复：Windows CRLF 产物导致 dist MD5 跨平台不可比，
+# bazi-app MD5 对齐机制失效；LF 后本地/CI/bazi-app 三方字节一致）
+ui/index.html text eol=lf
+engine/engine.dist.js text eol=lf
+kb/04-rules-db/rules.json text eol=lf
+skill/SKILL.md text eol=lf
+tools/*.js text eol=lf
+tools/*.py text eol=lf
+*.md text eol=lf

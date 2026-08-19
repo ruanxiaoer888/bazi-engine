@@ -35,5 +35,5 @@ jobs:
           node tools/verify_edu_rules.js
           node tools/test_xiyong.js
           node tools/check_conflicts.js
-      - name: Hit distribution audit (100 charts)
-        run: node tools/audit_hit_distribution.js --sample=100
+      - name: Hit distribution audit (100 charts, fixed seed)
+        run: node tools/audit_hit_distribution.js --sample=100 --seed=42

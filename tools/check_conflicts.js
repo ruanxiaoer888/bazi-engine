@@ -18,9 +18,11 @@ for(let si=0; si<10; si++){
     const c=paipan('测','男',y,m,d,hh,mm,'广州','no');
     if(!c) continue;
     total++;
+    // 2026-08-19 修复（工具链审计）：原 matchRules(c,{id:a}) 第二参数被忽略、返回值对象无 .length
+    // → ra.length 恒 undefined → conflicts 恒 0，检测整体失效恒绿。改为每盘 matchRules 一次 + Set 查 id。
+    const all = new Set(Object.values(matchRules(c)).flat().map(r => r.id));
     for(const [a,b] of pairs){
-      const ra=matchRules(c,{id:a}), rb=matchRules(c,{id:b});
-      if(ra.length&&rb.length){ conflicts++; console.log(`冲突: 盘${y}-${m}-${d} ${c.dg} 同时命中 ${a}+${b}`); }
+      if(all.has(a) && all.has(b)){ conflicts++; console.log(`冲突: 盘${y}-${m}-${d} ${c.dg} 同时命中 ${a}+${b}`); }
     }
   }
 }
