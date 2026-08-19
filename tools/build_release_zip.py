@@ -30,7 +30,8 @@ EXCLUDE_ROOT_FILES = {'LICENSE', 'LICENSE-DATA', 'README.en.md',
 # 目录内排除的子路径/文件模式
 EXCLUDE_SUB = {
     'kb/04-rules-db/drafts',        # 内部取材源
-    'tools/__pycache__', 'tools/_dbg', 'kb/05-reference',  # 内部参考
+    'tools/__pycache__', 'tools/_dbg', 'tools/archive',  # 归档脚本不进发布包（2026-08-19 审计修复）
+    'kb/05-reference',  # 内部参考
 }
 EXCLUDE_NAMES = {'__pycache__', '.DS_Store', 'Thumbs.db'}
 

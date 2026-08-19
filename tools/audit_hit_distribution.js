@@ -33,8 +33,11 @@ eval(stub + m[1] + exp);
 const ALL_CATS = ['性格','事业','财运','婚姻','健康','格局','用神喜忌','十神组合','学业','六亲','神煞','流年','合婚','五行生克','大运','流月'];
 let activeCats = watchCats || ALL_CATS;
 
-// ---- 随机盘生成 ----
-const rand = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
+// ---- 随机盘生成（2026-08-19：LCG 可复现种子，--seed=N 固定样本；默认时间种子保持随机）----
+let seed = (args.find(a => a.startsWith('--seed=')) || '').split('=')[1];
+seed = seed ? (+seed >>> 0) : (Date.now() >>> 0);
+function rnd(){ seed = (seed * 1664525 + 1013904223) >>> 0; return seed / 4294967296; }
+const rand = (a, b) => a + Math.floor(rnd() * (b - a + 1));
 const charts = [];
 for (let i = 0; i < sampleN; i++) {
   const y = rand(1950, 2005), mo = rand(1, 12), d = rand(1, 28), hh = rand(0, 23), mm = rand(0, 59);
