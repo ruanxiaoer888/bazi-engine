@@ -3,14 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#07070d">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14' fill='%2307070d' stroke='%23c9a35f' stroke-width='2'/%3E%3Cpath d='M16 2a14 14 0 0 1 0 28z' fill='%23c9a35f'/%3E%3Ccircle cx='16' cy='8' r='3.5' fill='%2307070d'/%3E%3Ccircle cx='16' cy='24' r='3.5' fill='%23c9a35f'/%3E%3C/svg%3E">
 <title>八字命盘 · 赛博命理师</title>
 <style>
   :root{
     --bg:#07070d; --bg2:#0d0d15; --card:#12121e; --card2:#161627;
     --ink:#e6dfcf; --ink2:#f2ecdf; --muted:#8f8774; --muted2:#5d574a;
     --gold:#c9a35f; --gold2:#dfc088; --gold3:#9c7a3f;
-    --line:#23232f; --line2:#1c1c28; --line3:#34344c;
-    --red:#e06060; --green:#52b083; --accent:#c9a35f;
+    --line:#23232f; --line3:#34344c;
+    --red:#e06060; --green:#52b083;
     --wood:#63c08c; --fire:#e06060; --earth:#d6a94e; --metal:#b6c2cc; --water:#63a3d9;
     --wood-bg:rgba(99,192,140,0.08); --fire-bg:rgba(224,96,96,0.08); --earth-bg:rgba(214,169,78,0.08);
     --metal-bg:rgba(182,194,204,0.08); --water-bg:rgba(99,163,217,0.08);
@@ -82,7 +84,7 @@
     font-size:14px;background:var(--bg2);color:var(--ink);font-family:var(--font-body);
     transition:border-color 0.2s,box-shadow 0.2s;
   }
-  input::placeholder{color:var(--muted2)}
+  input::placeholder{color:var(--muted)}
   input:focus,select:focus{border-color:var(--gold);outline:none;box-shadow:0 0 0 3px rgba(201,163,95,0.08)}
   .row{display:flex;gap:14px;flex-wrap:wrap}
   .row>div{flex:1;min-width:140px}
@@ -186,6 +188,7 @@
   .note{font-size:12px;color:var(--muted);text-align:center;margin-top:20px;line-height:2}
   /* ===== 流月表 ===== */
   .month-table{width:100%;border-collapse:collapse;font-size:13px;margin-top:8px}
+  .table-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
   .month-table th{
     background:linear-gradient(180deg,#232334,#1a1a28);
     color:var(--gold2);font-weight:600;font-size:12px;padding:9px 5px;letter-spacing:1px;
@@ -345,6 +348,20 @@
     .row>div{min-width:0}
     /* iOS Safari: select 字号 <16px 聚焦时自动放大页面，移动端统一 16px 防误触 */
     select{font-size:16px}
+    /* 2026-08-19 UI 审计：移动端流月/流日 6 列表格横向滚动（min-width 防列挤压） */
+    .month-table{min-width:540px}
+    /* 2026-08-19 UI 审计：触控目标 ≥40px（cal-toggle/report-tab/chart-tabs/chip 原 <33px 易误触） */
+    .cal-toggle button{padding:8px 16px}
+    .report-tab,.chart-tabs span,.chip{padding-top:8px;padding-bottom:8px}
+  }
+  /* 2026-08-19 UI 审计：键盘焦点可见（原仅 input/select 有 focus，按钮 Tab 无反馈） */
+  button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+  /* 2026-08-19 UI 审计：打印样式（原深底金字白底不可读） */
+  @media print{
+    :root{--bg:#fff;--bg2:#fafafa;--card:#fff;--card2:#f5f5f5;--ink:#1a1a1a;--ink2:#000;--muted:#555;--muted2:#777;--line:#ddd;--line3:#ccc;--gold:#8a6d3b;--gold2:#8a6d3b;--gold3:#a08040;--shadow:none}
+    body{background:#fff;color:#1a1a1a}
+    .brand-rings,.rule,.card::before{display:none!important}
+    a{color:#8a6d3b}
   }
 </style>
 </head>
@@ -500,7 +517,7 @@
     <div class="card">
       <h2><span class="num">柒</span>流年分析</h2>
       <div class="row">
-        <div><label>流年（公历年份）</label><input id="liuYear" type="number" value="2026"></div>
+        <div><label>流年（公历年份）</label><input id="liuYear" type="number" value=""></div>
         <div><label>对应大运</label><select id="liuDayun"></select></div>
       </div>
       <button class="ghost" id="btnLiu" onclick="runLiu()">分析该流年 →</button>
@@ -510,7 +527,7 @@
     <div class="card" id="liuMonthCard">
       <h2><span class="num">捌</span>流月分析</h2>
       <div class="row">
-        <div><label>目标年份</label><input id="liuMonthYear" type="number" value="2026"></div>
+        <div><label>目标年份</label><input id="liuMonthYear" type="number" value=""></div>
         <div style="display:flex;align-items:flex-end;flex-wrap:wrap"><button class="ghost" id="btnLiuYue" onclick="runLiuYue()" style="margin-top:0;white-space:normal;max-width:100%">展开十二流月 →</button></div>
       </div>
       <div id="liuMonthResult"></div>
@@ -519,7 +536,7 @@
     <div class="card" id="liuDayCard">
       <h2><span class="num">玖⁺</span>流日分析（单月逐日）</h2>
       <div class="row">
-        <div><label>目标年份</label><input id="liuDayYear" type="number" value="2026"></div>
+        <div><label>目标年份</label><input id="liuDayYear" type="number" value=""></div>
         <div><label>目标月份</label><select id="liuDayMonth">
           <option value="1">1 月</option><option value="2">2 月</option><option value="3">3 月</option>
           <option value="4">4 月</option><option value="5">5 月</option><option value="6">6 月</option>
@@ -1660,6 +1677,19 @@ function initSelects(){
     const el=document.getElementById(id);
     if(el && el.addEventListener) el.addEventListener('change', function(){ updateHeTimeHint(id.slice(-1)); });
   });
+  // 2026-08-19 UI 审计：流年/流月/流日年份动态填当前年（原 HTML 硬编码 2026 会逐年过时）
+  const curY=new Date().getFullYear();
+  ['liuYear','liuMonthYear','liuDayYear'].forEach(id=>{ const el=document.getElementById(id); if(el&&!el.value) el.value=String(curY); });
+  // 2026-08-19 UI 审计：span 伪按钮键盘可达（chart-tabs 静态注入 tabindex + Enter/Space 委托触发）
+  document.querySelectorAll('.chart-tabs span').forEach(s=>{ if(s.setAttribute){ s.setAttribute('role','tab'); s.setAttribute('tabindex','0'); } });
+  if(typeof document.addEventListener==='function'){
+    document.addEventListener('keydown', function(e){
+      if(e.key==='Enter'||e.key===' '){
+        const t=e.target;
+        if(t && t.matches && t.matches('.chart-tabs span,.report-tab span')){ e.preventDefault(); t.click(); }
+      }
+    });
+  }
 }
 initSelects();
 toggleTimeMode();
@@ -1728,7 +1758,7 @@ function updateTimeHint(){
       if(jt) warns.push(jt);
     }
   }
-  hint.innerHTML=base+(warns.length?('<div style="color:#e05555;margin-top:2px">'+warns.join('<br>')+'</div>'):'');
+  hint.innerHTML=base+(warns.length?('<div style="color:var(--red);margin-top:2px">'+warns.join('<br>')+'</div>'):'');
 }
 // 合婚 A/B 提示（与主表单逻辑一致，读 h 前缀 id）
 function updateHeTimeHint(s){
@@ -1749,7 +1779,7 @@ function updateHeTimeHint(s){
       if(jt) warns.push(jt);
     }
   }
-  hint.innerHTML=base+(warns.length?('<div style="color:#e05555;margin-top:2px">'+warns.join('<br>')+'</div>'):'');
+  hint.innerHTML=base+(warns.length?('<div style="color:var(--red);margin-top:2px">'+warns.join('<br>')+'</div>'):'');
 }
 
 function generate(){
@@ -1822,10 +1852,10 @@ function renderResult(ctx){
   document.getElementById('rStrength').innerHTML='身<span class="tag">'+ctx.strength+'（藏干加权）</span>';
   // chips
   let chips=`<span class="chip">格局：<b>${ctx.pattern||'杂气/未成格'}</b></span>`;
-  if(ctx.specialDetail) chips+=`<span class="chip" style="background:rgba(212,164,69,0.1);border-color:rgba(212,164,69,0.3);">特殊格局：<b style="color:#d4a445;">${ctx.specialDetail}</b></span>`;
+  if(ctx.specialDetail) chips+=`<span class="chip" style="background:rgba(212,164,69,0.1);border-color:rgba(212,164,69,0.3);">特殊格局：<b style="color:var(--gold);">${ctx.specialDetail}</b></span>`;
   chips+=`<span class="chip">喜用：<b>${ctx.xiYong.join('、')||'—'}</b></span>`;
-  if(ctx.special.tiaohou && ctx.special.tiaohouEls.length) chips+=`<span class="chip" style="background:rgba(77,168,124,0.1);border-color:rgba(77,168,124,0.3);">调候用神：<b style="color:#5dbe8a;">${ctx.special.tiaohouEls.join('、')}</b></span>`;
-  if(ctx.special.bingyao) chips+=`<span class="chip" style="background:rgba(224,85,85,0.1);border-color:rgba(224,85,85,0.3);">病药：<b style="color:#e05555;">病在${ctx.special.bingyao.bing}</b>·<b style="color:#4da87c;">药取${ctx.special.bingyao.yao.filter((v,i,a)=>a.indexOf(v)===i).join('、')}</b></span>`;
+  if(ctx.special.tiaohou && ctx.special.tiaohouEls.length) chips+=`<span class="chip" style="background:rgba(77,168,124,0.1);border-color:rgba(77,168,124,0.3);">调候用神：<b style="color:var(--green);">${ctx.special.tiaohouEls.join('、')}</b></span>`;
+  if(ctx.special.bingyao) chips+=`<span class="chip" style="background:rgba(224,85,85,0.1);border-color:rgba(224,85,85,0.3);">病药：<b style="color:var(--red);">病在${ctx.special.bingyao.bing}</b>·<b style="color:var(--green);">药取${ctx.special.bingyao.yao.filter((v,i,a)=>a.indexOf(v)===i).join('、')}</b></span>`;
   chips+=`<span class="chip">年柱纳音：<b>${ctx.naYinYear}</b></span>`;
   chips+=`<span class="chip">生肖：<b>${SHENGX[ZHI.indexOf(ctx.pillars[0][1])]}</b></span>`;
   document.getElementById('rChips').innerHTML=chips;
@@ -2231,7 +2261,7 @@ function runLiuYue(){
   const JIECI=[0,1,2,3,4,5,6,7,8,9,10,11];
   const yg0=yearGZ(ty,6,1,12,0); // ty 年年干（12 个月均在 ty 立春 ~ ty+1 立春之间，年柱不换）
   let out=[`<h3 style="font-size:16px;color:var(--gold);margin-bottom:12px">${ty} 年十二流月分析</h3>`];
-  out.push('<table class="month-table"><thead><tr><th>月令</th><th>月柱</th><th>纳音</th><th>十神</th><th>与命局合冲</th><th>月运简述</th></tr></thead><tbody>');
+  out.push('<div class="table-scroll"><table class="month-table"><thead><tr><th>月令</th><th>月柱</th><th>纳音</th><th>十神</th><th>与命局合冲</th><th>月运简述</th></tr></thead><tbody>');
   for(let i=0;i<12;i++){
     const jidx=JIECI[i], jy=(i===11)?ty+1:ty; // 十二月小寒在次年 1 月
     const jarr=JIEQI.data[String(jy)];
@@ -2264,7 +2294,7 @@ function runLiuYue(){
     if(mr.length) briefHtml+=`<div style="margin-top:4px;font-size:12px;color:var(--muted)">${mr.map(r=>r.conclusion).join('<br>')}</div>`;
     out.push(`<tr><td><b>${monthNames[i]}</b></td><td><span class="mz">${mgz}</span></td><td style="color:var(--muted)">${nayin}</td><td>${mTen}</td><td>${rels.length?rels.join(' ') : '—'}</td><td>${briefHtml}</td></tr>`);
   }
-  out.push('</tbody></table>');
+  out.push('</tbody></table></div>');
   out.push('<div style="color:var(--muted);font-size:12px;margin-top:10px">注：流月分析基于月柱与命局关系，结合调候用神给出趋势参考。吉凶须结合大运流年综合判断。</div>');
   document.getElementById('liuMonthResult').innerHTML=out.join('');
   document.getElementById('btnLiuYue').textContent='收起十二流月 ↑';
@@ -2288,7 +2318,7 @@ function runLiuDay(){
   let hotDays=[], relDays=[], heDaysArr=[], heRelsArr=[];
   let out=[`<h3 style="font-size:16px;color:var(--gold);margin-bottom:12px">${ty} 年${monthNames[tm-1]}（${ty}-${String(tm).padStart(2,'0')}）逐日分析 · ${days} 天</h3>`];
   out.push('<div class="ld-legend"><span class="ml-good">● 喜用</span><span class="ml-warn">● 忌神/空亡</span><span class="ld-hot">● 冲合日柱（关键日）</span><span class="ml-neu">● 中和</span></div>');
-  out.push('<table class="month-table ld-table"><thead><tr><th>日期</th><th>日柱</th><th>纳音</th><th>十神</th><th>与命局关系</th><th>当日简评</th></tr></thead><tbody>');
+  out.push('<div class="table-scroll"><table class="month-table ld-table"><thead><tr><th>日期</th><th>日柱</th><th>纳音</th><th>十神</th><th>与命局关系</th><th>当日简评</th></tr></thead><tbody>');
   for(let d=1; d<=days; d++){
     const gz=dayGZ(ty,tm,d);
     const g=gz[0], z=gz[1];
@@ -2350,7 +2380,7 @@ function runLiuDay(){
     if(hitRiHe){ heDaysArr.push(d); heRelsArr.push(`${d}日${heHits.join('、')}`); }
     out.push(`<tr${riClass}><td><b>${d}</b><br><span class="ml-neu" style="font-size:11px">周${week}</span></td><td><span class="mz">${gz}</span></td><td style="color:var(--muted);font-size:12px">${nayin}</td><td>${ten}</td><td style="font-size:12px">${rels.length?rels.slice(0,3).join(' '):'—'}</td><td style="text-align:left;font-size:12px">${brief.slice(0,3).join(' ')}</td></tr>`);
   }
-  out.push('</tbody></table>');
+  out.push('</tbody></table></div>');
   // 本月关键日小结
   if(hotDays.length || heDaysArr.length){
     const parts=[];
@@ -2685,8 +2715,8 @@ function runHe(){
   ctxB.shichenMode=b.shichenMode;
   const rep=analyzeHe(ctxA,ctxB);
   let notes='';
-  if(a.shichenMode||b.shichenMode) notes+='<div class="dstnote" style="font-size:12px;color:#5dbe8a;margin-bottom:10px;">一方或双方以时辰排盘，已跳过夏令时与真太阳时校正（时辰本身即为真太阳时时段）。</div>';
-  if(a.dst||b.dst) notes+='<div class="dstnote" style="font-size:12px;color:#d4a445;margin-bottom:10px;">已自动校正夏令时（−1 小时）：一方或双方出生日期落在 1986-1991 年夏令时窗口内，记录时间已还原为标准时间。</div>';
+  if(a.shichenMode||b.shichenMode) notes+='<div class="dstnote" style="font-size:12px;color:var(--green);margin-bottom:10px;">一方或双方以时辰排盘，已跳过夏令时与真太阳时校正（时辰本身即为真太阳时时段）。</div>';
+  if(a.dst||b.dst) notes+='<div class="dstnote" style="font-size:12px;color:var(--gold);margin-bottom:10px;">已自动校正夏令时（−1 小时）：一方或双方出生日期落在 1986-1991 年夏令时窗口内，记录时间已还原为标准时间。</div>';
   document.getElementById('heResult').innerHTML=notes+rep;
 }
 function readHe(s){
