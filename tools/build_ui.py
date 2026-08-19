@@ -3066,7 +3066,7 @@ function varVal(k){
 html = TPL.replace("__JIEQI__", json.dumps(jieqi, ensure_ascii=False)).replace(
     "__RULES__", json.dumps(rules, ensure_ascii=False)
 )
-with open(os.path.join(ROOT, "ui", "index.html"), "w", encoding="utf-8") as f:
+with open(os.path.join(ROOT, "ui", "index.html"), "w", encoding="utf-8", newline="\n") as f:
     f.write(html)
 print(
     "index.html built, size=%dKB, jieqi years=%d, rules=%d"
@@ -3115,7 +3115,7 @@ __EXPORTS__
 """
 dist = DIST_TPL.replace("__ENGINE__", engine_js).replace("__EXPORTS__", EXPORTS)
 os.makedirs(os.path.join(ROOT, "engine"), exist_ok=True)
-with open(os.path.join(ROOT, "engine", "engine.dist.js"), "w", encoding="utf-8") as f:
+with open(os.path.join(ROOT, "engine", "engine.dist.js"), "w", encoding="utf-8", newline="\n") as f:
     f.write(dist)
 print(
     "engine/engine.dist.js built, size=%dKB, regions=%d"

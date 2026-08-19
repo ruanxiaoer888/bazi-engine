@@ -16,7 +16,7 @@
 
 | 项 | 值 |
 |---|---|
-| dist MD5 | `AFB7FE8191D3C475600FAB6B4F4E9A2D` |
+| dist MD5 | `F73822DF49AE813B5B079E2C0BA99CFD`（LF 口径，2026-08-19 起产物强制 LF——跨平台 MD5 可比；此前的 CRLF 口径值 `AFB7FE81...` 已作废） |
 | dist 大小 | 437KB（RULES 1000 条不变） |
 | 影响 C 端 | **否**（改 matchLiuDay 流日规则与构建路径；C 端只消费 paipan/applyDst/SHI_CHEN_MAP，不受影响） |
 

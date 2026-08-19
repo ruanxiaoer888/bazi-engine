@@ -10,7 +10,10 @@ function assert(name, cond, extra){
 
 console.log('== 独立库加载 ==');
 assert('module.exports 为对象', typeof BaziEngine === 'object' && BaziEngine !== null);
-assert('无 document 依赖痕迹（库内不引用 DOM）', (()=>{ try{ return true; }catch(e){ return false; } })());
+// 2026-08-19 修复（工具链审计）：原断言 try{return true} 恒真，改真实检查 dist 源码不含 DOM 引用
+const fs = require('fs');
+const distSrc = fs.readFileSync(__dirname + '/../engine/engine.dist.js', 'utf8');
+assert('dist 不引用 DOM（document/getElementById）', !/document\.|getElementById/.test(distSrc));
 
 console.log('== 核心排盘（真值=lunar-python 马云盘）==');
 const c1 = BaziEngine.paipan('马云','男',1964,9,10,12,0,'北京市','no');
