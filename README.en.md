@@ -40,7 +40,7 @@ Same birth data in, same chart out — every single time.
 
 **Q:** Chart for me — May 15, 1990, 10:00 AM, male, born in Guangzhou.
 
-**A:** Four Pillars (庚午 辛巳 庚辰 癸巳), element distribution, favorable gods, 8-step Da Yun, current-year reading — every statement with its classical citation.
+**A:** Four Pillars (庚午 辛巳 庚辰 庚辰, incl. DST rollback + true solar time note), element distribution, favorable gods, 8-step Da Yun, current-year reading — every statement with its classical citation.
 
 **Q:** Are we compatible? Me: 1990-05-15 10:00 M Guangzhou. Her: 1992-08-08 20:00 F Beijing.
 
