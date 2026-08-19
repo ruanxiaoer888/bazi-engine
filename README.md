@@ -30,7 +30,7 @@
 
 **Q：** 帮我算一下八字，1990年5月15日上午10点，男，广州出生。
 
-**A：** 排出四柱（庚午 辛巳 庚辰 癸巳）、五行分布、喜用神，并给出大运 8 步与当前流年解读（每条断语附古籍出处）。
+**A：** 排出四柱（庚午 辛巳 庚辰 庚辰，含夏令时回拨 + 真太阳时校正说明）、五行分布、喜用神，并给出大运 8 步与当前流年解读（每条断语附古籍出处）。
 
 **Q：** 看看我和她合不合，我1990年5月15日10点男广州，她1992年8月8日20点女北京。
 
@@ -44,7 +44,7 @@
 
 - **UI**：`ui/index.html` — 单文件离线（零外部依赖），内置 206 年节气数据 + 1000 条断语
 - **构建**：`tools/build_ui.py`（Python）内联节气与断语库生成 UI
-- **验证**：5 套回归脚本（`tools/test_ui.js` / `test_eval_state.js` / `test_p1_fixes.js` / `verify_sleep_rules.js` / `verify_ux_e2e.js`），覆盖输入容错、边界场景、报告质量、稳定性与端到端用户视角
+- **验证**：13 套回归脚本（`test_engine` / `test_lunar` / `test_ui` / `test_eval_state` / `test_p1_fixes` / `verify_sleep_rules` / `verify_ux_e2e` / `test_dst` / `test_liuri_v2` / `test_liuyue_v2` / `verify_edu_rules` / `test_xiyong` / `check_conflicts`），覆盖引擎库、农历、夏令时、输入容错、边界场景、报告质量与端到端用户视角，CI 自动执行
 - **质检工具**：`audit_hit_distribution.js`（命中分布审查）、`check_dup_hits.js`（重复命中检测）、`check_conflicts.js`（反义矛盾检测）
 
 ## 目录结构
