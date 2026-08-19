@@ -10,6 +10,27 @@
 
 ---
 
+## v1.3.6（2026-08-19 · UI 审计批：移动端表格 + 无障碍 + 视觉统一）
+
+> **UI 层变更（dist 不变，MD5 同 v1.3.4/1.3.5 `1A4722FA7B0974EB4F5CFA53C71AA9C3`），影响 C 端：否。**
+
+| 项 | 值 |
+|---|---|
+| dist MD5 | `1A4722FA7B0974EB4F5CFA53C71AA9C3`（不变） |
+| 影响 C 端 | **否**（纯 UI 层） |
+
+**变更内容**（UI 审计 🔴-2/🟡-7,8,9,12,13/🟢-6,7,8）：
+1. **移动端流月/流日 6 列表格横向滚动**：表格包 `.table-scroll{overflow-x:auto}` + ≤768px `min-width:540px`（原窄屏列挤压不可读）。
+2. **无障碍**：`:focus-visible` 焦点环（键盘 Tab 可见）；chart-tabs span 注入 `role=tab/tabindex=0` + Enter/Space 键盘委托；触控目标 ≥40px（cal-toggle/report-tab/chart-tabs/chip）。
+3. **视觉统一**：JS 硬编码色 6 处 → `var(--gold/--green/--red)`（特殊格局/调候/病药/提示/合婚 DST 提示）；`:root` 删未用 token（--accent/--line2）。
+4. **打印样式**：`@media print` 反色（白底深字，深墨底金字打印不可读问题修复）。
+5. **head 增强**：`theme-color`（移动端地址栏）+ 内联 SVG 太极 favicon（零依赖）。
+6. **年份动态化**：流年/流月/流日输入去掉硬编码 2026，init 动态填当前年；placeholder 对比度提亮（--muted2→--muted）。
+
+**bazi-app 注意事项**：dist 未变，C 端无需任何操作。
+
+---
+
 ## v1.3.5（2026-08-19 · 引擎审计算法批 B：流月精确节气 + 合婚评分扩维）
 
 > **UI 层变更（dist 不变，MD5 同 v1.3.4 `1A4722FA7B0974EB4F5CFA53C71AA9C3`），影响 C 端：否。**
