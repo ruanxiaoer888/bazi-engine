@@ -1,8 +1,19 @@
 # bazi-app 闭环收尾启动指令 · 引擎 v1.3.6
 
-> 用途：bazi-app 对话（C 端「本初」仓库）接入 bazi-engine **v1.3.6**（三方审计后稳定版）并完成闭环收尾（回归确认 → 服务器四件套更新 → 虎皮椒通道 → 锁定）。
+> 用途：bazi-app 对话（C 端「本初」仓库）接入 bazi-engine **v1.3.6**（三方审计后稳定版）并完成闭环收尾（回归确认 → 服务器四件套更新 → 虎皮椒真实支付 → 锁定）。
 > 由 bazi-engine 侧交付（2026-08-19，随引擎更新至 v1.3.6），Michael 直接粘贴给 bazi-app 对话即可。
 > 边界约定（双项目 git 边界）：引擎 dist 由 bazi-engine 侧交付，bazi-app 不手改 engine.dist.js；发现引擎 bug 记录后反馈 bazi-engine 侧。
+
+---
+
+## 📋 速贴版（直接复制粘贴给 bazi-app 对话）
+
+> 按根目录 `BAZI-APP-HANDOFF-v1.3.0.md` 完成 bazi-engine v1.3.6 闭环收尾：
+> ① `md5sum web/engine.dist.js` 核对 `1A4722FA7B0974EB4F5CFA53C71AA9C3`；
+> ② 回归确认（排盘冒烟 + 特殊格局核对——专旺判定已收紧，误标盘不再显示属预期）；
+> ③ **服务器四件套更新**：上传 `web/index.html` + `web/admin.html` + **`web/paid/` 目录**（match.js/year.js 必须连目录上传）+ `api/server.js` + `api/config.json` → `pm2 restart benchu_api` → `/api/health` 验证 → 新账号登录 → 重新生成兑换码；
+> ④ **虎皮椒真实支付接入（微信渠道已开通，支付宝未）**：填 `config.json` 的 `xunhu.appid/appsecret`（**微信**凭证）→ 确认 `xunhu.channel` 为 `"wechat"`（默认即是，代码无需改）→ `mock:false` → `pm2 restart` → ¥0.01 微信支付真实验证全链路（下单→支付→回调→解锁）；
+> ⑤ 全部通过后把引擎依赖记入本仓 HANDOFF/AI_CONTEXT（**v1.3.6 + MD5 `1A4722FA7B0974EB4F5CFA53C71AA9C3`**）并 commit 锁定。
 
 ---
 
