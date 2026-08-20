@@ -8,18 +8,21 @@
 
 ## 📋 速贴版（直接复制粘贴给 bazi-app 对话）
 
-> 按根目录 `BAZI-APP-HANDOFF-v1.3.0.md` 完成 bazi-engine v1.3.6 闭环收尾：
-> ① `md5sum web/engine.dist.js` 核对 `1A4722FA7B0974EB4F5CFA53C71AA9C3`；
+> 完成 bazi-engine v1.3.6 闭环收尾（**bazi-app 已锁 v1.3.4 引擎 + 合规文案定制，MD5 `3B90D659353460343FE96CA9132490B8`**；引擎逻辑与 v1.3.6 一致——v1.3.5/1.3.6 为 B 端 UI 层、dist 未变）：
+> ① `md5sum web/engine.dist.js` 核对 `3B90D659353460343FE96CA9132490B8`（当前基线；若与 bazi-engine 侧 `1A4722FA...` 不同属预期——bazi-app 在 commit `2bb404f` 做了合规术语软化定制）；
 > ② 回归确认（排盘冒烟 + 特殊格局核对——专旺判定已收紧，误标盘不再显示属预期）；
 > ③ **服务器四件套更新**：上传 `web/index.html` + `web/admin.html` + **`web/paid/` 目录**（match.js/year.js 必须连目录上传）+ `api/server.js` + `api/config.json` → `pm2 restart benchu_api` → `/api/health` 验证 → 新账号登录 → 重新生成兑换码；
 > ④ **虎皮椒真实支付接入（微信渠道已开通，支付宝未）**：填 `config.json` 的 `xunhu.appid/appsecret`（**微信**凭证）→ 确认 `xunhu.channel` 为 `"wechat"`（默认即是，代码无需改）→ `mock:false` → `pm2 restart` → ¥0.01 微信支付真实验证全链路（下单→支付→回调→解锁）；
-> ⑤ 全部通过后把引擎依赖记入本仓 HANDOFF/AI_CONTEXT（**v1.3.6 + MD5 `1A4722FA7B0974EB4F5CFA53C71AA9C3`**）并 commit 锁定。
+> ⑤ 全部通过后把引擎依赖记入本仓 HANDOFF/AI_CONTEXT（**引擎 v1.3.6 逻辑 + 合规定制 MD5 `3B90D659353460343FE96CA9132490B8`**）并 commit 锁定。
+
+> ⚠️ **合规定制边界**（commit `2bb404f`）：bazi-app 在 dist 上做了术语软化（姻缘→情感 / 桃花正缘→人际正缘 / 流年→年度 / 烂桃花→不良人际 等 10 处，MD5 `1A4722FA`→`3B90D659`）。这是 C 端微信生态合规需求，但**手改了 bazi-engine 构建产物**——未来 bazi-engine 重建 dist 会覆盖此定制。建议：a) 将软化文案回馈 bazi-engine 纳入构建（build_ui.py 的 RULES/文案源），或 b) bazi-app 用构建后脚本（如 sed/脚本）统一替换，避免直接手改 dist；否则每次引擎升级都要重打补丁。
 
 ---
 
 ## ✅ 引擎 v1.3.6 交付状态（bazi-engine 侧已核）
 
-- **dist 已拷贝交付**：`web/engine.dist.js`，MD5 `1A4722FA7B0974EB4F5CFA53C71AA9C3`（LF 口径，跨平台可比）
+- **dist 交付基线**：bazi-engine v1.3.6 的 dist MD5 `1A4722FA7B0974EB4F5CFA53C71AA9C3`（LF 口径，跨平台可比）
+- **bazi-app 当前 dist**：`3B90D659353460343FE96CA9132490B8`（= v1.3.4 引擎（与 v1.3.6 dist 相同）+ commit `2bb404f` 合规术语软化定制 10 处）——引擎逻辑与 v1.3.6 一致，文案为 C 端合规定制，详见下方「合规定制边界」
 - **C 端只消费 `paipan` / `applyDst` / `SHI_CHEN_MAP`**（已 grep 确认，不用 matchRules/RULES；`lunarToSolar` 为 C 端自有实现，与引擎同步但独立——引擎 v1.3.3 加的防御**不影响 C 端**）
 - **v1.3.2~v1.3.6 对 C 端影响评估**：仅 **v1.3.4 专旺格判定收紧**（0.55→0.75+他行≤0.15 双条件，5000 盘 0.94%→0.02% 去误标）——C 端若显示「特殊格局」，**此前被误标的盘不再显示专旺细分**（更准确，属预期）；其余均为 B 端 matchRules/UI 层，C 端无感知
 - 一致性基线：8 盘 ctx 全字段 0 差异（v1.3.0 验证，v1.3.6 引擎层对 C 端消费 API 无改动）
