@@ -16,9 +16,9 @@
 - **项目性质**：Michael 个人独立研发项目，**与魅可科技（Meke）业务无任何关联**，推广/发布一律按个人项目口径
 - **双轨关系**：bazi-engine（B 端引擎底座）↔ 另仓 `bazi-app`（C 端「本初」变现），引擎层共用，UI 各自独立
 
-## 2. 当前阶段（2026-08-19）
+## 2. 当前阶段（2026-08-20）
 
-- **版本**：v1.3.1（v1.3.0 定版后审计修复：空亡断语修活 + wealth_kugu 换补；git tag `v1.3.0` 保留；累计：全面扫描修复批次 + 农历模块同步 + 农历/阳历双模式切换 + 合婚上下布局 + 合婚时段模式修复 + xiYong ratio 细分 + 五行补救文案强/弱区分 + 太极 logo + 输入侧晚子时/节气临界提示语 + 断语库 504→801 + 死规则清理 801→789 + 空亡断语修活 + **断语库扩充 789→1000 并定版 v1.3.0、审计修复 v1.3.1**）
+- **版本**：**v1.3.6**（git tag `v1.3.0` 保留；累计：全面扫描修复批次 + 农历模块同步 + 农历/阳历双模式切换 + 合婚上下布局 + 合婚时段模式修复 + xiYong ratio 细分 + 五行补救文案强/弱区分 + 太极 logo + 输入侧晚子时/节气临界提示语 + 断语库 504→801 + 死规则清理 801→789 + 空亡断语修活 + 断语库扩充 789→1000 并定版 v1.3.0 + **三方深度审计 v1.3.1~v1.3.6 全量修复** + **C 端合规软化工具 compliance_soften.py（坑 #41 解决）+ bazi-app 闭环收尾速贴块交付**）
 - **功能**：132 项任务**全部完成**（排盘/大运/流年/流月/流日/六亲/合婚/五行补救/神煞/调候用神/三式宫位/特殊格局）
 - **农历模块**：引擎层新增 `lunarToSolar`/`leapMonth`/`leapDays`/`monthDays`/`lunarDayName` + `LUNAR_INFO` 数据表（1900-2099），与 bazi-app C 端实现完全一致
 - **农历/阳历双模式切换**：主表单 + 合婚 A/B 各自独立（`switchCal`/`switchHeCal`），农历输入自动 `lunarToSolar` 转公历
@@ -26,11 +26,11 @@
 - **输入侧提示语**（2026-08-17）：主表单 + 合婚 A/B 填时间即时提示——晚子时（23 点，时柱按次日）+ 节气临界（距十二节交节 ≤6h 提示年/月柱切换敏感点，立春特判；农历模式跳过）
 - **断语库**：`kb/04-rules-db/rules.json` — **1000 条**（事业112/性格97/神煞74/用神喜忌72/婚姻67/十神组合65/六亲64/健康62/学业61/财运57/格局56/五行生克48/流月45/流日50/流年30/合婚20/大运20），每条含 `suggestion` 建议字段；2026-08-19 清理 12 条死规则（801→789）+ 修活空亡（`cc5e405`）+ 5 批次扩充至 1000（`026bf4d`~`338f981`）
 - **UI**：`ui/index.html` 单文件离线，**零外部依赖**（无 Google Fonts），墨底 + 古铜金高端商务风，壹~玖中文序号徽章，内置 206 年节气
-- **引擎**：`engine/engine.dist.js`（437KB 字节，UMD 双端，含 getRemedy/yongShenChong/农历模块 + 1000 条规则数据；v1.3.1 MD5 `3E4E97B260C313B4D295F5696FD11EEC`）
-- **发布状态**：✅ **双平台均已上架**——① **SkillHub**：申诉通过已发布（「生态杀手」分类，平台归一化显示 V1.0.0，实际 v1.3.0）；② **ClawHub**：已发布（SkillSpector 转 Published，Productivity 分类，v1.3.0 GitHub 自动同步版——绑定 `ruanxiaoer888/bazi-engine`，git push 自动拉新）；③ GitHub 开源仓库（Release v1.3.0 已发布）
+- **引擎**：`engine/engine.dist.js`（438KB 字节，UMD 双端，含 getRemedy/yongShenChong/农历模块 + 1000 条规则数据；v1.3.6 MD5 `1A4722FA7B0974EB4F5CFA53C71AA9C3`，v1.3.4 起 LF 口径跨平台可比）
+- **发布状态**：✅ **双平台均已上架**——① **SkillHub**：申诉通过已发布（「生态杀手」分类，平台归一化显示 V1.0.0，实际 v1.3.6）；② **ClawHub**：已发布（SkillSpector 转 Published，Productivity 分类，v1.3.6 GitHub 自动同步版——绑定 `ruanxiaoer888/bazi-engine`，git push 自动拉新）；③ GitHub 开源仓库（Release v1.3.0 已发布）
 - **真人验收**：✅ 已完成（3 案例全部通过，截图 `assets/screenshots/final/`）
-- **阻塞项**：**无**。功能/验收/发布/扩库全部完成，无外部等待
-- **GitHub**：本地 HEAD=`cc5e405`（2026-08-19，死规则清理 commit），远程 `e2bb1f2`（本次 cc5e405 + 文档 commit 待推送）
+- **阻塞项**：**无**。功能/验收/发布/扩库/审计全部完成，无外部等待
+- **GitHub**：本地 HEAD=`41ba0eb`（2026-08-19，compliance_soften.py），与远程 `origin/main` 同步，工作树干净
 
 ## 3. 技术架构
 
@@ -42,6 +42,7 @@
 | 知识库 | `kb/` | 01-basics / 02-rules / 03-classics / 04-rules-db / 05-reference |
 | 发布 | `tools/build_release_zip.py` | 发布验证流程：打 ZIP（自动排除 LICENSE/LICENSE-DATA/README.en.md）+ 关键产物 MD5 校验，不依赖任何平台目录 |
 | 引擎变更记录 | `docs/ENGINE-CHANGES.md` | 权威记录（版本 + 变更 + dist MD5），bazi-app 对话据此对齐；引擎变更必须 bump 版本并追加记录 |
+| C 端合规软化 | `tools/compliance_soften.py` | 构建后术语替换（运势→能量/大运→十年节奏/姻缘→情感/八字→出生信息 等，保护 `"流年":` 条件键；`--check` 残留检测）——bazi-app 同步 dist 后跑一次即得合规版，免手改（坑 #41 解决方案，commit `41ba0eb`） |
 | 发布材料 | `docs/history/发布物料.md` + `docs/history/SkillHub-Submission-Kit.md` | 卖点/图标提示词/示例对话/合规声明 + 提交包模板 |
 
 ### 引擎抽层机制（重要，commit `807ab4c`）
@@ -86,7 +87,7 @@ const dayName = BaziEngine.lunarDayName(15)                // '十五'
 
 0. ✅ ~~SkillHub 申诉~~（2026-08-17 通过并上架）
 1. ✅ ~~ClawHub SkillSpector 扫描~~（已转 Published，海外发布闭环完成）
-2. **[协作] bazi-app C 端**：引擎已同步（v1.3.6，1000 条规则，MD5 `1A4722FA7B0974EB4F5CFA53C71AA9C3`），C 端部署/虎皮椒真实支付（**微信渠道已开通**，支付宝未）在另一个对话推进（读 `docs/ENGINE-CHANGES.md` 对齐）
+2. **[协作] bazi-app C 端**：引擎已同步（v1.3.6，1000 条规则，MD5 `1A4722FA7B0974EB4F5CFA53C71AA9C3`），C 端部署/虎皮椒真实支付（**微信渠道已开通**，支付宝未）在另一个对话推进。**Michael 当前唯一操作**：把 `docs/BAZI-APP-HANDOFF-v1.3.0.md` 顶部速贴块粘贴给 bazi-app 对话（①~⑤ 五步）；到 ③④ 步向该对话提供 SSH 凭据 + 虎皮椒微信 appid/appsecret
 3. ✅ ~~断语库扩充 504→800+~~（已完成 `bd7f5ab`，801 条，2026-08-17）
 4. ✅ ~~晚子时/节气临界**输入侧**提示语~~（已完成 `53a3bd2`，2026-08-17）
 5. ✅ ~~断语库 789→1000+~~（已完成 2026-08-19，5 批次 `026bf4d`~`338f981`，路线图达成）
@@ -157,7 +158,7 @@ cp engine/engine.dist.js ../bazi-app/web/engine.dist.js
 
 - **bazi-app**（C 端「本初」，原「算了么」因品牌冲突已改名）：`github.com/ruanxiaoer888/bazi-app`（Private）
   - 本地路径：`../bazi-app`（相对于本仓库工作区，平台不同则位置不同）
-  - 状态：报告功能（25+ 板块）+ 海报分享 + 支付链路（虎皮椒 mock）+ 兑换码解锁均已完成；**待部署上线**（等 SSH+DNS），阻塞在服务器四件套更新 + 虎皮椒真实支付接入（**微信渠道已开通**，支付宝未；`xunhu.channel` 默认 `wechat`）
+  - 状态：报告功能（25+ 板块）+ 海报分享 + 支付链路（虎皮椒 mock）+ 兑换码解锁均已完成；**待部署上线**（等 SSH+DNS），阻塞在服务器四件套更新 + 虎皮椒真实支付接入（**微信渠道已开通**，支付宝未；`xunhu.channel` 默认 `wechat`）。**闭环启动指令已交付**：`docs/BAZI-APP-HANDOFF-v1.3.0.md`（顶部速贴版，直接粘贴给 bazi-app 对话）
   - 冷启动文档：该仓 `AI_CONTEXT.md` + `HANDOFF.md`（注意其第 9 节对 bazi-project 的状态描述以本文件为准）
 
 ---
