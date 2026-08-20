@@ -86,7 +86,7 @@ const dayName = BaziEngine.lunarDayName(15)                // '十五'
 
 0. ✅ ~~SkillHub 申诉~~（2026-08-17 通过并上架）
 1. ✅ ~~ClawHub SkillSpector 扫描~~（已转 Published，海外发布闭环完成）
-2. **[协作] bazi-app C 端**：引擎已同步（v1.2.3，1000 条规则，MD5 `CE99E451F5733376A56BDCE9F49D8ED4`），C 端部署/虎皮椒开通在另一个对话推进（读 `docs/ENGINE-CHANGES.md` 对齐）
+2. **[协作] bazi-app C 端**：引擎已同步（v1.3.6，1000 条规则，MD5 `1A4722FA7B0974EB4F5CFA53C71AA9C3`），C 端部署/虎皮椒真实支付（**微信渠道已开通**，支付宝未）在另一个对话推进（读 `docs/ENGINE-CHANGES.md` 对齐）
 3. ✅ ~~断语库扩充 504→800+~~（已完成 `bd7f5ab`，801 条，2026-08-17）
 4. ✅ ~~晚子时/节气临界**输入侧**提示语~~（已完成 `53a3bd2`，2026-08-17）
 5. ✅ ~~断语库 789→1000+~~（已完成 2026-08-19，5 批次 `026bf4d`~`338f981`，路线图达成）
@@ -157,7 +157,7 @@ cp engine/engine.dist.js ../bazi-app/web/engine.dist.js
 
 - **bazi-app**（C 端「本初」，原「算了么」因品牌冲突已改名）：`github.com/ruanxiaoer888/bazi-app`（Private）
   - 本地路径：`../bazi-app`（相对于本仓库工作区，平台不同则位置不同）
-  - 状态：报告功能（25+ 板块）+ 海报分享 + 支付链路（虎皮椒 mock）+ 兑换码解锁均已完成；**待部署上线**（等 SSH+DNS），阻塞在虎皮椒新通道未开通
+  - 状态：报告功能（25+ 板块）+ 海报分享 + 支付链路（虎皮椒 mock）+ 兑换码解锁均已完成；**待部署上线**（等 SSH+DNS），阻塞在服务器四件套更新 + 虎皮椒真实支付接入（**微信渠道已开通**，支付宝未；`xunhu.channel` 默认 `wechat`）
   - 冷启动文档：该仓 `AI_CONTEXT.md` + `HANDOFF.md`（注意其第 9 节对 bazi-project 的状态描述以本文件为准）
 
 ---
