@@ -288,6 +288,7 @@
 - **发布包命令：`python tools/build_release_zip.py`**（输出 `bazi-engine-v1.3.6.zip`，排除 LICENSE/LICENSE-DATA/README.en.md、tools/archive，文件在 ZIP 根；可传版本号参数）
 - **发布验证（平台无关，替代旧打包目录同步）**：`python tools/build_release_zip.py` 产出 ZIP 后，md5sum 校验关键产物（`ui/index.html` / `engine/engine.dist.js` / `skill/SKILL.md` / `kb/04-rules-db/rules.json`）
 - 回归命令（13 套，全部必须 PASS）：`node tools/test_engine.js` + `node tools/test_lunar.js` + `node tools/test_ui.js` + `node tools/test_eval_state.js` + `node tools/test_p1_fixes.js` + `node tools/verify_sleep_rules.js` + `node tools/verify_ux_e2e.js` + `node tools/test_dst.js` + `node tools/test_liuri_v2.js` + `node tools/test_liuyue_v2.js` + `node tools/verify_edu_rules.js` + `node tools/test_xiyong.js` + `node tools/check_conflicts.js`；断语库维护另用 `audit_hit_distribution.js`（命中分布 + 0 命中检测，`--sample=2000` 大样本判死规则）；CI 已接入 `.github/workflows/ci.yml`（push 自动跑 build + 13 套 + audit）
+- **C 端合规软化工具**：`python tools/compliance_soften.py <dist路径>`（就地替换：运势→能量/大运→十年节奏/姻缘→情感/八字→出生信息/烂桃花→不良人际/流年文案→年度，保护 `"流年":` 条件键；`--check` 检查敏感词残留）——bazi-app 同步 dist 后跑一次即可，免手改构建产物（坑 #41）
 - C 端同步：`cp engine/engine.dist.js ../bazi-app/web/` 并 commit（bazi-app 独立仓库/对话，仅拷贝交付，commit/push 留给 bazi-app 侧）
 - 命名约定：对外统一 "bazi-engine"（原名 bazi-master 因 SkillHub 同名竞品已弃用），个人项目口径，不挂钩魅可
 - 发布文档：`docs/history/SkillHub-Submission-Kit.md`（提交母版）+ `docs/history/SkillHub发布最终指引.md`（填表指引）+ `docs/history/验收与截图清单_3案例.md`（回归验收模板）
