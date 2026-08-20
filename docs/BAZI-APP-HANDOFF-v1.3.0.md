@@ -62,7 +62,7 @@
 
 **注意**：admin 登录字段为 `username`/`password`（不是 user/pass）；`config.json` 未配置 adminUser/adminPass 时回退 `admin` / `CFG.adminToken`。测试发现 8787 曾被 WorkBuddy 旧实例占用（无 config 的残留进程），需先清理再起新实例。
 
-**结论：支付-解锁-兑换码商业链路本地全通**。剩余真实闭环阻塞（需 Michael 操作）：① 服务器四件套更新（线上仍旧版）；② 虎皮椒真实通道（申请被拒，需换支付宝重提）。
+**结论：支付-解锁-兑换码商业链路本地全通**。剩余真实闭环阻塞（需 Michael 操作）：① 服务器四件套更新（线上仍旧版）；② 虎皮椒真实支付接入（**微信渠道已开通**，支付宝未——填微信 appid/appsecret 后 `mock:false` 即可，`xunhu.channel` 已是 `wechat`）。
 
 ---
 
@@ -73,7 +73,7 @@
 - bazi-engine **v1.3.6**（断语库 1000 条 + 三方深度审计 6 批次修复，稳定版）；引擎文件已交付 `web/engine.dist.js`
 - C 端只消费 `paipan`/`applyDst`/`SHI_CHEN_MAP`（lunarToSolar 为 C 端自有实现，不受引擎 v1.3.3 防御影响）
 - 一致性零破坏 + 页面冒烟 + 闭环 API 18/18 均已由 bazi-engine 侧验证（见上文）
-- 本仓真实闭环剩 2 个外部阻塞：**服务器四件套更新**（线上仍旧版）+ **虎皮椒真实通道**（申请被拒）
+- 本仓真实闭环剩 2 个外部阻塞：**服务器四件套更新**（线上仍旧版）+ **虎皮椒真实支付接入**（微信渠道已开通，支付宝未）
 
 ## 执行步骤
 
@@ -96,10 +96,10 @@ md5sum web/engine.dist.js
 4. **重新生成兑换码**（线上 codes.json 为空/旧数据）——`api/gen_codes.js` 或后台生成
 5. 可选：Nginx `/api/admin/` 加 IP 白名单
 
-**第 4 步 · 虎皮椒真实通道**：
-1. 换支付宝账号重提虎皮椒申请（原账号被风控拒）→ 通过后填 `config.json` 的 `xunhu.appid/appsecret` → `mock:false`
-2. `pm2 restart` → 真实支付验证一单（¥0.01 试单）：下单 → 支付 → 回调 → 解锁 全链路
-3. 验证通过后恢复正式价格（如 ¥19.9 首单 ¥9.9 已在 skus 配置）
+**第 4 步 · 虎皮椒真实支付接入（微信渠道已开通，支付宝未开通）**：
+1. 填入 `config.json` 的 `xunhu.appid/appsecret`（**微信渠道**的凭证）→ 确认 `xunhu.channel` 为 `"wechat"`（默认即是，代码无需改）→ `mock:false`
+2. `pm2 restart benchu_api` → 真实支付验证一单（¥0.01 试单）：下单 → 微信支付 → 回调验签 → 解锁 全链路（`web/index.html` 支付按钮从「模拟支付」变为跳转 payUrl）
+3. 验证通过后恢复正式价格（如 ¥19.9 首单 ¥9.9 已在 skus 配置）；如需同时支持支付宝，另行申请支付宝渠道后 `channel` 切 `alipay`
 
 **第 5 步 · 锁定**：全部通过后，将引擎依赖记录到本仓 `HANDOFF.md` / `AI_CONTEXT.md`（**v1.3.6 + MD5 `1A4722FA7B0974EB4F5CFA53C71AA9C3`**），commit 闭环收尾结果。
 
