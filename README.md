@@ -2,8 +2,14 @@
 
 一个开箱即用的八字排盘与命理分析 Skill：输入出生信息，自动排出四柱八字、大运流年，并参照经典命理典籍给出带出处的专业解读。
 
+[![GitHub Stars](https://img.shields.io/github/stars/ruanxiaoer888/bazi-engine?style=flat-square&label=Stars&color=blue)](https://github.com/ruanxiaoer888/bazi-engine)
+[![License](https://img.shields.io/badge/License-MIT%2FCC--BY--NC--SA%204.0-blue?style=flat-square)](LICENSE)
+[![在线体验](https://img.shields.io/badge/%E5%9C%A8%E7%BA%BF%E4%BD%93%E9%AA%8C-%E6%9C%AC%E5%88%9D%20benchu.xiaoerpro.com-brightgreen?style=flat-square)](https://benchu.xiaoerpro.com/)
+[![SkillHub](https://img.shields.io/badge/SkillHub-%E5%B7%B2%E4%B8%8A%E6%9E%B6-purple?style=flat-square)](https://skillhub.com/)
+
 > **English**: [README.en.md](README.en.md)  
-> **GitHub**: https://github.com/ruanxiaoer888/bazi-engine
+> **GitHub**: https://github.com/ruanxiaoer888/bazi-engine  
+> 🔗 **在线体验**：**[本初 · benchu.xiaoerpro.com](https://benchu.xiaoerpro.com/)** — 基于本引擎的 C 端在线产品
 
 > 单文件离线运行，无任何外部依赖；排盘精确至节气时刻。
 
@@ -17,6 +23,33 @@
 - **神煞速查**：24 项吉凶星曜按命中展示
 - **三式宫位**：胎元、命宫、身宫
 - **断语可追溯**：1000 条断语，每条标注古籍出处（古代命理典籍）与行动建议
+
+<p align="center">
+  <img src="assets/screenshots/final/02_liuri.png" alt="bazi-engine · 流日分析" width="520"/>
+  <br/>
+  <em>引擎深度能力示例：单月逐日 30 天分析（每日干支 / 十神 / 冲合刑害 / 空亡 / 喜忌 / 十二长生）</em>
+</p>
+
+## 产品生态
+
+| | 项目 | 说明 |
+|---|---|---|
+| 🧩 | **bazi-engine**（本仓库） | 开源排盘引擎底座：Skill + 单文件 UI + 独立 JS 库（MIT），面向开发者与命理师 |
+| 🚀 | **[本初](https://benchu.xiaoerpro.com/)** | 作者自有的 C 端在线产品：AI 八字报告（排盘 / 合婚 / 流年），付费解锁，微信支付 |
+
+**开源 → 商业闭环**：引擎开源于 GitHub 供社区使用与二次开发；C 端产品「本初」是作者自有的商业落地，与引擎共用同一确定性排盘内核——C 端仅消费 `paipan` / `applyDst` 等 **MIT 代码层** API，付费解读内容为 C 端自有实现，不涉及 NC 数据。开源获得社区打磨，产品验证商业价值，互相成就。
+
+<p align="center">
+  <img src="assets/screenshots/benchu/paipan.png" alt="本初 · 排盘结果页" width="700"/>
+  <br/>
+  <em>排盘结果：四柱命盘 + 五行能量 + 人格解读（以示例命盘展示）</em>
+</p>
+<p align="center">
+  <img src="assets/screenshots/benchu/hehun.png" alt="本初 · 双人匹配" width="460"/>
+  <img src="assets/screenshots/benchu/year.png" alt="本初 · 年度能量趋势" width="460"/>
+  <br/>
+  <em>双人匹配（合婚评分）· 年度能量趋势（逐月提醒）</em>
+</p>
 
 ## 快速开始
 
@@ -71,4 +104,6 @@ kb/          古籍原文 + 规则手册 + 断语库
 - **代码**（排盘引擎 / UI / 构建测试脚本 / Skill 定义）：[MIT](LICENSE) — 自由使用
 - **数据**（`kb/` 断语库与古籍汇编等）：[CC BY-NC-SA 4.0](LICENSE-DATA) — 署名 · 非商业 · 相同方式共享（古籍原文属公有领域，可自由引用）
 
+> **商业边界**：「本初」为作者自有商业产品（作者对自有代码与数据享有完整权利）；第三方使用本仓库仍按上方双许可执行（代码 MIT / 数据 CC BY-NC-SA 4.0），商业授权请联系作者。
+>
 > 双许可边界、来源归属与商业授权说明详见 [LICENSE-DATA](LICENSE-DATA)。
