@@ -2,8 +2,14 @@
 
 A deterministic, zero-dependency BaZi (Chinese Four Pillars) charting and analysis engine. Feed it a birth date, and it computes the Four Pillars, Luck Cycles (Da Yun), and annual/monthly/daily fortunes with **every reading traced back to a classical text source**.
 
+[![GitHub Stars](https://img.shields.io/github/stars/ruanxiaoer888/bazi-engine?style=flat-square&label=Stars&color=blue)](https://github.com/ruanxiaoer888/bazi-engine)
+[![License](https://img.shields.io/badge/License-MIT%2FCC--BY--NC--SA%204.0-blue?style=flat-square)](LICENSE)
+[![Try it live](https://img.shields.io/badge/Try%20it%20live-Benchu%20benchu.xiaoerpro.com-brightgreen?style=flat-square)](https://benchu.xiaoerpro.com/)
+[![SkillHub](https://img.shields.io/badge/SkillHub-Published-purple?style=flat-square)](https://skillhub.com/)
+
 > Single-file offline runtime — open in a browser and it works. No API keys, no external services, no build step.  
-> **GitHub**: https://github.com/ruanxiaoer888/bazi-engine
+> **GitHub**: https://github.com/ruanxiaoer888/bazi-engine  
+> 🚀 **Try it live**: **[Benchu · benchu.xiaoerpro.com](https://benchu.xiaoerpro.com/)** — a consumer web product powered by this engine
 
 ## Why "engine"?
 
@@ -25,6 +31,33 @@ Same birth data in, same chart out — every single time.
 - **24 auspicious/inauspicious stars (神煞)** with hit-based display
 - **Three palaces (三式宫位)**: Tai Yuan, Ming Gong, Shen Gong
 - **Traceable readings**: 1000 rules, each citing its classical source (三命通会 / 渊海子平 / 滴天髓 / 子平真诠 / 穷通宝鉴) plus a practical suggestion
+
+<p align="center">
+  <img src="assets/screenshots/final/02_liuri.png" alt="bazi-engine · day-level analysis" width="520"/>
+  <br/>
+  <em>Engine depth example: month expanded into 30 day-by-day readings (daily stem-branch / Ten Gods / clashes & combos / void / favorable-unfavorable / Twelve Life Stages)</em>
+</p>
+
+## Ecosystem
+
+| | Project | Description |
+|---|---|---|
+| 🧩 | **bazi-engine** (this repo) | Open-source engine foundation: Skill + single-file UI + standalone JS library (MIT), for developers & practitioners |
+| 🚀 | **[Benchu](https://benchu.xiaoerpro.com/)** | The author's own consumer web product: AI BaZi reports (chart / compatibility / yearly), paid unlock, WeChat Pay |
+
+**Open source → commercial loop**: the engine is open-sourced on GitHub for community use and redevelopment; **Benchu** is the author's own commercial landing built on the same deterministic charting core — the consumer product consumes only **MIT code-layer** APIs (`paipan` / `applyDst`), and its paid readings are its own implementation, not NC-licensed data. Open source gains community polish, the product validates commercial value — each feeds the other.
+
+<p align="center">
+  <img src="assets/screenshots/benchu/paipan.png" alt="Benchu · chart result page" width="700"/>
+  <br/>
+  <em>Chart result: Four Pillars + element energy + personality reading (sample chart)</em>
+</p>
+<p align="center">
+  <img src="assets/screenshots/benchu/hehun.png" alt="Benchu · compatibility" width="460"/>
+  <img src="assets/screenshots/benchu/year.png" alt="Benchu · yearly energy trends" width="460"/>
+  <br/>
+  <em>Compatibility scoring · Yearly energy trends (month-by-month reminders)</em>
+</p>
 
 ## Quick Start
 
@@ -81,4 +114,6 @@ This repository uses a **dual-license** structure:
 - **Code** (charting engine / UI / build & test scripts / Skill definition): [MIT](LICENSE) — free to use
 - **Data** (`kb/` verdict library & classical-text compilations): [CC BY-NC-SA 4.0](LICENSE-DATA) — Attribution · NonCommercial · ShareAlike (classical texts are public domain and freely quotable)
 
+> **Commercial boundary**: **Benchu** is the author's own commercial product (the author retains full rights to their own code and data); third-party use of this repository still follows the dual license above (MIT for code / CC BY-NC-SA 4.0 for data). For commercial licensing, contact the author.
+>
 > See [LICENSE-DATA](LICENSE-DATA) for the exact boundaries, source attribution, and commercial licensing.
