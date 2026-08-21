@@ -3,8 +3,8 @@
 A deterministic, zero-dependency BaZi (Chinese Four Pillars) charting and analysis engine. Feed it a birth date, and it computes the Four Pillars, Luck Cycles (Da Yun), and annual/monthly/daily fortunes with **every reading traced back to a classical text source**.
 
 [![GitHub Stars](https://img.shields.io/github/stars/ruanxiaoer888/bazi-engine?style=flat-square&label=Stars&color=blue)](https://github.com/ruanxiaoer888/bazi-engine)
+[![CI](https://img.shields.io/github/actions/workflow/status/ruanxiaoer888/bazi-engine/ci.yml?style=flat-square&label=CI)](https://github.com/ruanxiaoer888/bazi-engine/actions)
 [![License](https://img.shields.io/badge/License-MIT%2FCC--BY--NC--SA%204.0-blue?style=flat-square)](LICENSE)
-[![Try it live](https://img.shields.io/badge/Try%20it%20live-Benchu%20benchu.xiaoerpro.com-brightgreen?style=flat-square)](https://benchu.xiaoerpro.com/)
 [![SkillHub](https://img.shields.io/badge/SkillHub-Published-purple?style=flat-square)](https://skillhub.com/)
 
 > Single-file offline runtime — open in a browser and it works. No API keys, no external services, no build step.  
@@ -74,9 +74,39 @@ Same birth data in, same chart out — every single time.
 
 ## Quick Start
 
-**Option A — Browser (no install):** open `ui/index.html`. Everything is inline — solar-term data, rule database, engine, UI. Works offline, works from `file://`.
+### 👤 End users — try it now
 
-**Option B — WorkBuddy Skill:** import the skill and ask in natural language:
+- **Online**: visit [Benchu · benchu.xiaoerpro.com](https://benchu.xiaoerpro.com/) (paid reports, WeChat Pay)
+- **Offline**: open `ui/index.html` in a browser (single file, zero deps, works from `file://`)
+
+### 🧑‍💻 Developers — use the engine
+
+`engine/engine.dist.js` is a standalone UMD library (zero deps, 101 exported APIs), usable in browser or Node:
+
+```html
+<!-- Browser -->
+<script src="engine/engine.dist.js"></script>
+<script>
+  // Note: gender must be '男' or '女' (Chinese); applyDst rolls back DST (e.g. 1990 China)
+  const d = window.BaziEngine.applyDst(1990, 5, 15, 10);           // {hh: 9, dst: 1}
+  const c = window.BaziEngine.paipan('李明远', '男', 1990, 5, 15, d.hh, 0, '广州市', 'yes');
+  console.log(c.yg, c.mg, c.dg, c.hg); // 庚午 辛巳 庚辰 庚辰
+</script>
+```
+
+```js
+// Node.js
+const BaziEngine = require('./engine/engine.dist.js');
+const d = BaziEngine.applyDst(1990, 5, 15, 10);
+const c = BaziEngine.paipan('李明远', '男', 1990, 5, 15, d.hh, 0, '广州市', 'yes');
+console.log(c.yg, c.mg, c.dg, c.hg); // 庚午 辛巳 庚辰 庚辰
+```
+
+Key APIs: `paipan` (charting) / `matchRules` (rule matching) / `applyDst` (DST correction) / `lunarToSolar` (lunar→solar) / `calcShenSha` (stars) / `getDaYun` (Luck Cycles).
+
+### 🤖 AI assistants — use the Skill
+
+Import the skill into a Skill-capable assistant (WorkBuddy / DeepSeek Harness / Codex, etc.) and ask in natural language:
 
 1. Provide: name, birth date (solar or lunar), birth time, gender, birthplace
 2. Get back: Four Pillars → element analysis → Da Yun & current year → integrated reading
@@ -100,7 +130,27 @@ Same birth data in, same chart out — every single time.
 
 - **Runtime**: `ui/index.html` — single file, zero external dependencies, 206 years of solar-term data + 1000-rule database inlined
 - **Build**: `tools/build_ui.py` (Python) inlines solar terms + rules into the UI
-- **Verification**: 13 regression suites (see `tools/`) covering the engine library, lunar calendar, DST, input tolerance, boundary cases, report quality, and end-to-end user flows — run automatically by CI
+- **Verification**: 13 regression suites covering the engine library, lunar calendar, DST, input tolerance, boundary cases, report quality, and end-to-end user flows — run automatically by CI
+
+  <details>
+  <summary>13 regression suites (click to expand)</summary>
+
+  ```
+  tools/test_engine.js       toolchain audit (28 checks, standalone lib)
+  tools/test_lunar.js        lunar calendar (27 checks)
+  tools/test_ui.js           UI regression
+  tools/test_eval_state.js   strength state machine
+  tools/test_p1_fixes.js     P1 fix regressions
+  tools/verify_sleep_rules.js Twelve Life Stages rules
+  tools/verify_ux_e2e.js     end-to-end user flows
+  tools/test_dst.js          daylight-saving time
+  tools/test_liuri_v2.js     day-level analysis
+  tools/test_liuyue_v2.js    month-level analysis
+  tools/verify_edu_rules.js  education rules
+  tools/test_xiyong.js       favorable-god rules
+  tools/check_conflicts.js   contradiction detection
+  ```
+  </details>
 - **CI gate**: `.github/workflows/ci.yml` (GitHub Actions) builds the UI + engine dist, validates the rule-database JSON, and runs all 13 regressions + a hit-distribution audit on every push / PR — nothing merges until green
 - **Cross-platform consistency**: `.gitattributes` enforces LF line endings on build artifacts & data files (Windows CRLF once made dist bytes differ, breaking MD5 alignment across platforms), keeping local / CI / consumer builds byte-identical
 - **Quality tooling**: `audit_hit_distribution.js` (hit-distribution audit), `check_dup_hits.js` (duplicate-hit detection), `check_conflicts.js` (contradictory-rule detection)
@@ -141,3 +191,7 @@ This repository uses a **dual-license** structure:
 > **Commercial boundary**: **Benchu** is the author's own commercial product (the author retains full rights to their own code and data); third-party use of this repository still follows the dual license above (MIT for code / CC BY-NC-SA 4.0 for data). For commercial licensing, contact the author.
 >
 > See [LICENSE-DATA](LICENSE-DATA) for the exact boundaries, source attribution, and commercial licensing.
+
+## Support the Author
+
+If this project helps you, consider [Starring ⭐](https://github.com/ruanxiaoer888/bazi-engine) or trying the paid reports on [Benchu](https://benchu.xiaoerpro.com/); for commercial licensing, custom work, or feedback, contact the author.
