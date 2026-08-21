@@ -3,8 +3,8 @@
 一个开箱即用的八字排盘与命理分析 Skill：输入出生信息，自动排出四柱八字、大运流年，并参照经典命理典籍给出带出处的专业解读。
 
 [![GitHub Stars](https://img.shields.io/github/stars/ruanxiaoer888/bazi-engine?style=flat-square&label=Stars&color=blue)](https://github.com/ruanxiaoer888/bazi-engine)
+[![CI](https://img.shields.io/github/actions/workflow/status/ruanxiaoer888/bazi-engine/ci.yml?style=flat-square&label=CI)](https://github.com/ruanxiaoer888/bazi-engine/actions)
 [![License](https://img.shields.io/badge/License-MIT%2FCC--BY--NC--SA%204.0-blue?style=flat-square)](LICENSE)
-[![在线体验](https://img.shields.io/badge/%E5%9C%A8%E7%BA%BF%E4%BD%93%E9%AA%8C-%E6%9C%AC%E5%88%9D%20benchu.xiaoerpro.com-brightgreen?style=flat-square)](https://benchu.xiaoerpro.com/)
 [![SkillHub](https://img.shields.io/badge/SkillHub-%E5%B7%B2%E4%B8%8A%E6%9E%B6-purple?style=flat-square)](https://skillhub.com/)
 
 > **English**: [README.en.md](README.en.md)  
@@ -12,6 +12,16 @@
 > 🔗 **在线体验**：**[本初 · benchu.xiaoerpro.com](https://benchu.xiaoerpro.com/)** — 基于本引擎的 C 端在线产品
 
 > 单文件离线运行，无任何外部依赖；排盘精确至节气时刻。
+
+## 为什么是引擎？
+
+大多数"AI 算命"产品让大语言模型直接**猜**四柱——而 LLM 恰恰不擅长历法计算。**bazi-engine 从不猜测**：排盘是确定性的、可测试的代码。
+
+- 年柱精确到**立春时刻**，月柱精确到**节气时刻**（基于 206 年 1895–2100 预验证节气数据）
+- 日柱按固定六十甲子递归，从规范基准日推算
+- 晚子时（23:00+）翻日、真太阳时校正、大运精确至出生时刻
+
+**同一出生数据，永远排出同一张盘。**
 
 ## 功能特性
 
@@ -66,7 +76,39 @@
 
 ## 快速开始
 
-直接打开 `ui/index.html`（单文件，浏览器即可运行，无需安装任何东西），或通过支持 Skill 的 AI 助手（WorkBuddy / DeepSeek Harness / Codex 等）调用本 Skill：
+### 👤 普通用户 —— 直接体验
+
+- **在线**：访问 [本初 · benchu.xiaoerpro.com](https://benchu.xiaoerpro.com/)（付费报告，微信支付）
+- **离线**：浏览器打开 `ui/index.html`（单文件零依赖，`file://` 即可运行）
+
+### 🧑‍💻 开发者 —— 接入引擎
+
+`engine/engine.dist.js` 是独立的 UMD 引擎库（零依赖，导出 101 个 API），浏览器 / Node 双端可用：
+
+```html
+<!-- 浏览器 -->
+<script src="engine/engine.dist.js"></script>
+<script>
+  // 性别参数须为 '男' / '女'；applyDst 回拨夏令时（1990 年中国曾实行）
+  const d = window.BaziEngine.applyDst(1990, 5, 15, 10);           // {hh: 9, dst: 1}
+  const c = window.BaziEngine.paipan('李明远', '男', 1990, 5, 15, d.hh, 0, '广州市', 'yes');
+  console.log(c.yg, c.mg, c.dg, c.hg); // 庚午 辛巳 庚辰 庚辰
+</script>
+```
+
+```js
+// Node.js
+const BaziEngine = require('./engine/engine.dist.js');
+const d = BaziEngine.applyDst(1990, 5, 15, 10);
+const c = BaziEngine.paipan('李明远', '男', 1990, 5, 15, d.hh, 0, '广州市', 'yes');
+console.log(c.yg, c.mg, c.dg, c.hg); // 庚午 辛巳 庚辰 庚辰
+```
+
+核心 API：`paipan`（排盘）/ `matchRules`（断语匹配）/ `applyDst`（夏令时校正）/ `lunarToSolar`（农历转阳历）/ `calcShenSha`（神煞）/ `getDaYun`（大运）等。
+
+### 🤖 AI 助手 —— 调用 Skill
+
+通过支持 Skill 的 AI 助手（WorkBuddy / DeepSeek Harness / Codex 等）调用本 Skill：
 
 1. 告诉我你的出生信息：姓名、生日（阳历或农历均可）、出生时间、性别、出生地
 2. 自动排盘并输出：四柱命盘 → 五行分析 → 大运流年 → 综合解读
@@ -90,7 +132,27 @@
 
 - **UI**：`ui/index.html` — 单文件离线（零外部依赖），内置 206 年节气数据 + 1000 条断语
 - **构建**：`tools/build_ui.py`（Python）内联节气与断语库生成 UI
-- **验证**：13 套回归脚本（`test_engine` / `test_lunar` / `test_ui` / `test_eval_state` / `test_p1_fixes` / `verify_sleep_rules` / `verify_ux_e2e` / `test_dst` / `test_liuri_v2` / `test_liuyue_v2` / `verify_edu_rules` / `test_xiyong` / `check_conflicts`），覆盖引擎库、农历、夏令时、输入容错、边界场景、报告质量与端到端用户视角，CI 自动执行
+- **验证**：13 套回归脚本，覆盖引擎库、农历、夏令时、输入容错、边界场景、报告质量与端到端用户视角，CI 自动执行
+
+  <details>
+  <summary>13 套回归脚本清单（点击展开）</summary>
+
+  ```
+  tools/test_engine.js       工具链审计（28 项，独立库直测）
+  tools/test_lunar.js        农历模块（27 项）
+  tools/test_ui.js           UI 功能回归
+  tools/test_eval_state.js   旺衰状态机
+  tools/test_p1_fixes.js     P1 修复回归
+  tools/verify_sleep_rules.js 十二长生规则
+  tools/verify_ux_e2e.js     端到端用户视角
+  tools/test_dst.js          夏令时
+  tools/test_liuri_v2.js     流日分析
+  tools/test_liuyue_v2.js    流月分析
+  tools/verify_edu_rules.js  学业规则
+  tools/test_xiyong.js       喜用神
+  tools/check_conflicts.js   反义矛盾检测
+  ```
+  </details>
 - **CI 门禁**：`.github/workflows/ci.yml`（GitHub Actions）在每次 push / PR 时自动构建 UI 与引擎 dist、校验断语库 JSON、跑 13 套回归 + 命中分布审计，全绿方可合并——质量保障由机器人把关
 - **跨平台一致性**：`.gitattributes` 强制构建产物与数据文件使用 LF 换行（Windows CRLF 曾导致 dist 字节不一致、MD5 无法跨平台对齐），保证本地 / CI / C 端三方字节一致
 - **质检工具**：`audit_hit_distribution.js`（命中分布审查）、`check_dup_hits.js`（重复命中检测）、`check_conflicts.js`（反义矛盾检测）
@@ -131,3 +193,7 @@ kb/                      古籍原文 + 规则手册 + 断语库
 > **商业边界**：「本初」为作者自有商业产品（作者对自有代码与数据享有完整权利）；第三方使用本仓库仍按上方双许可执行（代码 MIT / 数据 CC BY-NC-SA 4.0），商业授权请联系作者。
 >
 > 双许可边界、来源归属与商业授权说明详见 [LICENSE-DATA](LICENSE-DATA)。
+
+## 支持作者
+
+如果本项目对你有帮助，欢迎 [Star ⭐](https://github.com/ruanxiaoer888/bazi-engine) 或在 [本初](https://benchu.xiaoerpro.com/) 体验付费报告；商业授权 / 定制合作 / 反馈建议请联系作者。
