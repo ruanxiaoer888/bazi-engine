@@ -25,3 +25,6 @@ _dbg_*.py
 
 # 发布包 ZIP（构建产物，不入库）
 bazi-engine-*.zip
+
+# C 端截图原始素材（本地归档，不入库）
+assets/screenshots/benchu/_raw/
