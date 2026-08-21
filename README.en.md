@@ -194,4 +194,10 @@ This repository uses a **dual-license** structure:
 
 ## Support the Author
 
-If this project helps you, consider [Starring ⭐](https://github.com/ruanxiaoer888/bazi-engine) or trying the paid reports on [Benchu](https://benchu.xiaoerpro.com/); for commercial licensing, custom work, or feedback, contact the author.
+If this project helps you, consider [Starring ⭐](https://github.com/ruanxiaoer888/bazi-engine) or trying the paid reports on [Benchu](https://benchu.xiaoerpro.com/); for commercial licensing, custom work, or feedback, contact the author:
+
+<p align="center">
+  <img src="assets/screenshots/qrcode-wechat.png" alt="Author's WeChat QR code" width="180"/>
+  <br/>
+  <em>WeChat: <code>feizi6651</code> (scan or search)</em>
+</p>
