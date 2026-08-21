@@ -87,7 +87,9 @@ Same birth data in, same chart out — every single time.
 
 - **Runtime**: `ui/index.html` — single file, zero external dependencies, 206 years of solar-term data + 1000-rule database inlined
 - **Build**: `tools/build_ui.py` (Python) inlines solar terms + rules into the UI
-- **Verification**: 5 regression suites (`tools/test_ui.js` / `test_eval_state.js` / `test_p1_fixes.js` / `verify_sleep_rules.js` / `verify_ux_e2e.js`) covering input tolerance, boundary cases (incl. the 1895 data-start-year edge), report quality, output stability, and end-to-end user flows
+- **Verification**: 13 regression suites (see `tools/`) covering the engine library, lunar calendar, DST, input tolerance, boundary cases, report quality, and end-to-end user flows — run automatically by CI
+- **CI gate**: `.github/workflows/ci.yml` (GitHub Actions) builds the UI + engine dist, validates the rule-database JSON, and runs all 13 regressions + a hit-distribution audit on every push / PR — nothing merges until green
+- **Cross-platform consistency**: `.gitattributes` enforces LF line endings on build artifacts & data files (Windows CRLF once made dist bytes differ, breaking MD5 alignment across platforms), keeping local / CI / consumer builds byte-identical
 - **Quality tooling**: `audit_hit_distribution.js` (hit-distribution audit), `check_dup_hits.js` (duplicate-hit detection), `check_conflicts.js` (contradictory-rule detection)
 
 ## Directory Layout
@@ -95,8 +97,11 @@ Same birth data in, same chart out — every single time.
 ```
 skill/SKILL.md           Skill definition (guided interaction + analysis workflow)
 ui/index.html            Single-file offline UI
+engine/engine.dist.js    Standalone engine library (UMD: browser / Node)
 tools/                   Build / test / quality-audit tooling
-kb/          Classical texts + rule handbooks + 1000-rule database
+kb/                      Classical texts + rule handbooks + 1000-rule database
+.github/workflows/       CI gate (GitHub Actions: build + regressions + audit)
+.gitattributes           LF line-ending policy (cross-platform consistency)
 ```
 
 ## Disclaimer
