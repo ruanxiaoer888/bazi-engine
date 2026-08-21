@@ -199,7 +199,7 @@ kb/                      古籍原文 + 规则手册 + 断语库
 如果本项目对你有帮助，欢迎 [Star ⭐](https://github.com/ruanxiaoer888/bazi-engine) 或在 [本初](https://benchu.xiaoerpro.com/) 体验付费报告；商业授权 / 定制合作 / 反馈建议请联系作者：
 
 <p align="center">
-  <img src="assets/screenshots/qrcode-wechat.png" alt="作者微信二维码" width="180"/>
+  <img src="assets/screenshots/contact-card.png" alt="作者联系方式：微信 + 公众号" width="440"/>
   <br/>
-  <em>微信：<code>feizi6651</code>（扫码或搜索添加）</em>
+  <em>微信：<code>feizi6651</code>（扫码或搜索添加）· 公众号：AI 知识分享</em>
 </p>
