@@ -18,7 +18,7 @@
 
 ## 2. 当前阶段（2026-08-20）
 
-- **版本**：**v1.3.6**（git tag `v1.3.0` 保留；累计：全面扫描修复批次 + 农历模块同步 + 农历/阳历双模式切换 + 合婚上下布局 + 合婚时段模式修复 + xiYong ratio 细分 + 五行补救文案强/弱区分 + 太极 logo + 输入侧晚子时/节气临界提示语 + 断语库 504→801 + 死规则清理 801→789 + 空亡断语修活 + 断语库扩充 789→1000 并定版 v1.3.0 + **三方深度审计 v1.3.1~v1.3.6 全量修复** + **C 端合规软化工具 compliance_soften.py（坑 #41 解决）+ bazi-app 闭环收尾速贴块交付**）
+- **版本**：**v1.3.6**（git tag `v1.3.0` 保留；累计：全面扫描修复批次 + 农历模块同步 + 农历/阳历双模式切换 + 合婚上下布局 + 合婚时段模式修复 + xiYong ratio 细分 + 五行补救文案强/弱区分 + 太极 logo + 输入侧晚子时/节气临界提示语 + 断语库 504→801 + 死规则清理 801→789 + 空亡断语修活 + 断语库扩充 789→1000 并定版 v1.3.0 + **三方深度审计 v1.3.1~v1.3.6 全量修复** + **C 端合规软化工具 compliance_soften.py（坑 #41 解决）+ bazi-app 闭环收尾速贴块交付** + **README 推广优化（2026-08-20：产品生态/本初在线体验/7 张配图/开发者三路径/支持作者微信 feizi6651+公众号海报，commit `f0bd94a`~`1d045cc`，纯 docs+assets，dist 未动）**）
 - **功能**：132 项任务**全部完成**（排盘/大运/流年/流月/流日/六亲/合婚/五行补救/神煞/调候用神/三式宫位/特殊格局）
 - **农历模块**：引擎层新增 `lunarToSolar`/`leapMonth`/`leapDays`/`monthDays`/`lunarDayName` + `LUNAR_INFO` 数据表（1900-2099），与 bazi-app C 端实现完全一致
 - **农历/阳历双模式切换**：主表单 + 合婚 A/B 各自独立（`switchCal`/`switchHeCal`），农历输入自动 `lunarToSolar` 转公历
@@ -29,8 +29,8 @@
 - **引擎**：`engine/engine.dist.js`（438KB 字节，UMD 双端，含 getRemedy/yongShenChong/农历模块 + 1000 条规则数据；v1.3.6 MD5 `1A4722FA7B0974EB4F5CFA53C71AA9C3`，v1.3.4 起 LF 口径跨平台可比）
 - **发布状态**：✅ **双平台均已上架**——① **SkillHub**：申诉通过已发布（「生态杀手」分类，平台归一化显示 V1.0.0，实际 v1.3.6）；② **ClawHub**：已发布（SkillSpector 转 Published，Productivity 分类，v1.3.6 GitHub 自动同步版——绑定 `ruanxiaoer888/bazi-engine`，git push 自动拉新）；③ GitHub 开源仓库（Release v1.3.0 已发布）
 - **真人验收**：✅ 已完成（3 案例全部通过，截图 `assets/screenshots/final/`）
-- **阻塞项**：**无**。功能/验收/发布/扩库/审计全部完成，无外部等待
-- **GitHub**：本地 HEAD=`41ba0eb`（2026-08-19，compliance_soften.py），与远程 `origin/main` 同步，工作树干净
+- **阻塞项**：**无**。功能/验收/发布/扩库/审计全部完成，无外部等待；⚠️ bazi-app 真实支付闭环（服务器四件套 + 虎皮椒微信）仍未落地——README 推广已上线，引流后支付未通会流失访客，应优先推进（速贴块见 `docs/BAZI-APP-HANDOFF-v1.3.0.md` 顶部，粘贴给 bazi-app 对话即可）
+- **GitHub**：本地 HEAD=`1d045cc`（2026-08-20，README 推广优化收尾），与远程 `origin/main` 同步，工作树干净；dist MD5 `1A4722FA7B0974EB4F5CFA53C71AA9C3` 不变（README 改动未动引擎）
 
 ## 3. 技术架构
 
