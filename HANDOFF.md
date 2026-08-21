@@ -1,6 +1,6 @@
 # bazi-engine 八字命理 Skill · 项目交接文档（HANDOFF）
 
-> 更新时间：2026-08-20 · 当前版本 **v1.3.6**（git tag `v1.3.0` 保留；实际已含：农历/阳历双模式切换、合婚上下双区块布局、晚子时/节气临界提示语、断语库 504→801→789→1000 并定版 v1.3.0、**三方深度审计 v1.3.1~v1.3.6 全量修复**——空亡真修活/天克地冲方向/专旺阈值/流月精确节气/合婚评分扩维/农历越界 P0/跨平台构建/CI 门禁/假断言/移动端表格/无障碍/视觉统一/打印样式、**C 端合规软化工具 compliance_soften.py 落地（坑 #41 解决）+ bazi-app 闭环收尾速贴块交付**）
+> 更新时间：2026-08-20 · 当前版本 **v1.3.6**（git tag `v1.3.0` 保留；实际已含：农历/阳历双模式切换、合婚上下双区块布局、晚子时/节气临界提示语、断语库 504→801→789→1000 并定版 v1.3.0、**三方深度审计 v1.3.1~v1.3.6 全量修复**——空亡真修活/天克地冲方向/专旺阈值/流月精确节气/合婚评分扩维/农历越界 P0/跨平台构建/CI 门禁/假断言/移动端表格/无障碍/视觉统一/打印样式、**C 端合规软化工具 compliance_soften.py 落地（坑 #41 解决）+ bazi-app 闭环收尾速贴块交付**、**README 推广优化（本初 C 端推广位 + 产品生态 + 7 张配图 + 开发者三路径快速开始 + 支持作者联系方式，commit `f0bd94a`~`1d045cc` 共 7 个 docs/chore 提交，HEAD=`1d045cc`）**）
 > 项目性质：**Michael 个人独立研发项目**，与魅可科技（Meke）业务无任何关联，推广/发布按个人项目口径。
 > 发布状态：✅ **双平台均已上架**（2026-08-17 确认）——① SkillHub（腾讯）**已发布**（「生态杀手」分类，申诉通过；平台归一化显示 V1.0.0，见坑 #21）；② ClawHub（OpenClaw 官方市场）**已发布**（Productivity 分类，SkillSpector 扫描通过转 Published，v1.3.6 GitHub 自动同步版——绑定 `ruanxiaoer888/bazi-engine`，git push 自动拉新）
 > **给 Codex / 新会话**：先读同目录 `AI_CONTEXT.md`（冷启动文档），再读本文件。
@@ -23,9 +23,19 @@
 ## 一、当前任务（进行中 / 待办）
 
 ### 当前状态（2026-08-20 快照）
-- **本仓库无阻塞**：132 项任务清零 / 真人验收通过 / 双平台已上架 / **断语库 1000 条**（路线图达成）/ **v1.3.6**（三方审计 6 批次全量修复）/ 13 套回归全绿 + **CI 门禁真实生效**；工作树干净，HEAD=`41ba0eb` 与远程同步，dist MD5 `1A4722FA7B0974EB4F5CFA53C71AA9C3`（LF 口径）
+- **本仓库无阻塞**：132 项任务清零 / 真人验收通过 / 双平台已上架 / **断语库 1000 条**（路线图达成）/ **v1.3.6**（三方审计 6 批次全量修复）/ 13 套回归全绿 + **CI 门禁真实生效**；工作树干净，HEAD=`1d045cc` 与远程同步，dist MD5 `1A4722FA7B0974EB4F5CFA53C71AA9C3`（LF 口径，本次 README 优化未动引擎）
 - **在途事项（等待 Michael 操作，非本仓库代码工作）**：bazi-app C 端真实闭环剩 2 个外部阻塞（服务器四件套更新 + 虎皮椒真实支付接入——**微信渠道已开通，支付宝未开通**）；**速贴块已于 2026-08-19 交付**（`docs/BAZI-APP-HANDOFF-v1.3.0.md` 顶部），Michael 复制粘贴给 bazi-app 对话即可启动，执行到 ③④ 步时向对话提供 SSH 凭据 + 虎皮椒微信 appid/appsecret
 - **遗留待清理**：✅ 全部已清（死规则 2 轮清理 + 三方审计 6 批次，见下方各段）
+
+### ✅ 2026-08-20 README 推广优化（commit `f0bd94a`~`1d045cc`，共 7 个 docs/chore 提交，中英文同步）
+> 目标：把开源引擎 + C 端「本初」（benchu.xiaoerpro.com）的「开源 → 商业闭环」故事写进 README，形成推广闭环。全部为文档/素材变更，**引擎 dist 未动**（MD5 不变）。
+- **产品生态章节 + 在线体验入口**（`f0bd94a`）：README 新增「产品生态」表（bazi-engine ↔ 本初）+ 顶部「在线体验」链接 + 徽章；License 段补**商业边界**说明（本初为作者自有产品，C 端只消费 MIT 代码层 API、付费内容自有实现，不涉及 NC 数据——消除双许可疑虑）
+- **C 端截图素材管理**（`acc4c05`）：截图素材归档 `assets/screenshots/benchu/_raw/`（28 张原始素材，**gitignore 排除不入库**），入库仅 3 张语义化命名（paipan/hehun/year）；新建 `assets/screenshots/promo/` 存宣传物料（compare 对比图 / flow 流程图，压缩自 2MB+ 原始图）
+- **技术说明补充**（`fad5dc7`）：CI 门禁（`.github/workflows/ci.yml`）+ 跨平台一致性（`.gitattributes` LF 规范）说明；目录结构补 engine.dist.js / .github / .gitattributes
+- **精选 3 张配图**（`b6688fa`）：功能特性→对比宣传图（引擎卖点）、产品生态→六维人格图谱（付费报告深度）、技术说明→处理链路流程图
+- **README 全面优化**（`6528751`）：中文版新增「为什么是引擎？」段（对标英文 Why engine，LLM 猜盘 vs 确定性排盘卖点）；新增 **CI 徽章**；回归脚本清单折叠 `<details>`；快速开始拆 **用户 / 开发者 / AI 三路径**并补 `engine.dist.js` 浏览器+Node 双示例；新增「支持作者」入口；**修正示例代码两处 bug**（见坑 #42/#43）
+- **支持作者联系方式**（`bdffa17`→`1d045cc`）：微信 `feizi6651` + 二维码 → 升级为**微信+公众号双二维码海报**（`assets/screenshots/contact-card.png`，@阮小贰 水印与 GitHub 账号一致，保留微信号文字防失效）
+- **虚构示例命盘 5 个**（README 截图用，引擎实测验证）：李明远（男 1990-05-15 10:00 广州，夏令时+真太阳时链路）/ 林小雅（女 1992-08-08 20:00 北京，合婚乙方）/ 陈子墨（男 1990-02-20 15:00 深圳，合婚甲方）/ 王建国（男 1988 腊月廿七 西安，农历+节气临界）/ 陈静怡（女 1995-03-06 12:00 成都，流年类）——**均为虚构人物**，可放心用于公开截图
 
 ### ✅ 2026-08-19 bazi-app 闭环收尾交付（commit `df9cd7b`/`0605386`/`a9d1261`/`41d7688`/`41ba0eb`）
 - **速贴块交付**：`docs/BAZI-APP-HANDOFF-v1.3.0.md` 顶部新增「速贴版」5 步指令（① MD5 核对基线 `3B90D659…` ② 回归确认含专旺收紧说明 ③ 服务器四件套 + `web/paid/` 目录 + pm2 ④ 微信支付接入——填微信 appid/appsecret、`mock:false`、¥0.01 真实验证 ⑤ 锁定引擎依赖并 commit），可直接复制粘贴给 bazi-app 对话
@@ -201,10 +211,11 @@
 
 ## 三、卡住的问题
 
-- ✅ **本仓库无阻塞**：132 项任务清零 / 真人验收通过 / 双平台已上架 / 断语库 1000 条 / **v1.3.6**（三方审计 6 批次全量修复）/ 13 套回归全绿 + CI 门禁真实生效
-- 🔜 **bazi-app C 端真实闭环剩 2 个外部阻塞**（本地 mock 全链路已通，属部署/支付侧，需 bazi-app 对话推进；**速贴块已交付，Michael 粘贴即可启动**）：
+- ✅ **本仓库无阻塞**：132 项任务清零 / 真人验收通过 / 双平台已上架 / 断语库 1000 条 / **v1.3.6**（三方审计 6 批次全量修复）/ 13 套回归全绿 + CI 门禁真实生效；**README 推广优化已完成（2026-08-20，HEAD `1d045cc`）**
+- 🔜 **bazi-app C 端真实闭环剩 2 个外部阻塞**（本地 mock 全链路已通，属部署/支付侧，需 bazi-app 对话推进；**速贴块已交付，Michael 粘贴即可启动**；⚠️ README 推广已上线，此阻塞**更紧迫**——引流访客来了若卡在支付环节会直接流失）：
   1. **服务器四件套更新**：线上 CentOS 仍是旧版（缺 `/api/redeem`、删除接口无鉴权、旧账号密码）——需上传 `web/index.html` + `web/admin.html` + `api/server.js` + `api/config.json` + **`web/paid/` 目录** → `pm2 restart benchu_api` → 新账号登录 → 重新生成兑换码（**执行到此处需要 Michael 提供服务器 SSH/宝塔凭据**）
   2. **虎皮椒真实支付接入**：**微信渠道已开通**（支付宝未开通）——填 `config.json` 的 `xunhu.appid/appsecret`（**微信**凭证）→ `mock:false` → `pm2 restart` → 真实支付验证一单（¥0.01）；`channel` 已是 `wechat` 无需改代码（**需要 Michael 提供虎皮椒微信 appid/appsecret**）
+- 🔜 **bazi-app 功能边界（产品决策，非 bug）**：C 端只有 3 个 SKU（report 个人报告 / match 双人匹配 / year 年度能量趋势），**无流月 / 流日功能**（bazi-app 源码搜不到这两个关键词；"年度能量趋势"= 流年+流月的轻量版，12 个月卡片，非引擎级逐日 30 天分析）。README 配图已按 **B/C 分区**处理：产品生态章节只放 C 端 3 个 SKU 截图；流日截图（`final/02_liuri.png`）放「功能特性」作为**引擎深度能力**展示，不误导读者以为本初有流日。若要补流月/流日付费 SKU（FateTell 验证过的复购点），属 bazi-app 侧产品决策，可规划后续迭代
 
 ---
 
@@ -212,7 +223,8 @@
 
 0. ✅ ~~SkillHub 申诉~~（2026-08-17 通过并上架）
 1. ✅ ~~ClawHub SkillSpector 扫描~~（已转 Published，海外发布闭环完成）
-2. **[推荐] bazi-app C 端真实闭环收尾** → 引擎已同步（v1.3.6，dist MD5 `1A4722FA7B0974EB4F5CFA53C71AA9C3`），本地 mock 全链路 18/18 已通 + 一致性/冒烟零破坏确认 + 三方审计后引擎更稳；剩**服务器四件套更新** + **虎皮椒真实支付接入（微信渠道已开通，支付宝未）**。**Michael 当前唯一要做的操作**：把 `docs/BAZI-APP-HANDOFF-v1.3.0.md` 顶部的速贴块粘贴给 bazi-app 对话 → 该对话按 ①~⑤ 推进；到 ③④ 步时把 **SSH 凭据** + **虎皮椒微信 appid/appsecret** 提供给 bazi-app 对话。若后续引擎升级，bazi-app 侧用 `python tools/compliance_soften.py web/engine.dist.js` 生成合规版（坑 #41 解决方案）
+2. **[推荐·最高优先] bazi-app C 端真实闭环收尾** → 引擎已同步（v1.3.6，dist MD5 `1A4722FA7B0974EB4F5CFA53C71AA9C3`），本地 mock 全链路 18/18 已通 + 一致性/冒烟零破坏确认 + 三方审计后引擎更稳；剩**服务器四件套更新** + **虎皮椒真实支付接入（微信渠道已开通，支付宝未）**。**⚠️ README 推广已于 2026-08-20 上线（本初链接 + 7 张配图 + 支持作者微信），引流通道已开，支付闭环未通会直接流失访客——本项应优先于一切**。**Michael 当前唯一要做的操作**：把 `docs/BAZI-APP-HANDOFF-v1.3.0.md` 顶部的速贴块粘贴给 bazi-app 对话 → 该对话按 ①~⑤ 推进；到 ③④ 步时把 **SSH 凭据** + **虎皮椒微信 appid/appsecret** 提供给 bazi-app 对话。若后续引擎升级，bazi-app 侧用 `python tools/compliance_soften.py web/engine.dist.js` 生成合规版（坑 #41 解决方案）
+2b. **[可选] bazi-app 补流月/流日付费 SKU**（复购点，FateTell「运之书」模式）：C 端现有 3 SKU 无流月/流日，README 已按 B/C 分区展示引擎流日能力；若要在 C 端变现，需 bazi-app 侧新增 SKU + 报告页（引擎 matchLiuDay/matchLiuYue 可复用，见坑 #44）
 3. ✅ ~~断语库扩充 504→800+~~（已完成 `bd7f5ab`，801 条，2026-08-17）
 4. ✅ ~~晚子时/节气临界**输入侧**提示语~~（已完成 `53a3bd2`，2026-08-17；输出侧原有提示保留）
 5. ✅ ~~断语库 789→1000+~~（已完成 `338f981` 等 5 批次 + 定版 v1.3.0 + 三方审计 v1.3.1~v1.3.6，2026-08-19；若续扩可考虑为元辰/魁罡/太极贵人等补 SHENSHA 算法后重新入库）
@@ -282,6 +294,15 @@
 ### 双项目协作类（2026-08-19 第三轮）
 41. **bazi-app 为合规手改 dist（引擎构建产物）会与 B 端重建冲突**：bazi-app 在 commit `2bb404f`（合规风控整改）对 `web/engine.dist.js` 做了术语软化定制（姻缘→情感 / 桃花正缘→人际正缘 / 流年→年度 / 烂桃花→不良人际 等 10 处，MD5 `1A4722FA`→`3B90D659`），属 C 端微信生态合规需求，但**手改构建产物违反坑 #29 边界**——bazi-engine 下次重建 dist 会覆盖该定制。正确做法：a) 软化文案回馈 bazi-engine 纳入构建源（build_ui.py 的 RULES/文案），或 b) bazi-app 用构建后脚本统一替换；否则每次引擎升级都要重打补丁。**✅ 已解决（commit `41ba0eb`）**：bazi-engine 侧落地 `tools/compliance_soften.py`（构建后术语替换，保护 `"流年":` 条件键，`--check` 残留检测），bazi-app 今后同步 dist 后跑一次即得合规版（软化后 MD5 `1CA0DF3EC306DF96E160D76A9CEB191D`），免手改。当前状态：bazi-app 锁 v1.3.4 引擎 + 合规定制（MD5 `3B90D659`），引擎逻辑与 v1.3.6 一致（v1.3.5/1.3.6 为 B 端 UI 层、dist 未变）
 
+### README 推广 / 引擎 API 使用类（2026-08-20，README 优化 + 配图 + 联系方式）
+42. **`paipan` 的 gender 参数只接受中文 `'男'/'女'`**：源码第 376 行 `if(gender!=='男'&&gender!=='女'){ alert('性别需为男或女'); return null; }`——传 `'M'`/`'male'` 会触发 alert（Node 下 `ReferenceError: alert is not defined` 崩溃）。README 英文版示例最初写 `'M'` 会误导开发者，已改为中文 `'男'`。教训：README/文档里的引擎示例代码必须**实跑验证**，不能只凭直觉写
+43. **1990 年中国夏令时：直接传 9:00 排盘时柱是 `辛巳` 而非 `庚辰`**：1990-05-15 在夏令时窗口（4/15~9/16）内，正确链路 = `applyDst(1990,5,15,10)`（回拨 1 小时→9:00）→ `paipan(..., 9, 0, ...)` 才是庚辰时柱（README 示例对话的值）。README 开发者示例曾直接写 `paipan(1990,5,15,9,0,...)` + 注释庚辰（错误，实排辛巳），已改为完整 DST 链路。教训：示例代码的**注释结果值**也要实测核对，DST 窗口期的盘最容易错
+44. **bazi-app C 端只有 3 个 SKU，无流月/流日**：`web/index.html` 全文搜不到「流月/流日/逐日」（`Select-String` 0 匹配）；「年度能量趋势」= 12 个月卡片（月五行×喜忌×与日主关系 50 组文案），是流年+流月的**轻量版**，非引擎级逐日 30 天。规划 C 端截图/推广时必须按**真实功能边界**来（README 已 B/C 分区），否则截图与产品不符会砸口碑
+45. **PowerShell 5.1 不支持 `&&` 连接符**：`cmd1 && cmd2` 报 `The token '&&' is not a valid statement separator`——用 `;` 分隔或分行执行（`$?` 判断上一条结果）；多步 git 操作用 `git add ...; git commit ...; git push ...` 串行即可（有依赖时分行判断）
+46. **PowerShell `Add-Content` 中文注释落盘乱码**：控制台显示 `鍥剧墖` 类乱码，但用 read 工具按 UTF-8 读回是**正常中文**——是控制台代码页（GBK）与文件编码（UTF-8）不一致的显示问题，**以 read 工具内容为准**，勿据此改文件（.gitignore 追加中文注释曾虚惊一场）
+47. **Windows 沙箱里 `System.Drawing` 读图片尺寸失败**（受限环境），改用 Node 读 PNG 头部字节：`buf.readUInt32BE(16)`（宽）/ `readUInt32BE(20)`（高），校验魔数 `0x89 0x50 0x4E 0x47`——临时脚本 `tools/tmp_*.js` 用完即删（坑 #3 延续）
+48. **DSH Web GUI 用户上传图片的下载途径**：`Invoke-WebRequest http://127.0.0.1:3080/describe-image/raw/sha256:<附件id>` → `[IO.File]::WriteAllBytes(本地路径, $resp.Content)` 可把会话里用户贴的图片存到工作区（本仓库 `assets/screenshots/contact-card.png` 即由此取得）；`$resp.Content` 是 byte[] 可直接写，勿转 string
+
 ---
 
 ## 六、项目速查
@@ -300,5 +321,11 @@
 - 发布文档：`docs/history/SkillHub-Submission-Kit.md`（提交母版）+ `docs/history/SkillHub发布最终指引.md`（填表指引）+ `docs/history/验收与截图清单_3案例.md`（回归验收模板）
 - **引擎变更记录：`docs/ENGINE-CHANGES.md`**（权威记录：每次引擎变更 bump 版本 + 记 dist MD5，供 bazi-app 对话核对；2026-08-17 建立，首条 v1.2.1）
 - 历史文档：`docs/history/`（第七轮验收 / 发布物料 / 竞对分析，历史快照）
-- 截图素材：`assets/screenshots/final/`（3 张验收通过截图：01_paipan / 02_liuri / 03_hehun）
+- 截图素材：
+  - `assets/screenshots/final/`（3 张 B 端验收截图：01_paipan / 02_liuri 流日 / 03_hehun，README 引用 02_liuri）
+  - `assets/screenshots/benchu/`（**C 端「本初」截图，已入库 4 张**：paipan 排盘 / hehun 合婚 / year 年度 / insight 六维人格图谱；`README.md` 目录说明；`_raw/` 28 张原始素材 **gitignore 排除不入库**）
+  - `assets/screenshots/promo/`（宣传物料 2 张：compare 引擎对比图 / flow 处理链路流程图，压缩自 _raw/图2/图3）
+  - `assets/screenshots/contact-card.png`（作者微信+公众号双二维码海报，README 支持作者章节用）
 - 发布平台：**SkillHub**（腾讯，已上架，「生态杀手」分类）+ **ClawHub**（已上架，clawhub.ai/skills，npx clawhub@latest install bazi-engine）+ **GitHub**（开源仓库）
+- **C 端「本初」**：https://benchu.xiaoerpro.com/（README 在线体验入口；微信 `feizi6651` 在支持作者章节）
+- **README 推广资产速查**：产品生态章节（本初推广位）/ 徽章（Stars/CI/License/SkillHub）/ 「为什么是引擎？」（中文核心卖点）/ 快速开始三路径（用户/开发者/AI，含 engine.dist.js 双端示例）/ 支持作者（微信+公众号海报）——2026-08-20 全部落地，改动只动 docs 与 assets，引擎 dist MD5 不变
