@@ -30,6 +30,14 @@
   <em>引擎深度能力示例：单月逐日 30 天分析（每日干支 / 十神 / 冲合刑害 / 空亡 / 喜忌 / 十二长生）</em>
 </p>
 
+### 为什么选 bazi-engine？
+
+<p align="center">
+  <img src="assets/screenshots/promo/compare.png" alt="bazi-engine vs 传统工具" width="420"/>
+  <br/>
+  <em>开源 · 节气精确切分 · 本地零依赖 · 1000 条古籍溯源断语</em>
+</p>
+
 ## 产品生态
 
 | | 项目 | 说明 |
@@ -49,6 +57,11 @@
   <img src="assets/screenshots/benchu/year.png" alt="本初 · 年度能量趋势" width="460"/>
   <br/>
   <em>双人匹配（合婚评分）· 年度能量趋势（逐月提醒）</em>
+</p>
+<p align="center">
+  <img src="assets/screenshots/benchu/insight.png" alt="本初 · 六维人格图谱" width="700"/>
+  <br/>
+  <em>深度报告示例：六维人格图谱（决策力 / 坚韧性等量化评估）</em>
 </p>
 
 ## 快速开始
@@ -81,6 +94,12 @@
 - **CI 门禁**：`.github/workflows/ci.yml`（GitHub Actions）在每次 push / PR 时自动构建 UI 与引擎 dist、校验断语库 JSON、跑 13 套回归 + 命中分布审计，全绿方可合并——质量保障由机器人把关
 - **跨平台一致性**：`.gitattributes` 强制构建产物与数据文件使用 LF 换行（Windows CRLF 曾导致 dist 字节不一致、MD5 无法跨平台对齐），保证本地 / CI / C 端三方字节一致
 - **质检工具**：`audit_hit_distribution.js`（命中分布审查）、`check_dup_hits.js`（重复命中检测）、`check_conflicts.js`（反义矛盾检测）
+
+<p align="center">
+  <img src="assets/screenshots/promo/flow.png" alt="bazi-engine · 处理链路" width="420"/>
+  <br/>
+  <em>处理链路：输入 → 时间校正（夏令时 / 真太阳时）→ 命理计算 → 结构化输出 → 可选 AI 解读</em>
+</p>
 
 ## 目录结构
 

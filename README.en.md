@@ -38,6 +38,14 @@ Same birth data in, same chart out — every single time.
   <em>Engine depth example: month expanded into 30 day-by-day readings (daily stem-branch / Ten Gods / clashes & combos / void / favorable-unfavorable / Twelve Life Stages)</em>
 </p>
 
+### Why bazi-engine?
+
+<p align="center">
+  <img src="assets/screenshots/promo/compare.png" alt="bazi-engine vs traditional tools" width="420"/>
+  <br/>
+  <em>Open source · exact solar-term split · local zero-dependency · 1000 traceable rules with classical citations</em>
+</p>
+
 ## Ecosystem
 
 | | Project | Description |
@@ -57,6 +65,11 @@ Same birth data in, same chart out — every single time.
   <img src="assets/screenshots/benchu/year.png" alt="Benchu · yearly energy trends" width="460"/>
   <br/>
   <em>Compatibility scoring · Yearly energy trends (month-by-month reminders)</em>
+</p>
+<p align="center">
+  <img src="assets/screenshots/benchu/insight.png" alt="Benchu · six-dimension personality radar" width="700"/>
+  <br/>
+  <em>Deep report example: six-dimension personality radar (decision-making / resilience, etc.)</em>
 </p>
 
 ## Quick Start
@@ -91,6 +104,12 @@ Same birth data in, same chart out — every single time.
 - **CI gate**: `.github/workflows/ci.yml` (GitHub Actions) builds the UI + engine dist, validates the rule-database JSON, and runs all 13 regressions + a hit-distribution audit on every push / PR — nothing merges until green
 - **Cross-platform consistency**: `.gitattributes` enforces LF line endings on build artifacts & data files (Windows CRLF once made dist bytes differ, breaking MD5 alignment across platforms), keeping local / CI / consumer builds byte-identical
 - **Quality tooling**: `audit_hit_distribution.js` (hit-distribution audit), `check_dup_hits.js` (duplicate-hit detection), `check_conflicts.js` (contradictory-rule detection)
+
+<p align="center">
+  <img src="assets/screenshots/promo/flow.png" alt="bazi-engine · processing pipeline" width="420"/>
+  <br/>
+  <em>Pipeline: input → time correction (DST / true solar time) → computation → structured output → optional AI reading</em>
+</p>
 
 ## Directory Layout
 
