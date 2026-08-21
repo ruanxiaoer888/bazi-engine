@@ -78,6 +78,8 @@
 - **UI**：`ui/index.html` — 单文件离线（零外部依赖），内置 206 年节气数据 + 1000 条断语
 - **构建**：`tools/build_ui.py`（Python）内联节气与断语库生成 UI
 - **验证**：13 套回归脚本（`test_engine` / `test_lunar` / `test_ui` / `test_eval_state` / `test_p1_fixes` / `verify_sleep_rules` / `verify_ux_e2e` / `test_dst` / `test_liuri_v2` / `test_liuyue_v2` / `verify_edu_rules` / `test_xiyong` / `check_conflicts`），覆盖引擎库、农历、夏令时、输入容错、边界场景、报告质量与端到端用户视角，CI 自动执行
+- **CI 门禁**：`.github/workflows/ci.yml`（GitHub Actions）在每次 push / PR 时自动构建 UI 与引擎 dist、校验断语库 JSON、跑 13 套回归 + 命中分布审计，全绿方可合并——质量保障由机器人把关
+- **跨平台一致性**：`.gitattributes` 强制构建产物与数据文件使用 LF 换行（Windows CRLF 曾导致 dist 字节不一致、MD5 无法跨平台对齐），保证本地 / CI / C 端三方字节一致
 - **质检工具**：`audit_hit_distribution.js`（命中分布审查）、`check_dup_hits.js`（重复命中检测）、`check_conflicts.js`（反义矛盾检测）
 
 ## 目录结构
@@ -85,8 +87,11 @@
 ```
 skill/SKILL.md           Skill 定义（引导式交互 + 分析流程）
 ui/index.html            单文件离线界面
+engine/engine.dist.js    独立引擎库（UMD：浏览器 / Node 双端可用）
 tools/                   构建 / 测试 / 质检工具
-kb/          古籍原文 + 规则手册 + 断语库
+kb/                      古籍原文 + 规则手册 + 断语库
+.github/workflows/       CI 门禁（GitHub Actions：构建 + 回归 + 审计）
+.gitattributes           LF 换行规范（跨平台产物一致性）
 ```
 
 ## 免责声明
