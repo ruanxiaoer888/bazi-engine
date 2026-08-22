@@ -28,3 +28,9 @@ bazi-engine-*.zip
 
 # C 端截图原始素材（本地归档，不入库）
 assets/screenshots/benchu/_raw/
+
+# 课程物料（商业内容 + 含敏感对话记录，不入库不公开）
+docs/course-materials/
+docs/专栏/
+docs/course-diagrams/
+docs/course-tools/
