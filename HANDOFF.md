@@ -146,13 +146,14 @@ const dayName = BaziEngine.lunarDayName(15)                // '十五'
 ## 四、当前任务（进行中 / 待办）
 
 ### 当前状态（2026-08-24 快照）
-- **本仓库无阻塞**：132 项任务清零 / 真人验收通过 / 双平台已上架 / **断语库 1000 条**（路线图达成）/ **v1.3.6**（三方审计 6 批次全量修复）/ 13 套回归全绿 + **CI 门禁真实生效**；dist MD5 `1A4722FA7B0974EB4F5CFA53C71AA9C3`（LF 口径，README 优化未动引擎）；HEAD=`1b3e703`（ClawHub 发布脚本正则修复），git tag `v1.3.6`，工作树干净（favicon 已入库）
+- **本仓库无阻塞**：132 项任务清零 / 真人验收通过 / 双平台已上架 / **断语库 1000 条**（路线图达成）/ **v1.3.6**（三方审计 6 批次全量修复）/ 13 套回归全绿 + **CI 门禁真实生效**；dist MD5 `1A4722FA7B0974EB4F5CFA53C71AA9C3`（LF 口径，README 优化未动引擎）；HEAD=`5c3fe6c`（商业文档移出归档，2026-08-24），git tag `v1.3.6`，工作树干净
 - **在途事项（等待 Michael 操作，非本仓库代码工作）**：bazi-app C 端真实闭环剩 2 个外部阻塞（服务器四件套更新 + 虎皮椒真实支付接入——**微信渠道已开通，支付宝未开通**）；**速贴块已于 2026-08-19 交付**（本地归档 `E:\\michael\\Courses\\bazi-engine-internal\BAZI-APP-HANDOFF-v1.3.0.md` 顶部，2026-08-24 自 docs/ 移出），Michael 复制粘贴给 bazi-app 对话即可启动，执行到 ③④ 步时向对话提供 SSH 凭据 + 虎皮椒微信 appid/appsecret
 - **遗留待清理**：✅ 全部已清（死规则 2 轮清理 + 三方审计 6 批次，见下方各段）
 - **2026-08-24 文档整理 + 根目录清理**：
   - 合并原 `AI_CONTEXT.md` / `冷启动提示词_COLD_START.md` 至本文件（唯一真相源），两文件已删除
   - 根目录删除：发布 ZIP ×2（`bazi-engine-v1.3.0/1.3.6.zip`，`tools/build_release_zip.py` 可重建）+ `.tmp-cover/.tmp-logo/.tmp-qr/.tmp-v` 临时工作区（~30MB，产物已集成 assets/）+ 清空 `.dsh-uploads/`
   - 课程商业内容移出仓库：`docs/course-materials/` `docs/专栏/` `docs/course-diagrams/` `docs/course-tools/` + `assets/screenshots/benchu/_raw/` → `E:\michael\Courses\bazi-course-materials\`（gitignore 已排除不入库，物理隔离防误提/泄露）
+  - 商业文档移出仓库（git rm）：`docs/history/竞对分析报告.md`（竞品/商业模式/定价/增长策略）+ `发布物料.md`（市场卖点/渠道建议）+ `SkillHub-Submission-Kit.md`（提交材料包）+ `docs/BAZI-APP-HANDOFF-v1.3.0.md` / `BAZI-APP-REGRESSION-v1.3.0.md`（bazi-app C 端运维/支付交接）→ `E:\michael\Courses\bazi-engine-internal\`（本地归档保留）；⚠️ GitHub 历史 commit 仍残留，未做历史重写（filter-repo 需 force push、影响所有 clone，暂不执行）；HANDOFF 当前/未来引用已改本地归档路径，历史进度记录保留原样
   - 入库 `assets/bazi-logo-favicon.png`（太极 favicon 素材）
   - 根目录文档现状 = HANDOFF.md（内部真相源）+ README.md / README.en.md（对外门面）+ LICENSE/LICENSE-DATA
 
