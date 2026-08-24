@@ -2,7 +2,7 @@
 
 > 更新时间：2026-08-20 · 当前版本 **v1.3.6**（git tag `v1.3.0` 保留；实际已含：农历/阳历双模式切换、合婚上下双区块布局、晚子时/节气临界提示语、断语库 504→801→789→1000 并定版 v1.3.0、**三方深度审计 v1.3.1~v1.3.6 全量修复**——空亡真修活/天克地冲方向/专旺阈值/流月精确节气/合婚评分扩维/农历越界 P0/跨平台构建/CI 门禁/假断言/移动端表格/无障碍/视觉统一/打印样式、**C 端合规软化工具 compliance_soften.py 落地（坑 #41 解决）+ bazi-app 闭环收尾速贴块交付**、**README 推广优化（本初 C 端推广位 + 产品生态 + 7 张配图 + 开发者三路径快速开始 + 支持作者联系方式，commit `f0bd94a`~`1d045cc` 共 7 个 docs/chore 提交，HEAD=`1d045cc`）**）
 > 项目性质：**Michael 个人独立研发项目**，与任何企业无任何关联，推广/发布一律按个人项目口径。
-> 发布状态：✅ **双平台均已上架**（2026-08-17 确认）——① SkillHub（腾讯）**已发布**（「生态杀手」分类，申诉通过；平台归一化显示 V1.0.0，见坑 #21）；② ClawHub（OpenClaw 官方市场）**已发布**（Productivity 分类，SkillSpector 扫描通过转 Published，v1.3.6 GitHub 自动同步版——绑定 `ruanxiaoer888/bazi-engine`，git push 自动拉新）
+> 发布状态：✅ **双平台均已上架**（2026-08-17 确认）——① SkillHub（腾讯）**已发布**（「生态杀手」分类，申诉通过；平台归一化显示 V1.0.0，见坑 #21）；② ClawHub（OpenClaw 官方市场）**已发布**（Productivity 分类，SkillSpector 扫描通过转 Published，v1.3.6 GitHub 自动同步版——绑定 `ruanxiaoer888/bazi-engine`，git push 自动拉新）。⚠️ ClawHub 卡片两字段与仓库不一致（**License 显示 MIT-0、Current version 显示 v0.1.0**，见坑 #49）：仓库侧已加固（README 双许可市场分发说明 + SKILL.md description 许可声明，push 后页面描述自动更新），**License/版本字段需 Michael 在 ClawHub 后台手动改**（仓库代码无法改平台卡片字段）
 > **给 Codex / 新会话**：先读同目录 `AI_CONTEXT.md`（冷启动文档），再读本文件。
 
 ---
@@ -23,7 +23,7 @@
 ## 一、当前任务（进行中 / 待办）
 
 ### 当前状态（2026-08-20 快照）
-- **本仓库无阻塞**：132 项任务清零 / 真人验收通过 / 双平台已上架 / **断语库 1000 条**（路线图达成）/ **v1.3.6**（三方审计 6 批次全量修复）/ 13 套回归全绿 + **CI 门禁真实生效**；工作树干净，HEAD=`1d045cc` 与远程同步，dist MD5 `1A4722FA7B0974EB4F5CFA53C71AA9C3`（LF 口径，本次 README 优化未动引擎）
+- **本仓库无阻塞**：132 项任务清零 / 真人验收通过 / 双平台已上架 / **断语库 1000 条**（路线图达成）/ **v1.3.6**（三方审计 6 批次全量修复）/ 13 套回归全绿 + **CI 门禁真实生效**；dist MD5 `1A4722FA7B0974EB4F5CFA53C71AA9C3`（LF 口径，README 优化未动引擎）；HEAD=`1d045cc` 与远程同步，**工作树含 ClawHub 市场信息 + License 加固未提交改动**（见下方 2026-08-20 ClawHub 小节）
 - **在途事项（等待 Michael 操作，非本仓库代码工作）**：bazi-app C 端真实闭环剩 2 个外部阻塞（服务器四件套更新 + 虎皮椒真实支付接入——**微信渠道已开通，支付宝未开通**）；**速贴块已于 2026-08-19 交付**（`docs/BAZI-APP-HANDOFF-v1.3.0.md` 顶部），Michael 复制粘贴给 bazi-app 对话即可启动，执行到 ③④ 步时向对话提供 SSH 凭据 + 虎皮椒微信 appid/appsecret
 - **遗留待清理**：✅ 全部已清（死规则 2 轮清理 + 三方审计 6 批次，见下方各段）
 
@@ -36,6 +36,12 @@
 - **README 全面优化**（`6528751`）：中文版新增「为什么是引擎？」段（对标英文 Why engine，LLM 猜盘 vs 确定性排盘卖点）；新增 **CI 徽章**；回归脚本清单折叠 `<details>`；快速开始拆 **用户 / 开发者 / AI 三路径**并补 `engine.dist.js` 浏览器+Node 双示例；新增「支持作者」入口；**修正示例代码两处 bug**（见坑 #42/#43）
 - **支持作者联系方式**（`bdffa17`→`1d045cc`）：微信 `feizi6651` + 二维码 → 升级为**微信+公众号双二维码海报**（`assets/screenshots/contact-card.png`，@阮小贰 水印与 GitHub 账号一致，保留微信号文字防失效）
 - **虚构示例命盘 5 个**（README 截图用，引擎实测验证）：李明远（男 1990-05-15 10:00 广州，夏令时+真太阳时链路）/ 林小雅（女 1992-08-08 20:00 北京，合婚乙方）/ 陈子墨（男 1990-02-20 15:00 深圳，合婚甲方）/ 王建国（男 1988 腊月廿七 西安，农历+节气临界）/ 陈静怡（女 1995-03-06 12:00 成都，流年类）——**均为虚构人物**，可放心用于公开截图
+
+### ✅ 2026-08-20 ClawHub 市场信息 + License 双许可加固（**待 commit**，提交后补 commit 号）
+> 背景：ClawHub 已上架但 README 未体现；且 ClawHub 卡片 License 显示 MIT-0（与仓库双许可冲突，有法律风险）、版本显示 v0.1.0（仓库 v1.3.6）。本轮为 README + SKILL.md docs 级加固，**引擎 dist 未动**（MD5 不变）。
+- **README 三处补 ClawHub**（中英文同步）：徽章区新增 `ClawHub 已上架` 徽章（链接 clawhub.ai/ruanxiaoer888/skills/baizi-engine）；产品生态表格新增「Skill 市场分发」行（ClawHub 安全审计 ✅ + SkillHub 一键安装）；快速开始普通用户加 AI 助手市场入口、AI 助手小节加 `openclaw skills install @ruanxiaoer888/baizi-engine` 官方安装命令 + 自动同步说明
+- **License 加固**：README License 章节新增「市场分发」条款（市场页 License 与仓库不一致时**以仓库 LICENSE / LICENSE-DATA 为准**）；`skill/SKILL.md` frontmatter description 追加「本 Skill 采用双许可：代码 MIT / 数据 CC BY-NC-SA 4.0」——**ClawHub 页面描述自动同步自 SKILL.md frontmatter description（已核实逐字一致），push 后页面描述即更新**
+- **待 Michael 操作**：ClawHub 后台把 License 字段 MIT-0 → MIT、Current version v0.1.0 → v1.3.6（详见坑 #49；仓库代码无法代替）
 
 ### ✅ 2026-08-19 bazi-app 闭环收尾交付（commit `df9cd7b`/`0605386`/`a9d1261`/`41d7688`/`41ba0eb`）
 - **速贴块交付**：`docs/BAZI-APP-HANDOFF-v1.3.0.md` 顶部新增「速贴版」5 步指令（① MD5 核对基线 `3B90D659…` ② 回归确认含专旺收紧说明 ③ 服务器四件套 + `web/paid/` 目录 + pm2 ④ 微信支付接入——填微信 appid/appsecret、`mock:false`、¥0.01 真实验证 ⑤ 锁定引擎依赖并 commit），可直接复制粘贴给 bazi-app 对话
@@ -302,6 +308,7 @@
 46. **PowerShell `Add-Content` 中文注释落盘乱码**：控制台显示 `鍥剧墖` 类乱码，但用 read 工具按 UTF-8 读回是**正常中文**——是控制台代码页（GBK）与文件编码（UTF-8）不一致的显示问题，**以 read 工具内容为准**，勿据此改文件（.gitignore 追加中文注释曾虚惊一场）
 47. **Windows 沙箱里 `System.Drawing` 读图片尺寸失败**（受限环境），改用 Node 读 PNG 头部字节：`buf.readUInt32BE(16)`（宽）/ `readUInt32BE(20)`（高），校验魔数 `0x89 0x50 0x4E 0x47`——临时脚本 `tools/tmp_*.js` 用完即删（坑 #3 延续）
 48. **DSH Web GUI 用户上传图片的下载途径**：`Invoke-WebRequest http://127.0.0.1:3080/describe-image/raw/sha256:<附件id>` → `[IO.File]::WriteAllBytes(本地路径, $resp.Content)` 可把会话里用户贴的图片存到工作区（本仓库 `assets/screenshots/contact-card.png` 即由此取得）；`$resp.Content` 是 byte[] 可直接写，勿转 string
+49. **ClawHub 市场卡片字段 ≠ 仓库文件**：ClawHub 页面「License」「Current version」是**后台手动维护的卡片字段**（实测 License 显示 MIT-0、版本显示 v0.1.0；仓库实为 MIT + CC BY-NC-SA 4.0 双许可 / v1.3.6）——改仓库 LICENSE 或 SKILL.md frontmatter 的 `license:` 字段**不会**自动改平台卡片（SKILL.md frontmatter 是 `license: MIT`，页面仍显示 MIT-0，证明非同步来源）；但 **SKILL.md frontmatter 的 `description:` 会同步为 ClawHub 页面描述**（已核实逐字一致）。处理 = 仓库侧改 README / SKILL.md description 声明双许可（push 生效，ClawHub 页面描述自动更新）+ **Michael 登录 clawhub.ai 后台手动改 License（MIT-0→MIT）与版本（v0.1.0→v1.3.6）字段**（仓库代码无法代替）。MIT-0 = MIT 免署名版，对数据 NC 条款是直接冲突，属法律风险点，勿忽略
 
 ---
 
@@ -326,6 +333,6 @@
   - `assets/screenshots/benchu/`（**C 端「本初」截图，已入库 4 张**：paipan 排盘 / hehun 合婚 / year 年度 / insight 六维人格图谱；`README.md` 目录说明；`_raw/` 28 张原始素材 **gitignore 排除不入库**）
   - `assets/screenshots/promo/`（宣传物料 2 张：compare 引擎对比图 / flow 处理链路流程图，压缩自 _raw/图2/图3）
   - `assets/screenshots/contact-card.png`（作者微信+公众号双二维码海报，README 支持作者章节用）
-- 发布平台：**SkillHub**（腾讯，已上架，「生态杀手」分类）+ **ClawHub**（已上架，clawhub.ai/skills，npx clawhub@latest install bazi-engine）+ **GitHub**（开源仓库）
+- 发布平台：**SkillHub**（腾讯，已上架，「生态杀手」分类）+ **ClawHub**（已上架，[clawhub.ai/ruanxiaoer888/skills/baizi-engine](https://clawhub.ai/ruanxiaoer888/skills/baizi-engine)，官方安装 `openclaw skills install @ruanxiaoer888/baizi-engine`；旧命令 `npx clawhub@latest install bazi-engine` 仍可用）+ **GitHub**（开源仓库）
 - **C 端「本初」**：https://benchu.xiaoerpro.com/（README 在线体验入口；微信 `feizi6651` 在支持作者章节）
-- **README 推广资产速查**：产品生态章节（本初推广位）/ 徽章（Stars/CI/License/SkillHub）/ 「为什么是引擎？」（中文核心卖点）/ 快速开始三路径（用户/开发者/AI，含 engine.dist.js 双端示例）/ 支持作者（微信+公众号海报）——2026-08-20 全部落地，改动只动 docs 与 assets，引擎 dist MD5 不变
+- **README 推广资产速查**：产品生态章节（本初推广位 + Skill 市场分发行）/ 徽章（Stars/CI/License/SkillHub/ClawHub）/ 「为什么是引擎？」（中文核心卖点）/ 快速开始三路径（用户/开发者/AI，普通用户含市场安装入口、AI 助手含 ClawHub 官方安装命令）/ 支持作者（微信+公众号海报）——2026-08-20 全部落地，改动只动 docs 与 assets，引擎 dist MD5 不变

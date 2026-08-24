@@ -6,6 +6,7 @@ A deterministic, zero-dependency BaZi (Chinese Four Pillars) charting and analys
 [![CI](https://img.shields.io/github/actions/workflow/status/ruanxiaoer888/bazi-engine/ci.yml?style=flat-square&label=CI)](https://github.com/ruanxiaoer888/bazi-engine/actions)
 [![License](https://img.shields.io/badge/License-MIT%2FCC--BY--NC--SA%204.0-blue?style=flat-square)](LICENSE)
 [![SkillHub](https://img.shields.io/badge/SkillHub-Published-purple?style=flat-square)](https://skillhub.com/)
+[![ClawHub](https://img.shields.io/badge/ClawHub-Published-green?style=flat-square)](https://clawhub.ai/ruanxiaoer888/skills/baizi-engine)
 
 > Single-file offline runtime — open in a browser and it works. No API keys, no external services, no build step.  
 > **GitHub**: https://github.com/ruanxiaoer888/bazi-engine  
@@ -51,6 +52,7 @@ Same birth data in, same chart out — every single time.
 | | Project | Description |
 |---|---|---|
 | 🧩 | **bazi-engine** (this repo) | Open-source engine foundation: Skill + single-file UI + standalone JS library (MIT), for developers & practitioners |
+| 📦 | **Skill marketplaces** | Live on [ClawHub](https://clawhub.ai/ruanxiaoer888/skills/baizi-engine) (OpenClaw's official marketplace, security audit ✅ passed) and [SkillHub](https://skillhub.com/) (Tencent) — one-click install in AI assistants |
 | 🚀 | **[Benchu](https://benchu.xiaoerpro.com/)** | The author's own consumer web product: AI BaZi reports (chart / compatibility / yearly), paid unlock, WeChat Pay |
 
 **Open source → commercial loop**: the engine is open-sourced on GitHub for community use and redevelopment; **Benchu** is the author's own commercial landing built on the same deterministic charting core — the consumer product consumes only **MIT code-layer** APIs (`paipan` / `applyDst`), and its paid readings are its own implementation, not NC-licensed data. Open source gains community polish, the product validates commercial value — each feeds the other.
@@ -76,6 +78,7 @@ Same birth data in, same chart out — every single time.
 
 ### 👤 End users — try it now
 
+- **AI assistants**: one-click install the skill from [ClawHub](https://clawhub.ai/ruanxiaoer888/skills/baizi-engine) (OpenClaw's official marketplace) or SkillHub (Tencent), then just ask in natural language (see "AI assistants" below)
 - **Online**: visit [Benchu · benchu.xiaoerpro.com](https://benchu.xiaoerpro.com/) (paid reports, WeChat Pay)
 - **Offline**: open `ui/index.html` in a browser (single file, zero deps, works from `file://`)
 
@@ -106,7 +109,19 @@ Key APIs: `paipan` (charting) / `matchRules` (rule matching) / `applyDst` (DST c
 
 ### 🤖 AI assistants — use the Skill
 
-Import the skill into a Skill-capable assistant (WorkBuddy / DeepSeek Harness / Codex, etc.) and ask in natural language:
+Import the skill into a Skill-capable assistant (WorkBuddy / DeepSeek Harness / Codex / OpenClaw, etc.) and ask in natural language.
+
+The skill is live on two Skill marketplaces, each with one-click install:
+
+- **ClawHub** (OpenClaw's official marketplace): [clawhub.ai/ruanxiaoer888/skills/baizi-engine](https://clawhub.ai/ruanxiaoer888/skills/baizi-engine) · security audit ✅ passed · auto-synced from this GitHub repo (updates on push)
+
+  ```bash
+  openclaw skills install @ruanxiaoer888/baizi-engine
+  ```
+
+- **SkillHub** (Tencent): search `bazi-engine` in the marketplace and install
+
+Then:
 
 1. Provide: name, birth date (solar or lunar), birth time, gender, birthplace
 2. Get back: Four Pillars → element analysis → Da Yun & current year → integrated reading
@@ -189,6 +204,8 @@ This repository uses a **dual-license** structure:
 - **Data** (`kb/` verdict library & classical-text compilations): [CC BY-NC-SA 4.0](LICENSE-DATA) — Attribution · NonCommercial · ShareAlike (classical texts are public domain and freely quotable)
 
 > **Commercial boundary**: **Benchu** is the author's own commercial product (the author retains full rights to their own code and data); third-party use of this repository still follows the dual license above (MIT for code / CC BY-NC-SA 4.0 for data). For commercial licensing, contact the author.
+>
+> **Marketplace distribution**: when this Skill is distributed via [ClawHub](https://clawhub.ai/ruanxiaoer888/skills/baizi-engine) / SkillHub, the same dual license applies — if a marketplace page shows a License field that differs from this repository, this repository's [LICENSE](LICENSE) / [LICENSE-DATA](LICENSE-DATA) prevails.
 >
 > See [LICENSE-DATA](LICENSE-DATA) for the exact boundaries, source attribution, and commercial licensing.
 

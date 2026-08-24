@@ -6,6 +6,7 @@
 [![CI](https://img.shields.io/github/actions/workflow/status/ruanxiaoer888/bazi-engine/ci.yml?style=flat-square&label=CI)](https://github.com/ruanxiaoer888/bazi-engine/actions)
 [![License](https://img.shields.io/badge/License-MIT%2FCC--BY--NC--SA%204.0-blue?style=flat-square)](LICENSE)
 [![SkillHub](https://img.shields.io/badge/SkillHub-%E5%B7%B2%E4%B8%8A%E6%9E%B6-purple?style=flat-square)](https://skillhub.com/)
+[![ClawHub](https://img.shields.io/badge/ClawHub-%E5%B7%B2%E4%B8%8A%E6%9E%B6-green?style=flat-square)](https://clawhub.ai/ruanxiaoer888/skills/baizi-engine)
 
 > **English**: [README.en.md](README.en.md)  
 > **GitHub**: https://github.com/ruanxiaoer888/bazi-engine  
@@ -53,6 +54,7 @@
 | | 项目 | 说明 |
 |---|---|---|
 | 🧩 | **bazi-engine**（本仓库） | 开源排盘引擎底座：Skill + 单文件 UI + 独立 JS 库（MIT），面向开发者与命理师 |
+| 📦 | **Skill 市场分发** | 已上架 [ClawHub](https://clawhub.ai/ruanxiaoer888/skills/baizi-engine)（OpenClaw 官方市场，安全审计 ✅ 通过）与 [SkillHub](https://skillhub.com/)（腾讯），AI 助手一键安装即用 |
 | 🚀 | **[本初](https://benchu.xiaoerpro.com/)** | 作者自有的 C 端在线产品：AI 八字报告（排盘 / 合婚 / 流年），付费解锁，微信支付 |
 
 **开源 → 商业闭环**：引擎开源于 GitHub 供社区使用与二次开发；C 端产品「本初」是作者自有的商业落地，与引擎共用同一确定性排盘内核——C 端仅消费 `paipan` / `applyDst` 等 **MIT 代码层** API，付费解读内容为 C 端自有实现，不涉及 NC 数据。开源获得社区打磨，产品验证商业价值，互相成就。
@@ -78,6 +80,7 @@
 
 ### 👤 普通用户 —— 直接体验
 
+- **AI 助手**：从 [ClawHub](https://clawhub.ai/ruanxiaoer888/skills/baizi-engine)（OpenClaw 官方市场）或 SkillHub（腾讯）一键安装本 Skill，直接自然语言对话排盘（见下方「AI 助手」）
 - **在线**：访问 [本初 · benchu.xiaoerpro.com](https://benchu.xiaoerpro.com/)（付费报告，微信支付）
 - **离线**：浏览器打开 `ui/index.html`（单文件零依赖，`file://` 即可运行）
 
@@ -108,7 +111,19 @@ console.log(c.yg, c.mg, c.dg, c.hg); // 庚午 辛巳 庚辰 庚辰
 
 ### 🤖 AI 助手 —— 调用 Skill
 
-通过支持 Skill 的 AI 助手（WorkBuddy / DeepSeek Harness / Codex 等）调用本 Skill：
+通过支持 Skill 的 AI 助手（WorkBuddy / DeepSeek Harness / Codex / OpenClaw 等）调用本 Skill。
+
+本 Skill 已上架两大 Skill 市场，均可一键安装：
+
+- **ClawHub**（OpenClaw 官方市场）：[clawhub.ai/ruanxiaoer888/skills/baizi-engine](https://clawhub.ai/ruanxiaoer888/skills/baizi-engine) · 安全审计 ✅ 通过 · 与 GitHub 仓库自动同步（push 即更新）
+
+  ```bash
+  openclaw skills install @ruanxiaoer888/baizi-engine
+  ```
+
+- **SkillHub**（腾讯）：平台内搜索 `bazi-engine` 一键安装
+
+安装后：
 
 1. 告诉我你的出生信息：姓名、生日（阳历或农历均可）、出生时间、性别、出生地
 2. 自动排盘并输出：四柱命盘 → 五行分析 → 大运流年 → 综合解读
@@ -191,6 +206,8 @@ kb/                      古籍原文 + 规则手册 + 断语库
 - **数据**（`kb/` 断语库与古籍汇编等）：[CC BY-NC-SA 4.0](LICENSE-DATA) — 署名 · 非商业 · 相同方式共享（古籍原文属公有领域，可自由引用）
 
 > **商业边界**：「本初」为作者自有商业产品（作者对自有代码与数据享有完整权利）；第三方使用本仓库仍按上方双许可执行（代码 MIT / 数据 CC BY-NC-SA 4.0），商业授权请联系作者。
+>
+> **市场分发**：本 Skill 在 [ClawHub](https://clawhub.ai/ruanxiaoer888/skills/baizi-engine) / SkillHub 等市场分发时同样适用上述双许可——若市场页面的 License 字段与本仓库不一致，以本仓库 [LICENSE](LICENSE) / [LICENSE-DATA](LICENSE-DATA) 为准。
 >
 > 双许可边界、来源归属与商业授权说明详见 [LICENSE-DATA](LICENSE-DATA)。
 
