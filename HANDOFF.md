@@ -320,6 +320,7 @@
 - GitHub 仓库：https://github.com/ruanxiaoer888/bazi-engine
 - 构建命令：`python tools/build_ui.py`（输出 `ui/index.html` + `engine/engine.dist.js`）
 - **发布包命令：`python tools/build_release_zip.py`**（输出 `bazi-engine-v1.3.6.zip`，排除 LICENSE/LICENSE-DATA/README.en.md、tools/archive，文件在 ZIP 根；可传版本号参数）
+- **ClawHub 发布脚本：`powershell -File tools/publish_clawhub.ps1 -Version <版本>`**（2026-08-20 新增，封装坑 #49 实战流程：检查登录→准备发布目录→dry-run 预览→publish（--json 判 ok:true）→inspect 验证；`-DryRun` 只预览、`-Build` 先重建 UI；依赖 clawhub CLI 已登录；发布目录默认 %TEMP%\bazi-clawhub-publish）
 - **发布验证（平台无关，替代旧打包目录同步）**：`python tools/build_release_zip.py` 产出 ZIP 后，md5sum 校验关键产物（`ui/index.html` / `engine/engine.dist.js` / `skill/SKILL.md` / `kb/04-rules-db/rules.json`）
 - 回归命令（13 套，全部必须 PASS）：`node tools/test_engine.js` + `node tools/test_lunar.js` + `node tools/test_ui.js` + `node tools/test_eval_state.js` + `node tools/test_p1_fixes.js` + `node tools/verify_sleep_rules.js` + `node tools/verify_ux_e2e.js` + `node tools/test_dst.js` + `node tools/test_liuri_v2.js` + `node tools/test_liuyue_v2.js` + `node tools/verify_edu_rules.js` + `node tools/test_xiyong.js` + `node tools/check_conflicts.js`；断语库维护另用 `audit_hit_distribution.js`（命中分布 + 0 命中检测，`--sample=2000` 大样本判死规则）；CI 已接入 `.github/workflows/ci.yml`（push 自动跑 build + 13 套 + audit）
 - **C 端合规软化工具**：`python tools/compliance_soften.py <dist路径>`（就地替换：运势→能量/大运→十年节奏/姻缘→情感/八字→出生信息/烂桃花→不良人际/流年文案→年度，保护 `"流年":` 条件键；`--check` 检查敏感词残留）——bazi-app 同步 dist 后跑一次即可，免手改构建产物（坑 #41）
