@@ -5,6 +5,7 @@
 > 发布状态：✅ **双平台均已上架**（2026-08-17 确认）——① SkillHub（腾讯）**已发布**（「生态杀手」分类，申诉通过；平台归一化显示 V1.0.0，见坑 #21）；② ClawHub（OpenClaw 官方市场）**已发布**（Productivity 分类，SkillSpector 扫描通过转 Published；**2026-08-20 用 `clawhub skill publish` CLI 重新发布 v1.3.6 成功**，安全检查通过转公开，latest 已更新，见坑 #49）。⚠️ ClawHub 卡片字段坑已闭环：**版本 v0.1.0 → v1.3.6 已修复**；**License 显示 MIT-0 为平台强制**（ClawHub 所有 skill 一律 MIT-0，官方文档原文，无 per-skill 选项，改不了）——仓库侧已加固（README 双许可市场分发说明 + SKILL.md description 双许可声明，**页面描述已同步含双许可声明**）。**审计状态 = Review**（非 Pass，不阻塞安装）：原因 = tools/*.js 测试脚本 13 处动态代码执行 Critical（vm 沙箱回归脚本，静态扫描误报）+ kb/05-reference 含面相/手相/健康超范围内容（未实现参考）——**2026-08-20 Michael 决定方向 A 接受现状**，详见坑 #49
 > 📌 **唯一真相源**：2026-08-24 起，本文件已整合原 `AI_CONTEXT.md`（会话级冷启动补充）与 `冷启动提示词_COLD_START.md`（平台速贴提示词）的全部内容，两份文件已删除。**不要再创建/寻找其他上下文文档**；对外文档仅 `README.md` / `README.en.md`。
 > 🚀 **给 Codex / 任何新 AI / 新会话**：直接读本文件即可（唯一真相源）；到新平台冷启动时复制 §〇 的【速贴提示词】。写本文件前必须核实真实状态（任务台账 + 文件版本 + git log），不能凭记忆。
+> 📍 **工作区边界**：本工作区只做 bazi-engine（B 端引擎）的事；营销/跨项目/杂务去 `../工作区说明.md` 对应的工作区。
 > ⚠️ **2026-08-24 历史重写**：为从 GitHub 历史彻底清除商业文档（竞对分析/发布物料/SkillHub-Kit/BAZI-APP 交接×2），当日用 git plumbing 重写了全部 107 个 commit 并 force push。**文中所有旧 commit hash（如 `bd7f5ab`、`f0bd94a`、`1d045cc` 等）已失效，仅作当时顺序的追溯参考，在 git log 中查不到**；当前 HEAD=`6497e7d`，git tag `v1.3.0`=`5d31a9b`、`v1.3.6`=`9850102`（均已重定向到重写后的 commit）。旧→新 hash 对应可按 commit message / 日期在 `git log` 中查找。
 
 ---
