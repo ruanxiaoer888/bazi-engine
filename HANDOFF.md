@@ -23,7 +23,7 @@
 ## 一、当前任务（进行中 / 待办）
 
 ### 当前状态（2026-08-20 快照）
-- **本仓库无阻塞**：132 项任务清零 / 真人验收通过 / 双平台已上架 / **断语库 1000 条**（路线图达成）/ **v1.3.6**（三方审计 6 批次全量修复）/ 13 套回归全绿 + **CI 门禁真实生效**；dist MD5 `1A4722FA7B0974EB4F5CFA53C71AA9C3`（LF 口径，README 优化未动引擎）；HEAD=`1d045cc` 与远程同步，**工作树含 ClawHub 市场信息 + License 加固未提交改动**（见下方 2026-08-20 ClawHub 小节）
+- **本仓库无阻塞**：132 项任务清零 / 真人验收通过 / 双平台已上架 / **断语库 1000 条**（路线图达成）/ **v1.3.6**（三方审计 6 批次全量修复）/ 13 套回归全绿 + **CI 门禁真实生效**；dist MD5 `1A4722FA7B0974EB4F5CFA53C71AA9C3`（LF 口径，README 优化未动引擎）；HEAD 已推进至 `031d1d0` 并 push（ClawHub 市场信息 + License 加固，见下方 2026-08-20 ClawHub 小节）
 - **在途事项（等待 Michael 操作，非本仓库代码工作）**：bazi-app C 端真实闭环剩 2 个外部阻塞（服务器四件套更新 + 虎皮椒真实支付接入——**微信渠道已开通，支付宝未开通**）；**速贴块已于 2026-08-19 交付**（`docs/BAZI-APP-HANDOFF-v1.3.0.md` 顶部），Michael 复制粘贴给 bazi-app 对话即可启动，执行到 ③④ 步时向对话提供 SSH 凭据 + 虎皮椒微信 appid/appsecret
 - **遗留待清理**：✅ 全部已清（死规则 2 轮清理 + 三方审计 6 批次，见下方各段）
 
@@ -37,7 +37,7 @@
 - **支持作者联系方式**（`bdffa17`→`1d045cc`）：微信 `feizi6651` + 二维码 → 升级为**微信+公众号双二维码海报**（`assets/screenshots/contact-card.png`，@阮小贰 水印与 GitHub 账号一致，保留微信号文字防失效）
 - **虚构示例命盘 5 个**（README 截图用，引擎实测验证）：李明远（男 1990-05-15 10:00 广州，夏令时+真太阳时链路）/ 林小雅（女 1992-08-08 20:00 北京，合婚乙方）/ 陈子墨（男 1990-02-20 15:00 深圳，合婚甲方）/ 王建国（男 1988 腊月廿七 西安，农历+节气临界）/ 陈静怡（女 1995-03-06 12:00 成都，流年类）——**均为虚构人物**，可放心用于公开截图
 
-### ✅ 2026-08-20 ClawHub 市场信息 + License 双许可加固（**待 commit**，提交后补 commit 号）
+### ✅ 2026-08-20 ClawHub 市场信息 + License 双许可加固（commit `031d1d0`，已 push）
 > 背景：ClawHub 已上架但 README 未体现；且 ClawHub 卡片 License 显示 MIT-0（与仓库双许可冲突，有法律风险）、版本显示 v0.1.0（仓库 v1.3.6）。本轮为 README + SKILL.md docs 级加固，**引擎 dist 未动**（MD5 不变）。
 - **README 三处补 ClawHub**（中英文同步）：徽章区新增 `ClawHub 已上架` 徽章（链接 clawhub.ai/ruanxiaoer888/skills/baizi-engine）；产品生态表格新增「Skill 市场分发」行（ClawHub 安全审计 ✅ + SkillHub 一键安装）；快速开始普通用户加 AI 助手市场入口、AI 助手小节加 `openclaw skills install @ruanxiaoer888/baizi-engine` 官方安装命令 + 自动同步说明
 - **License 加固**：README License 章节新增「市场分发」条款（市场页 License 与仓库不一致时**以仓库 LICENSE / LICENSE-DATA 为准**）；`skill/SKILL.md` frontmatter description 追加「本 Skill 采用双许可：代码 MIT / 数据 CC BY-NC-SA 4.0」——**ClawHub 页面描述自动同步自 SKILL.md frontmatter description（已核实逐字一致），push 后页面描述即更新**
