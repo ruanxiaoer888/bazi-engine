@@ -14,9 +14,10 @@
 - `../promo/compare.png`（bazi-engine vs 传统工具对比宣传图，压缩自 _raw/图2.png）
 - `../promo/flow.png`（处理链路技术流程图，压缩自 _raw/图3.png）
 
-## 原始素材归档（`_raw/`，未入库）
+## 原始素材归档（已移出仓库）
 
-`_raw/` 存放截图过程的全部原始素材（28 张），**仅本地保留，未纳入 git**，供后续挑选替换：
+截图过程的全部原始素材（28 张）已于 **2026-08-24 移出仓库**，归档至本地独立目录：
+`E:\michael\Courses\bazi-course-materials\benchu-screenshots-raw\`（与课程材料一起单独管理，不入库），供后续挑选替换：
 
 - `1-22.png`：C 端产品页截图（输入表单 / 排盘结果 / 深度报告 / 五行补救 / 神煞 / 合婚 / 年度等）
 - `图1-图6.png`：宣传物料与平台页面（GitHub 主页 / 功能对比 / 技术流程 / ClawHub / Release / 信息采集页）
