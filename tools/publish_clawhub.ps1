@@ -10,6 +10,8 @@
     2) clawhub skill publish（总是先 dry-run 预览）
     3) inspect 验证 latest 版本
   依赖：clawhub CLI（npm i -g clawhub）+ 已登录（clawhub login，登录态存 %APPDATA%\clawhub）
+  发布提交成功后自动更新 HANDOFF.md 的「当前版本」与「更新时间」（只改版本标记行，
+  历史版本引用不受影响；改完请记得 git commit HANDOFF.md）
 
   坑 #49 要点：
     - 非 TTY 下 CLI 退出码 1 可能是进度动画假象，以 --json 输出的 ok:true 为准
@@ -135,6 +137,30 @@ if ($pubJson -and $pubJson.ok -eq $true) {
     # 坑 #49：非 TTY 下 CLI 退出码 1 可能是进度动画假象；--json 未解析出 ok:true 才需要人工确认
     Write-Host "[警告] 未能从输出解析 ok:true，原始输出如下（坑 #49：非 TTY 下退出码 1 可能是进度动画假象，请人工确认或稍后重跑验证）：" -ForegroundColor Yellow
     $pub | Out-String | Write-Host
+}
+
+# ---- 4.5 发布提交成功后自动更新 HANDOFF.md 版本号 ----
+if ($pubJson -and $pubJson.ok -eq $true) {
+    Write-Host "==> 自动更新 HANDOFF.md 版本号..." -ForegroundColor Cyan
+    $handoff = Join-Path $ROOT 'HANDOFF.md'
+    if (Test-Path $handoff) {
+        $bytes = [IO.File]::ReadAllBytes($handoff)
+        $hasBom = ($bytes.Length -ge 3 -and $bytes[0] -eq 0xEF -and $bytes[1] -eq 0xBB -and $bytes[2] -eq 0xBF)
+        $content = [IO.File]::ReadAllText($handoff, [Text.Encoding]::UTF8)
+        $today = Get-Date -Format 'yyyy-MM-dd'
+        $newContent = $content -replace '当前版本 **vd+.d+.d+**', "当前版本 **v$Version**"
+        $newContent = $newContent -replace '更新时间：d{4}-d{2}-d{2}', "更新时间：$today"
+        if ($newContent -ne $content) {
+            $enc = New-Object System.Text.UTF8Encoding($hasBom)
+            [IO.File]::WriteAllText($handoff, $newContent, $enc)
+            Write-Host "    [OK] HANDOFF.md 已更新：当前版本 v$Version（更新时间 $today）" -ForegroundColor Green
+            Write-Host "    注意：请记得 git commit 本次 HANDOFF.md 版本号更新" -ForegroundColor Yellow
+        } else {
+            Write-Host "    [提示] HANDOFF.md 未匹配到版本号/更新时间模式，未改动（请人工检查）" -ForegroundColor Yellow
+        }
+    } else {
+        Write-Host "    [提示] 未找到 HANDOFF.md，跳过文档更新" -ForegroundColor Yellow
+    }
 }
 
 # ---- 5. 验证最新版本（安全检查约 2-3 分钟后转公开）----
