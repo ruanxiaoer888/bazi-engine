@@ -1,31 +1,157 @@
 # bazi-engine 八字命理 Skill · 项目交接文档（HANDOFF）
 
-> 更新时间：2026-08-20 · 当前版本 **v1.3.6**（git tag `v1.3.0` 保留；实际已含：农历/阳历双模式切换、合婚上下双区块布局、晚子时/节气临界提示语、断语库 504→801→789→1000 并定版 v1.3.0、**三方深度审计 v1.3.1~v1.3.6 全量修复**——空亡真修活/天克地冲方向/专旺阈值/流月精确节气/合婚评分扩维/农历越界 P0/跨平台构建/CI 门禁/假断言/移动端表格/无障碍/视觉统一/打印样式、**C 端合规软化工具 compliance_soften.py 落地（坑 #41 解决）+ bazi-app 闭环收尾速贴块交付**、**README 推广优化（本初 C 端推广位 + 产品生态 + 7 张配图 + 开发者三路径快速开始 + 支持作者联系方式，commit `f0bd94a`~`1d045cc` 共 7 个 docs/chore 提交，HEAD=`1d045cc`）**）
+> 更新时间：2026-08-24 · 当前版本 **v1.3.6**（git tag `v1.3.0` 保留；实际已含：农历/阳历双模式切换、合婚上下双区块布局、晚子时/节气临界提示语、断语库 504→801→789→1000 并定版 v1.3.0、**三方深度审计 v1.3.1~v1.3.6 全量修复**——空亡真修活/天克地冲方向/专旺阈值/流月精确节气/合婚评分扩维/农历越界 P0/跨平台构建/CI 门禁/假断言/移动端表格/无障碍/视觉统一/打印样式、**C 端合规软化工具 compliance_soften.py 落地（坑 #41 解决）+ bazi-app 闭环收尾速贴块交付**、**README 推广优化（本初 C 端推广位 + 产品生态 + 7 张配图 + 开发者三路径快速开始 + 支持作者联系方式，commit `f0bd94a`~`1d045cc`）**、**ClawHub 双许可加固 + 审计 Review 决策（坑 #49）**）
 > 项目性质：**Michael 个人独立研发项目**，与任何企业无任何关联，推广/发布一律按个人项目口径。
 > 发布状态：✅ **双平台均已上架**（2026-08-17 确认）——① SkillHub（腾讯）**已发布**（「生态杀手」分类，申诉通过；平台归一化显示 V1.0.0，见坑 #21）；② ClawHub（OpenClaw 官方市场）**已发布**（Productivity 分类，SkillSpector 扫描通过转 Published；**2026-08-20 用 `clawhub skill publish` CLI 重新发布 v1.3.6 成功**，安全检查通过转公开，latest 已更新，见坑 #49）。⚠️ ClawHub 卡片字段坑已闭环：**版本 v0.1.0 → v1.3.6 已修复**；**License 显示 MIT-0 为平台强制**（ClawHub 所有 skill 一律 MIT-0，官方文档原文，无 per-skill 选项，改不了）——仓库侧已加固（README 双许可市场分发说明 + SKILL.md description 双许可声明，**页面描述已同步含双许可声明**）。**审计状态 = Review**（非 Pass，不阻塞安装）：原因 = tools/*.js 测试脚本 13 处动态代码执行 Critical（vm 沙箱回归脚本，静态扫描误报）+ kb/05-reference 含面相/手相/健康超范围内容（未实现参考）——**2026-08-20 Michael 决定方向 A 接受现状**，详见坑 #49
-> **给 Codex / 新会话**：先读同目录 `AI_CONTEXT.md`（冷启动文档），再读本文件。
+> 📌 **唯一真相源**：2026-08-24 起，本文件已整合原 `AI_CONTEXT.md`（会话级冷启动补充）与 `冷启动提示词_COLD_START.md`（平台速贴提示词）的全部内容，两份文件已删除。**不要再创建/寻找其他上下文文档**；对外文档仅 `README.md` / `README.en.md`。
+> 🚀 **给 Codex / 任何新 AI / 新会话**：直接读本文件即可（唯一真相源）；到新平台冷启动时复制 §〇 的【速贴提示词】。写本文件前必须核实真实状态（任务台账 + 文件版本 + git log），不能凭记忆。
 
 ---
 
-## 〇、双轨战略与引擎抽层（2026-08-15，重要架构决策）
+## 〇、冷启动速贴提示词（原 `冷启动提示词_COLD_START.md`，2026-08-24 并入）
+
+> 用途：切换到**任何新 AI 平台 / 新会话**（WorkBuddy、DeepSeek Harness、Codex、百度搭子等）时，把下面【提示词】整段复制粘贴即可冷启动。
+> 平台无关：不含任何平台专属路径/目录；工作区路径以你当前环境为准（如 `E:\michael\DSHProjects\bazi-engine` 或 `E:\michael\workBuddy\bazi-project`）；bazi-app 一律用相对路径 `../bazi-app` 表示，任何布局下都成立。
+> 新会话 AI 会自动读本文件（HANDOFF.md 真相源）核实状态，无需用户再补充背景。
+
+### 【提示词】（从这里开始复制）
+
+我是 Michael，独立开发者（个人身份，不挂任何公司品牌）。现在接手我的 B 端八字排盘引擎项目 **bazi-engine**，工作目录即**你当前的工作区**（不同平台路径不同，以实际为准）。
+
+**接手第一步（必须做）**：
+1. 先读工作区根目录 `HANDOFF.md`——**唯一真相源**，包含项目概览、技术架构、当前任务、已完成内容、卡住问题、下一步计划、踩坑 49 条、常用命令。所有决策以它为准；**写它之前必须核实真实状态**（git log + 文件版本），不能凭记忆。
+2. 核实 git 真实状态：`git status --short && git log --oneline -5`（远程显示 `[gone]` 是本地引用缓存误报，遇到推送问题先 `git fetch origin`）。
+3. 对照 HANDOFF §七「下一步计划」确认当前要推进的任务。
+
+**项目背景（一句话）**：
+- bazi-engine = 确定性四柱八字排盘引擎（开源 MIT），输入出生信息 → 四柱/大运/流年/流日/六亲/合婚/五行补救，全程标注古籍出处
+- 双轨战略：B 端引擎（本仓库，开源引流）+ C 端产品 `../bazi-app`（「本初」，付费变现，独立仓库/独立对话推进）
+- 技术栈：`ui/index.html` 单文件离线 UI（零依赖）+ `engine/engine.dist.js` UMD 引擎库（构建产物勿手改）+ `tools/build_ui.py` Python 构建 + `kb/` 知识库（31 文件，1000 条断语）
+
+**红线约束（不可违反）**：
+- `engine/engine.dist.js` 是构建产物，**勿手改**；新增引擎函数写进 `tools/build_ui.py` 的 `// [ENGINE:BEGIN/END]` 标记区内
+- **SkillHub 发布版 SKILL.md 不写具体典籍名**（穷通宝鉴/子平真诠等触发「涉政」误判），用「古代命理典籍」；内部文档/KB 保留
+- 发布打包用 `python tools/build_release_zip.py`（自动排除内部文档，文件在 ZIP 根无嵌套）
+- 合规：命理输出保留「仅供娱乐文化参考」免责，不做健康/疾病断言、不做改运消灾收费
+- **HANDOFF.md 是真相源**：写之前必须核实真实状态，不能凭记忆
+
+**当前状态（2026-08-24，v1.3.6）**：
+- ✅ 功能全部完成（132 项任务清零）、真人验收通过（3 案例）、**双平台上架**（SkillHub + ClawHub）、断语库 **1000 条**、13 套回归全绿 + CI 门禁生效、**本仓库无阻塞**
+- 🔜 下一步优先 **bazi-app C 端闭环**（独立对话推进，速贴块见 `docs/BAZI-APP-HANDOFF-v1.3.0.md` 顶部）；MCP/API 化、商标注册为后置
+
+**技术约定（详见 §九 项目速查）**：
+- 构建：`python tools/build_ui.py`（输出 `ui/index.html` + `engine/engine.dist.js`）
+- 回归：13 套（命令见 §九）；发布验证：`python tools/build_release_zip.py` 产出 ZIP 后 md5sum 校验关键产物
+- 引擎同步到 C 端：`cp engine/engine.dist.js ../bazi-app/web/`（仅拷贝交付，commit/push 留给 bazi-app 侧）
+- 每完成一个任务 commit，commit message 用中文描述清楚
+
+### 使用说明
+1. 复制上面【提示词】到新平台新会话第一句话
+2. 新会话应自动读 HANDOFF.md 并核实 git 状态
+3. 之后正常对话推进（断语库扩充 / bazi-app 协作 / 迭代都行）
+4. HANDOFF.md 会随项目推进更新，切换平台时如果隔了很久，先看本文件更新时间戳，过时的话让新会话先更新它再干活
+
+---
+
+## 一、项目概览与关键决策
+
+### 1.1 这是什么项目
+
+- **产品名**：bazi-engine（对外名称，原名 bazi-master 因 SkillHub 同名竞品已弃用）
+- **仓库**：`ruanxiaoer888/bazi-engine`（GitHub，Public 意向，当前按开源准备）
+- **定位**：B 端专业四柱八字排盘引擎底座，面向**命理师**，开源（MIT），可嵌入/二次开发
+- **一句话**：输入出生信息 → 四柱八字 + 大运流年 + 流日/流月/流年深度 + 六亲详解 + 合婚评分，全程标注古籍出处
+- **项目性质**：Michael 个人独立研发项目，**与任何企业/公司无任何关联**，推广/发布一律按个人项目口径
+- **双轨关系**：bazi-engine（B 端引擎底座）↔ 另仓 `bazi-app`（C 端「本初」变现），引擎层共用，UI 各自独立
+
+### 1.2 关键决策（不要回头讨论）
+
+| 决策 | 结论 |
+|---|---|
+| 双轨战略 | bazi-engine 走 B 端专业引擎底座（开源，面向命理师）；`bazi-app` 走 C 端轻量娱乐变现，引擎抽层共享 |
+| 视觉 | 墨底 + 古铜金高端商务风；卡片标题用壹~玖深中文序号圆形徽章；系统字体栈（Songti SC/STSong/SimSun + system-ui）；**零外部依赖**（已移除 Google Fonts） |
+| 断语库 | 1000 条（v1.2.3，2026-08-19 达路线图 1000 目标），路线图 434→504→801→789→1000 ✓；每条必须含 `suggestion` 建议字段；规则命中须可追溯古籍出处 |
+| 古籍规范 | 输出必须标注出处（穷通宝鉴/三命通会/滴天髓/渊海子平/子平真诠），保证可追溯、可检验。**注意：SkillHub 发布版 SKILL.md 不写具体典籍名**（平台误判"涉政"，改为「古代命理典籍」）；内部文档/KB 保留 |
+| 验收规范 | ✅ 已通过真人验收（3 案例：排盘 1990-05-15 / 流日 1996-02-22 / 合婚 1996-08-13+1973-03-02） |
+| 命名 | 对外统一 "bazi-engine"（不挂钩任何企业）；C 端 bazi-app 叫「本初」（原「算了么」因品牌冲突改名，域名 benchu.xiaoerpro.com） |
+| 引擎同步 | `python tools/build_ui.py` 后 `cp engine/engine.dist.js ../bazi-app/web/engine.dist.js` 并 commit |
+
+### 1.3 与 Michael 协作的偏好
+
+- 语言：中文
+- **⚠️ 最高优先级红线（2026-08-22 Michael 明确）**：Michael 是**个人身份**，与任何企业/公司**无任何关联**。所有产出（文档/课程/文案/对话/复盘）一律按**个人项目口径**，**绝不出现任何企业名、品牌名、历史客户/合作方名称或关联**；即使素材中客观存在，也一律匿名化为「个人实践」「某客户」或直接删除；**严禁在任何文档或对话中主动提及或询问任何企业关联**。
+- 表达：结论先行，先给建议再展开；复杂问题分点 + 对比表格
+- 多方案：直接给出推荐判断，不要平铺选项
+- 开发：严格按顺序推进 A→B→C；重大模块完成**主动暂停做代码审计**再打包
+- **HANDOFF.md 是项目真相源**：写之前必须核实真实状态（任务台账 + 文件版本 + git log），不能凭记忆
+- 常说"你自己想办法解决" = 期望 AI 独立完成，不需要逐步指导
+- 喜欢：状态检查点 + MD5 校验 + 详尽表格摘要 + 下一步清单
+- 完成后主动问"接下来我需要做什么"获取优先级清单
+
+---
+
+## 二、技术架构（原 AI_CONTEXT §3）
+
+### 2.1 架构总览
+| 层 | 文件/目录 | 说明 |
+|---|---|---|
+| 构建 | `tools/build_ui.py` | Python 构建脚本，内联断语库 + 节气 + 全部 JS → 产出 `ui/index.html` + `engine/engine.dist.js` |
+| UI | `ui/index.html` | 单文件成品（唯一真源），打开即用，离线可用 |
+| 引擎 | `engine/engine.dist.js` | 构建副产物，**不要手改**。UMD：浏览器 `window.BaziEngine` / Node `require` |
+| 知识库 | `kb/` | 01-basics / 02-rules / 03-classics / 04-rules-db / 05-reference |
+| 发布 | `tools/build_release_zip.py` | 发布验证流程：打 ZIP（自动排除 LICENSE/LICENSE-DATA/README.en.md）+ 关键产物 MD5 校验，不依赖任何平台目录 |
+| 引擎变更记录 | `docs/ENGINE-CHANGES.md` | 权威记录（版本 + 变更 + dist MD5），bazi-app 对话据此对齐；引擎变更必须 bump 版本并追加记录 |
+| C 端合规软化 | `tools/compliance_soften.py` | 构建后术语替换（运势→能量/大运→十年节奏/姻缘→情感/八字→出生信息 等，保护 `"流年":` 条件键；`--check` 残留检测）——bazi-app 同步 dist 后跑一次即得合规版，免手改（坑 #41 解决方案，commit `41ba0eb`） |
+| 发布材料 | `docs/history/发布物料.md` + `docs/history/SkillHub-Submission-Kit.md` | 卖点/图标提示词/示例对话/合规声明 + 提交包模板 |
+
+
+### 2.2 引擎抽层机制（重要，commit `807ab4c`）
+- `tools/build_ui.py` 的 TPL 内用 7 对 `// [ENGINE:BEGIN]` / `// [ENGINE:END]` 注释标记界定**纯计算层**（不搬代码，UI 行为不变）
+- 构建时把标记区段抽取拼装为 `engine/engine.dist.js`
+- **边界规则（铁律）**：引擎层 = 纯计算（无 DOM/CSS）；`fmtRule`/`analyzeHe`/所有 `render*`/`run*`/`draw*` 留在 UI 层（返回 HTML 的展示函数不进引擎库）
+- **新增引擎函数**：写进标记区内即可自动进入 dist；新增 UI 函数则写标记区外
+
+### 2.3 引擎 API（B 端常用）
+```js
+const ctx = BaziEngine.paipan(name, gender, y, m, d, hh, mm, place, truesun)
+// ctx: dayMaster, dmWx, pillars[4], five, strength, xiYong, pattern, shenSha[], solarInfo, dayun...
+const rules = BaziEngine.matchRules(ctx, category)   // 断语匹配
+const adj = BaziEngine.applyDst(y, m, d, hh, mm)     // {dst:0|1, y,m,d,hh,mm}
+const map = BaziEngine.SHI_CHEN_MAP['巳']            // [9,0] 时辰→时分
+
+// 农历转公历（1900-2099，与 bazi-app C 端实现一致）
+const solar = BaziEngine.lunarToSolar(2024, 1, 1, false)  // {y:2024,m:2,d:10}
+const leap = BaziEngine.leapMonth(2017)                    // 6（闰六月）
+const dayName = BaziEngine.lunarDayName(15)                // '十五'
+```
+
+### 2.4 排盘前预处理（B/C 端通用）
+
+- 时段模式（只知时辰）→ 强制 `truesun='no'`，不调 `applyDst`（时段本身即太阳时）
+- 具体时间模式 → 先 `applyDst` 回拨，再 `paipan`
+
+---
+
+## 三、双轨战略（2026-08-15，重要架构决策）
 
 **战略**：bazi-engine 走 B 端专业引擎底座（面向命理师，开源）；另建 **`../bazi-app`**（独立仓库/工作区）走 C 端轻量娱乐变现（大白话 + 付费报告）。
 
-**引擎抽层实现**（commit `807ab4c`）：
-- `tools/build_ui.py` 的 TPL 内用 7 对 `// [ENGINE:BEGIN]` / `// [ENGINE:END]` 注释标记界定纯计算层（**不搬代码**，`ui/index.html` 行为不变，仅多无害注释）
-- 构建时同时产出 **`engine/engine.dist.js`**（438KB，UMD：浏览器 `window.BaziEngine` / Node `require` 双端可用），导出 paipan/matchRules/calcShenSha/applyDst/matchLiuYue/lunarToSolar/leapMonth 等约 101 个函数与数据表（含 1000 条规则数据）
-- 新增回归 `node tools/test_engine.js`（28 项，独立库直测）+ `node tools/test_lunar.js`（27 项，农历模块验证）；原有 8 套回归不受影响
+**引擎抽层实现**（commit `807ab4c`，机制详见 §2.2）：`tools/build_ui.py` 的 TPL 内用 7 对 `// [ENGINE:BEGIN]` / `// [ENGINE:END]` 注释标记界定纯计算层（不搬代码，`ui/index.html` 行为不变，仅多无害注释），构建时同时产出 **`engine/engine.dist.js`**（438KB，UMD：浏览器 `window.BaziEngine` / Node `require` 双端可用），导出 paipan/matchRules/calcShenSha/applyDst/matchLiuYue/lunarToSolar/leapMonth 等约 101 个函数与数据表（含 1000 条规则数据）。
+- 新增回归：`node tools/test_engine.js`（28 项，独立库直测）+ `node tools/test_lunar.js`（27 项，农历模块验证）；原有 8 套回归不受影响
 - **C 端同步方法**：`python tools/build_ui.py` 后 `cp engine/engine.dist.js ../bazi-app/web/`
 - **边界规则**：引擎层 = 纯计算（无 DOM/CSS）；`fmtRule`/`analyzeHe`/所有 render*/run*/draw* 留在 UI 层（返回 HTML 的展示函数不进引擎库）；新增引擎函数时放进标记区内即可自动进入 dist
 
 ---
 
-## 一、当前任务（进行中 / 待办）
+## 四、当前任务（进行中 / 待办）
 
-### 当前状态（2026-08-20 快照）
-- **本仓库无阻塞**：132 项任务清零 / 真人验收通过 / 双平台已上架 / **断语库 1000 条**（路线图达成）/ **v1.3.6**（三方审计 6 批次全量修复）/ 13 套回归全绿 + **CI 门禁真实生效**；dist MD5 `1A4722FA7B0974EB4F5CFA53C71AA9C3`（LF 口径，README 优化未动引擎）；HEAD 已推进至 `031d1d0` 并 push（ClawHub 市场信息 + License 加固，见下方 2026-08-20 ClawHub 小节）
+### 当前状态（2026-08-24 快照）
+- **本仓库无阻塞**：132 项任务清零 / 真人验收通过 / 双平台已上架 / **断语库 1000 条**（路线图达成）/ **v1.3.6**（三方审计 6 批次全量修复）/ 13 套回归全绿 + **CI 门禁真实生效**；dist MD5 `1A4722FA7B0974EB4F5CFA53C71AA9C3`（LF 口径，README 优化未动引擎）；HEAD=`56100d2`（2026-08-20 后 ClawHub 发布脚本 + HANDOFF 版本号自动更新提交），git tag `v1.3.6`，工作树干净（仅 `assets/bazi-logo-favicon.png` 1 个 untracked）
 - **在途事项（等待 Michael 操作，非本仓库代码工作）**：bazi-app C 端真实闭环剩 2 个外部阻塞（服务器四件套更新 + 虎皮椒真实支付接入——**微信渠道已开通，支付宝未开通**）；**速贴块已于 2026-08-19 交付**（`docs/BAZI-APP-HANDOFF-v1.3.0.md` 顶部），Michael 复制粘贴给 bazi-app 对话即可启动，执行到 ③④ 步时向对话提供 SSH 凭据 + 虎皮椒微信 appid/appsecret
 - **遗留待清理**：✅ 全部已清（死规则 2 轮清理 + 三方审计 6 批次，见下方各段）
+- **2026-08-24 文档整理**：合并原 `AI_CONTEXT.md` / `冷启动提示词_COLD_START.md` 至本文件（唯一真相源），两文件已删除；根目录文档现状 = HANDOFF.md（内部真相源）+ README.md / README.en.md（对外门面）+ LICENSE/LICENSE-DATA
+
+### ✅ 历史进度（按时间倒序，commit 记录）
 
 ### ✅ 2026-08-20 README 推广优化（commit `f0bd94a`~`1d045cc`，共 7 个 docs/chore 提交，中英文同步）
 > 目标：把开源引擎 + C 端「本初」（benchu.xiaoerpro.com）的「开源 → 商业闭环」故事写进 README，形成推广闭环。全部为文档/素材变更，**引擎 dist 未动**（MD5 不变）。
@@ -150,15 +276,15 @@
 
 > ✅ 发布前待办已全部完成（真人验收 2026-08-16 通过 / 图标与提交材料按 `发布物料.md` 准备 / 2026-08-13 收尾：check_conflicts.js 同步打包目录 + SKILL.md 登记 + `断语库.json.bak` 清理 + 对外 `README.md` + SKILL.md frontmatter 补 `tags`/`license: MIT`）
 
-### 发布后增强（已清项并入 §四；剩余 2 项）
+### 发布后增强（已清项并入 §七；剩余 2 项）
 - ✅ 晚子时 / 节气临界时刻的**输入侧**提示语（已完成 `53a3bd2`，2026-08-17）
 - ✅ 断语库扩充 504 → 800+（已完成 `bd7f5ab`，801 条，2026-08-17）
-- MCP/API 化（P2，见 §四 第 6 项）
-- **bazi-app C 端全流程闭环**（见 §四 第 2 项，独立对话推进）
+- MCP/API 化（P2，见 §七 第 6 项）
+- **bazi-app C 端全流程闭环**（见 §七 第 2 项，独立对话推进）
 
 ---
 
-## 二、已完成内容（截至 v1.3.6）
+## 五、已完成内容（截至 v1.3.6）
 
 ### 功能全景（132 项任务中 132 completed）
 | 模块 | 状态 |
@@ -213,9 +339,7 @@
 ### 交付文档
 - `发布物料.md` — 6 大卖点 / 图标提示词 / 3 个示例对话 / 合规声明 / 渠道建议（SkillHub 优先）
 
----
-
-## 三、卡住的问题
+## 六、卡住的问题
 
 - ✅ **本仓库无阻塞**：132 项任务清零 / 真人验收通过 / 双平台已上架 / 断语库 1000 条 / **v1.3.6**（三方审计 6 批次全量修复）/ 13 套回归全绿 + CI 门禁真实生效；**README 推广优化已完成（2026-08-20，HEAD `1d045cc`）**
 - 🔜 **bazi-app C 端真实闭环剩 2 个外部阻塞**（本地 mock 全链路已通，属部署/支付侧，需 bazi-app 对话推进；**速贴块已交付，Michael 粘贴即可启动**；⚠️ README 推广已上线，此阻塞**更紧迫**——引流访客来了若卡在支付环节会直接流失）：
@@ -223,9 +347,7 @@
   2. **虎皮椒真实支付接入**：**微信渠道已开通**（支付宝未开通）——填 `config.json` 的 `xunhu.appid/appsecret`（**微信**凭证）→ `mock:false` → `pm2 restart` → 真实支付验证一单（¥0.01）；`channel` 已是 `wechat` 无需改代码（**需要 Michael 提供虎皮椒微信 appid/appsecret**）
 - 🔜 **bazi-app 功能边界（产品决策，非 bug）**：C 端只有 3 个 SKU（report 个人报告 / match 双人匹配 / year 年度能量趋势），**无流月 / 流日功能**（bazi-app 源码搜不到这两个关键词；"年度能量趋势"= 流年+流月的轻量版，12 个月卡片，非引擎级逐日 30 天分析）。README 配图已按 **B/C 分区**处理：产品生态章节只放 C 端 3 个 SKU 截图；流日截图（`final/02_liuri.png`）放「功能特性」作为**引擎深度能力**展示，不误导读者以为本初有流日。若要补流月/流日付费 SKU（FateTell 验证过的复购点），属 bazi-app 侧产品决策，可规划后续迭代
 
----
-
-## 四、下一步计划（按优先级）
+## 七、下一步计划（按优先级）
 
 0. ✅ ~~SkillHub 申诉~~（2026-08-17 通过并上架）
 1. ✅ ~~ClawHub SkillSpector 扫描~~（已转 Published，海外发布闭环完成）
@@ -237,9 +359,7 @@
 6. **[后置] MCP/API 化**（P2 路线图：为引擎提供 MCP 工具/HTTP API，供 B 端命理师/其他 agent 编程调用）
 7. **[后置] 商标注册**（41/42 必选 + 9/45 防御，注册前代理检索规避「本初子午」近似——注意这是 bazi-app 品牌，若做 C 端商标需核实）
 
----
-
-## 五、踩过的坑（经验教训，避免重蹈）
+## 八、踩过的坑（经验教训，避免重蹈）
 
 ### 测试/调试类
 1. **`LAST` 是 eval 内块级变量（`let LAST`）**，测试脚本必须用项目既有的 `__setLast()` 设置，直接 `globalThis.LAST=...` 会触发"请先排盘"拦截 —— verify_ux_e2e.js F 区曾因此报错
@@ -304,15 +424,14 @@
 42. **`paipan` 的 gender 参数只接受中文 `'男'/'女'`**：源码第 376 行 `if(gender!=='男'&&gender!=='女'){ alert('性别需为男或女'); return null; }`——传 `'M'`/`'male'` 会触发 alert（Node 下 `ReferenceError: alert is not defined` 崩溃）。README 英文版示例最初写 `'M'` 会误导开发者，已改为中文 `'男'`。教训：README/文档里的引擎示例代码必须**实跑验证**，不能只凭直觉写
 43. **1990 年中国夏令时：直接传 9:00 排盘时柱是 `辛巳` 而非 `庚辰`**：1990-05-15 在夏令时窗口（4/15~9/16）内，正确链路 = `applyDst(1990,5,15,10)`（回拨 1 小时→9:00）→ `paipan(..., 9, 0, ...)` 才是庚辰时柱（README 示例对话的值）。README 开发者示例曾直接写 `paipan(1990,5,15,9,0,...)` + 注释庚辰（错误，实排辛巳），已改为完整 DST 链路。教训：示例代码的**注释结果值**也要实测核对，DST 窗口期的盘最容易错
 44. **bazi-app C 端只有 3 个 SKU，无流月/流日**：`web/index.html` 全文搜不到「流月/流日/逐日」（`Select-String` 0 匹配）；「年度能量趋势」= 12 个月卡片（月五行×喜忌×与日主关系 50 组文案），是流年+流月的**轻量版**，非引擎级逐日 30 天。规划 C 端截图/推广时必须按**真实功能边界**来（README 已 B/C 分区），否则截图与产品不符会砸口碑
+
 45. **PowerShell 5.1 不支持 `&&` 连接符**：`cmd1 && cmd2` 报 `The token '&&' is not a valid statement separator`——用 `;` 分隔或分行执行（`$?` 判断上一条结果）；多步 git 操作用 `git add ...; git commit ...; git push ...` 串行即可（有依赖时分行判断）
 46. **PowerShell `Add-Content` 中文注释落盘乱码**：控制台显示 `鍥剧墖` 类乱码，但用 read 工具按 UTF-8 读回是**正常中文**——是控制台代码页（GBK）与文件编码（UTF-8）不一致的显示问题，**以 read 工具内容为准**，勿据此改文件（.gitignore 追加中文注释曾虚惊一场）
 47. **Windows 沙箱里 `System.Drawing` 读图片尺寸失败**（受限环境），改用 Node 读 PNG 头部字节：`buf.readUInt32BE(16)`（宽）/ `readUInt32BE(20)`（高），校验魔数 `0x89 0x50 0x4E 0x47`——临时脚本 `tools/tmp_*.js` 用完即删（坑 #3 延续）
 48. **DSH Web GUI 用户上传图片的下载途径**：`Invoke-WebRequest http://127.0.0.1:3080/describe-image/raw/sha256:<附件id>` → `[IO.File]::WriteAllBytes(本地路径, $resp.Content)` 可把会话里用户贴的图片存到工作区（本仓库 `assets/screenshots/contact-card.png` 即由此取得）；`$resp.Content` 是 byte[] 可直接写，勿转 string
 49. **ClawHub 市场卡片字段 ≠ 仓库文件**：ClawHub 页面「License」「Current version」是**后台手动维护的卡片字段**（实测 License 显示 MIT-0、版本显示 v0.1.0；仓库实为 MIT + CC BY-NC-SA 4.0 双许可 / v1.3.6）——改仓库 LICENSE 或 SKILL.md frontmatter 的 `license:` 字段**不会**自动改平台卡片（SKILL.md frontmatter 是 `license: MIT`，页面仍显示 MIT-0，证明非同步来源）；但 **SKILL.md frontmatter 的 `description:` 会同步为 ClawHub 页面描述**（已核实逐字一致）。处理 = 仓库侧改 README / SKILL.md description 声明双许可（push 生效，**SKILL.md description 会同步为页面 summary**，已核实）+ **用 CLI 重新发布新版本修复版本号**（`clawhub skill publish <目录> --slug baizi-engine --version 1.3.6`，2026-08-20 已执行成功：v0.1.0→v1.3.6，安全检查约 2-3 分钟转公开；非 TTY 下 CLI 退出码 1 是进度动画假象，加 `--json` 看 `ok:true` + `pending-publication` 即提交成功）。**License 字段无法修改**：ClawHub 平台强制所有 skill 以 MIT-0 发布（官方文档：`Publishing a skill means it is released under MIT-0 on ClawHub`，无 per-skill 选项），只能靠描述声明仓库双许可兜底。MIT-0 = MIT 免署名版，对数据 NC 条款是直接冲突，属法律风险点，已在描述中声明。**审计状态补记（2026-08-20）**：v1.3.6 审计 = Review 非 Pass——① tools/*.js 测试脚本 13 处 `vm` 动态执行标 Critical（规则引擎回归脚本，静态扫描误报，安装者不会运行）；② kb/05-reference/prompt-template.md 含面相/手相/健康内容超 Bazi 范围（实际未实现，仅未来参考）。**Michael 决定方向 A 接受现状**（Review 不阻塞安装，v1.3.6 已公开可装）；若日后追求干净审计，重发时排除 kb/05-reference + tools/ 即可转 Pass。**另更正**：ClawHub 的 Import from GitHub 是**一次性导入**（填仓库地址→Detect→发布），**非 git push 持续同步**（早期「GitHub 自动同步版」说法不准确）；要 push 自动发布需配 GitHub Actions workflow（openclaw/clawhub 的 skill-publish.yml + CLAWHUB_TOKEN secret）
 
----
-
-## 六、项目速查
+## 九、项目速查
 
 > 工作区路径随平台而异（WorkBuddy / DeepSeek Harness / Codex / 百度搭子等），下文一律用相对路径；bazi-app 为 `../bazi-app`（任何布局下成立）。
 
@@ -337,3 +456,19 @@
 - 发布平台：**SkillHub**（腾讯，已上架，「生态杀手」分类）+ **ClawHub**（已上架，[clawhub.ai/ruanxiaoer888/skills/baizi-engine](https://clawhub.ai/ruanxiaoer888/skills/baizi-engine)，官方安装 `openclaw skills install @ruanxiaoer888/baizi-engine`；旧命令 `npx clawhub@latest install bazi-engine` 仍可用）+ **GitHub**（开源仓库）
 - **C 端「本初」**：https://benchu.xiaoerpro.com/（README 在线体验入口；微信 `feizi6651` 在支持作者章节）
 - **README 推广资产速查**：产品生态章节（本初推广位 + Skill 市场分发行）/ 徽章（Stars/CI/License/SkillHub/ClawHub）/ 「为什么是引擎？」（中文核心卖点）/ 快速开始三路径（用户/开发者/AI，普通用户含市场安装入口、AI 助手含 ClawHub 官方安装命令）/ 支持作者（微信+公众号海报）——2026-08-20 全部落地，改动只动 docs 与 assets，引擎 dist MD5 不变
+
+---
+
+## 十、相关仓库
+
+- **bazi-app**（C 端「本初」，原「算了么」因品牌冲突已改名）：`github.com/ruanxiaoer888/bazi-app`（Private）
+  - 本地路径：`../bazi-app`（相对于本仓库工作区，平台不同则位置不同）
+  - 状态：报告功能（25+ 板块）+ 海报分享 + 支付链路（虎皮椒 mock）+ 兑换码解锁均已完成；**待部署上线**（等 SSH+DNS），阻塞在服务器四件套更新 + 虎皮椒真实支付接入（**微信渠道已开通**，支付宝未；`xunhu.channel` 默认 `wechat`）。**闭环启动指令已交付**：`docs/BAZI-APP-HANDOFF-v1.3.0.md`（顶部速贴版，直接粘贴给 bazi-app 对话）
+  - 冷启动文档：bazi-app 仓库**自己的** `AI_CONTEXT.md` + `HANDOFF.md`（与本仓不同，注意区分；本仓已于 2026-08-24 合并为一份 HANDOFF.md，其第 9 节对 bazi-project 的状态描述以本文件为准）
+
+---
+
+**每次接手时先做三件事**：
+1. `git status` 看工作树是否干净 + `git log --oneline -5` 看最新提交
+2. 读 `HANDOFF.md` 最新版（项目真相源）
+3. 对照 §七「下一步计划」确认当前要推进的任务

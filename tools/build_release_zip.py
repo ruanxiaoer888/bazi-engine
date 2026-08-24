@@ -24,8 +24,8 @@ INCLUDE_DIRS = {'ui', 'engine', 'kb', 'skill', 'tools'}
 INCLUDE_ROOT_FILES = {'README.md'}
 # SkillHub 禁止 / 内部不对外
 EXCLUDE_ROOT_FILES = {'LICENSE', 'LICENSE-DATA', 'README.en.md',
-                      'HANDOFF.md', 'AI_CONTEXT.md', 'SkillHub-Submission-Kit.md',
-                      'SkillHub发布最终指引.md', '冷启动提示词_COLD_START.md',
+                      'HANDOFF.md', 'SkillHub-Submission-Kit.md',
+                      'SkillHub发布最终指引.md',
                       '验收与截图清单_3案例.md', '.gitignore'}
 # 目录内排除的子路径/文件模式
 EXCLUDE_SUB = {
