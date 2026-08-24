@@ -1,4 +1,4 @@
-﻿#requires -Version 5.1
+#requires -Version 5.1
 <#
 .SYNOPSIS
   bazi-engine -> ClawHub 发布脚本（封装 2026-08-20 实战流程，坑 #49 经验沉淀）
@@ -148,8 +148,8 @@ if ($pubJson -and $pubJson.ok -eq $true) {
         $hasBom = ($bytes.Length -ge 3 -and $bytes[0] -eq 0xEF -and $bytes[1] -eq 0xBB -and $bytes[2] -eq 0xBF)
         $content = [IO.File]::ReadAllText($handoff, [Text.Encoding]::UTF8)
         $today = Get-Date -Format 'yyyy-MM-dd'
-        $newContent = $content -replace '当前版本 **vd+.d+.d+**', "当前版本 **v$Version**"
-        $newContent = $newContent -replace '更新时间：d{4}-d{2}-d{2}', "更新时间：$today"
+        $newContent = $content -replace '当前版本 \*\*v\d+\.\d+\.\d+\*\*', "当前版本 **v$Version**"
+        $newContent = $newContent -replace '更新时间：\d{4}-\d{2}-\d{2}', "更新时间：$today"
         if ($newContent -ne $content) {
             $enc = New-Object System.Text.UTF8Encoding($hasBom)
             [IO.File]::WriteAllText($handoff, $newContent, $enc)
