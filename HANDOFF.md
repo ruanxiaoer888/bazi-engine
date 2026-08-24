@@ -146,10 +146,15 @@ const dayName = BaziEngine.lunarDayName(15)                // '十五'
 ## 四、当前任务（进行中 / 待办）
 
 ### 当前状态（2026-08-24 快照）
-- **本仓库无阻塞**：132 项任务清零 / 真人验收通过 / 双平台已上架 / **断语库 1000 条**（路线图达成）/ **v1.3.6**（三方审计 6 批次全量修复）/ 13 套回归全绿 + **CI 门禁真实生效**；dist MD5 `1A4722FA7B0974EB4F5CFA53C71AA9C3`（LF 口径，README 优化未动引擎）；HEAD=`56100d2`（2026-08-20 后 ClawHub 发布脚本 + HANDOFF 版本号自动更新提交），git tag `v1.3.6`，工作树干净（仅 `assets/bazi-logo-favicon.png` 1 个 untracked）
+- **本仓库无阻塞**：132 项任务清零 / 真人验收通过 / 双平台已上架 / **断语库 1000 条**（路线图达成）/ **v1.3.6**（三方审计 6 批次全量修复）/ 13 套回归全绿 + **CI 门禁真实生效**；dist MD5 `1A4722FA7B0974EB4F5CFA53C71AA9C3`（LF 口径，README 优化未动引擎）；HEAD=`1b3e703`（ClawHub 发布脚本正则修复），git tag `v1.3.6`，工作树干净（favicon 已入库）
 - **在途事项（等待 Michael 操作，非本仓库代码工作）**：bazi-app C 端真实闭环剩 2 个外部阻塞（服务器四件套更新 + 虎皮椒真实支付接入——**微信渠道已开通，支付宝未开通**）；**速贴块已于 2026-08-19 交付**（`docs/BAZI-APP-HANDOFF-v1.3.0.md` 顶部），Michael 复制粘贴给 bazi-app 对话即可启动，执行到 ③④ 步时向对话提供 SSH 凭据 + 虎皮椒微信 appid/appsecret
 - **遗留待清理**：✅ 全部已清（死规则 2 轮清理 + 三方审计 6 批次，见下方各段）
-- **2026-08-24 文档整理**：合并原 `AI_CONTEXT.md` / `冷启动提示词_COLD_START.md` 至本文件（唯一真相源），两文件已删除；根目录文档现状 = HANDOFF.md（内部真相源）+ README.md / README.en.md（对外门面）+ LICENSE/LICENSE-DATA
+- **2026-08-24 文档整理 + 根目录清理**：
+  - 合并原 `AI_CONTEXT.md` / `冷启动提示词_COLD_START.md` 至本文件（唯一真相源），两文件已删除
+  - 根目录删除：发布 ZIP ×2（`bazi-engine-v1.3.0/1.3.6.zip`，`tools/build_release_zip.py` 可重建）+ `.tmp-cover/.tmp-logo/.tmp-qr/.tmp-v` 临时工作区（~30MB，产物已集成 assets/）+ 清空 `.dsh-uploads/`
+  - 课程商业内容移出仓库：`docs/course-materials/` `docs/专栏/` `docs/course-diagrams/` `docs/course-tools/` + `assets/screenshots/benchu/_raw/` → `E:\michael\Courses\bazi-course-materials\`（gitignore 已排除不入库，物理隔离防误提/泄露）
+  - 入库 `assets/bazi-logo-favicon.png`（太极 favicon 素材）
+  - 根目录文档现状 = HANDOFF.md（内部真相源）+ README.md / README.en.md（对外门面）+ LICENSE/LICENSE-DATA
 
 ### ✅ 历史进度（按时间倒序，commit 记录）
 
@@ -450,7 +455,7 @@ const dayName = BaziEngine.lunarDayName(15)                // '十五'
 - 历史文档：`docs/history/`（第七轮验收 / 发布物料 / 竞对分析，历史快照）
 - 截图素材：
   - `assets/screenshots/final/`（3 张 B 端验收截图：01_paipan / 02_liuri 流日 / 03_hehun，README 引用 02_liuri）
-  - `assets/screenshots/benchu/`（**C 端「本初」截图，已入库 4 张**：paipan 排盘 / hehun 合婚 / year 年度 / insight 六维人格图谱；`README.md` 目录说明；`_raw/` 28 张原始素材 **gitignore 排除不入库**）
+  - `assets/screenshots/benchu/`（**C 端「本初」截图，已入库 4 张**：paipan 排盘 / hehun 合婚 / year 年度 / insight 六维人格图谱；`README.md` 目录说明；**原始素材 `_raw/` 已移出至 `E:\michael\Courses\bazi-course-materials\benchu-screenshots-raw`（2026-08-24 清理，不入库）**）
   - `assets/screenshots/promo/`（宣传物料 2 张：compare 引擎对比图 / flow 处理链路流程图，压缩自 _raw/图2/图3）
   - `assets/screenshots/contact-card.png`（作者微信+公众号双二维码海报，README 支持作者章节用）
 - 发布平台：**SkillHub**（腾讯，已上架，「生态杀手」分类）+ **ClawHub**（已上架，[clawhub.ai/ruanxiaoer888/skills/baizi-engine](https://clawhub.ai/ruanxiaoer888/skills/baizi-engine)，官方安装 `openclaw skills install @ruanxiaoer888/baizi-engine`；旧命令 `npx clawhub@latest install bazi-engine` 仍可用）+ **GitHub**（开源仓库）
