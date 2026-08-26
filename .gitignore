@@ -38,3 +38,4 @@ docs/course-tools/
 # DSH 上传与临时工作目录（勿入库，防止 git add -A 误提交 node_modules 等）
 .dsh-uploads/
 .tmp-*/
+.dumate/
