@@ -59,6 +59,18 @@ assert('JIEQI 覆盖 206 年', Object.keys(BaziEngine.JIEQI.data).length===206, 
 assert('SHENSHA 24 项', BaziEngine.SHENSHA.length===24);
 assert('NAYIN 60 条', Object.keys(BaziEngine.NAYIN).length===60);
 assert('CITY_LON 含广州', !!BaziEngine.CITY_LON['广州']);
+// 2026-08-28 CITY_LON 扩充至 724 城（345 地级市 + 379 县级市）：关键县级市防回退断言
+assert('CITY_LON 共 724 城', Object.keys(BaziEngine.CITY_LON).length===724, 'len='+Object.keys(BaziEngine.CITY_LON).length);
+assert('CITY_LON 含黄冈(地级)', BaziEngine.CITY_LON['黄冈']===114.9, '黄冈='+BaziEngine.CITY_LON['黄冈']);
+assert('CITY_LON 含义乌市(县级)', BaziEngine.CITY_LON['义乌市']===120.1, '义乌市='+BaziEngine.CITY_LON['义乌市']);
+assert('CITY_LON 含昆山市(县级)', BaziEngine.CITY_LON['昆山市']===121, '昆山市='+BaziEngine.CITY_LON['昆山市']);
+assert('CITY_LON 含神木市(县级)', BaziEngine.CITY_LON['神木市']===110.3, '神木市='+BaziEngine.CITY_LON['神木市']);
+assert('CITY_LON 含喀什(西部)', BaziEngine.CITY_LON['喀什']===75.9, '喀什='+BaziEngine.CITY_LON['喀什']);
+// 匹配逻辑：最长名称优先 + 去"市"后缀兼容（填"义乌"命中"义乌市"）
+const yw = BaziEngine.paipan('测试','男',1990,6,1,14,0,'义乌','yes');
+assert('填"义乌"命中义乌市 120.1°', yw.solarInfo && yw.solarInfo.found && yw.solarInfo.lon===120.1, JSON.stringify(yw.solarInfo));
+const yid = BaziEngine.paipan('测试','男',1990,6,1,14,0,'湖北省宜昌市宜都市','yes');
+assert('最长匹配:宜都市(111.4)优先于宜昌', yid.solarInfo && yid.solarInfo.found && yid.solarInfo.lon===111.4, JSON.stringify(yid.solarInfo));
 assert('findRule 可用', BaziEngine.findRule('liuyue_01')!==null);
 assert('getRemedy 可用', BaziEngine.getRemedy('弱', c1.five, c1.avgFive, c1.xiYong, c1.pillars[1][1]).items!==undefined);
 
