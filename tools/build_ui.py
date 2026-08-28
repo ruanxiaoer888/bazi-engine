@@ -722,6 +722,9 @@ TPL = r"""<!DOCTYPE html>
 const JIEQI = __JIEQI__;
 const RULES = __RULES__;
 
+// Node 双端兼容：alert 仅浏览器存在，Node 下兜底为 no-op（引擎输入校验在 Node 环境返回 null 而非抛异常）
+if (typeof alert === 'undefined') { var alert = function(){}; }
+
 // ===== 基础数据 =====
 const GAN = ['甲','乙','丙','丁','戊','己','庚','辛','壬','癸'];
 const ZHI = ['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];

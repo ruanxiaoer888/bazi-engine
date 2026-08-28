@@ -6,7 +6,7 @@ description: >
   适用场景：用户想算八字、看命盘、测运势、查合婚、补五行、看神煞、看流年，或提到"算命/四柱/命理/bazi/fortune"。
   即使只提"算命""八字"而未明确说用 skill，也应启用本 skill。
   本 Skill 采用双许可：代码 MIT / 数据 CC BY-NC-SA 4.0（详见仓库 LICENSE / LICENSE-DATA）。
-version: 1.3.6
+version: 1.3.7
 tags: [八字, 命理, 四柱, 排盘, 运势, bazi, fortune]
 category: 传统文化/命理占卜
 platforms: [WorkBuddy, QClaw, ima]
