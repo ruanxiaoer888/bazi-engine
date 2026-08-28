@@ -1,6 +1,6 @@
 # bazi-engine 八字命理 Skill · 项目交接文档（HANDOFF）
 
-> 更新时间：2026-08-28 · 当前版本 **v1.3.7**（CITY_LON 扩充 71→724 城，含 379 县级市）（git tag `v1.3.0` 保留；实际已含：农历/阳历双模式切换、合婚上下双区块布局、晚子时/节气临界提示语、断语库 504→801→789→1000 并定版 v1.3.0、**三方深度审计 v1.3.1~v1.3.6 全量修复**——空亡真修活/天克地冲方向/专旺阈值/流月精确节气/合婚评分扩维/农历越界 P0/跨平台构建/CI 门禁/假断言/移动端表格/无障碍/视觉统一/打印样式、**C 端合规软化工具 compliance_soften.py 落地（坑 #41 解决）+ bazi-app 闭环收尾速贴块交付**、**README 推广优化（本初 C 端推广位 + 产品生态 + 7 张配图 + 开发者三路径快速开始 + 支持作者联系方式，commit `f0bd94a`~`1d045cc`）**、**ClawHub 双许可加固 + 审计 Review 决策（坑 #49）**）
+> 更新时间：2026-08-28 · 当前版本 **v1.3.7**（CITY_LON 扩充 71→724 城，含 379 县级市；已推送 + tag v1.3.7 + GitHub Release 创建；bazi-app 验证交接就绪）（git tag `v1.3.0` 保留；实际已含：农历/阳历双模式切换、合婚上下双区块布局、晚子时/节气临界提示语、断语库 504→801→789→1000 并定版 v1.3.0、**三方深度审计 v1.3.1~v1.3.6 全量修复**——空亡真修活/天克地冲方向/专旺阈值/流月精确节气/合婚评分扩维/农历越界 P0/跨平台构建/CI 门禁/假断言/移动端表格/无障碍/视觉统一/打印样式、**C 端合规软化工具 compliance_soften.py 落地（坑 #41 解决）+ bazi-app 闭环收尾速贴块交付**、**README 推广优化（本初 C 端推广位 + 产品生态 + 7 张配图 + 开发者三路径快速开始 + 支持作者联系方式，commit `f0bd94a`~`1d045cc`）**、**ClawHub 双许可加固 + 审计 Review 决策（坑 #49）**）
 > 项目性质：**Michael 个人独立研发项目**，与任何企业无任何关联，推广/发布一律按个人项目口径。
 > 发布状态：✅ **双平台均已上架**（2026-08-17 确认）——① SkillHub（腾讯）**已发布**（「生态杀手」分类，申诉通过；平台归一化显示 V1.0.0，见坑 #21）；② ClawHub（OpenClaw 官方市场）**已发布**（Productivity 分类，SkillSpector 扫描通过转 Published；**2026-08-20 用 `clawhub skill publish` CLI 重新发布 v1.3.6 成功**，安全检查通过转公开，latest 已更新，见坑 #49）。⚠️ ClawHub 卡片字段坑已闭环：**版本 v0.1.0 → v1.3.6 已修复**；**License 显示 MIT-0 为平台强制**（ClawHub 所有 skill 一律 MIT-0，官方文档原文，无 per-skill 选项，改不了）——仓库侧已加固（README 双许可市场分发说明 + SKILL.md description 双许可声明，**页面描述已同步含双许可声明**）。**审计状态 = Review**（非 Pass，不阻塞安装）：原因 = tools/*.js 测试脚本 13 处动态代码执行 Critical（vm 沙箱回归脚本，静态扫描误报）+ kb/05-reference 含面相/手相/健康超范围内容（未实现参考）——**2026-08-20 Michael 决定方向 A 接受现状**，详见坑 #49
 > 📌 **唯一真相源**：2026-08-24 起，本文件已整合原 `AI_CONTEXT.md`（会话级冷启动补充）与 `冷启动提示词_COLD_START.md`（平台速贴提示词）的全部内容，两份文件已删除。**不要再创建/寻找其他上下文文档**；对外文档仅 `README.md` / `README.en.md`。
@@ -160,6 +160,12 @@ const dayName = BaziEngine.lunarDayName(15)                // '十五'
   - 商业文档移出仓库（git rm）：`docs/history/竞对分析报告.md`（竞品/商业模式/定价/增长策略）+ `发布物料.md`（市场卖点/渠道建议）+ `SkillHub-Submission-Kit.md`（提交材料包）+ `docs/BAZI-APP-HANDOFF-v1.3.0.md` / `BAZI-APP-REGRESSION-v1.3.0.md`（bazi-app C 端运维/支付交接）→ `E:\michael\Courses\bazi-engine-internal\`（本地归档保留）；⚠️ GitHub 历史 commit 仍残留，未做历史重写（filter-repo 需 force push、影响所有 clone，暂不执行）；HANDOFF 当前/未来引用已改本地归档路径，历史进度记录保留原样
   - 入库 `assets/bazi-logo-favicon.png`（太极 favicon 素材）
   - 根目录文档现状 = HANDOFF.md（内部真相源）+ README.md / README.en.md（对外门面）+ LICENSE/LICENSE-DATA
+- **2026-08-28 三轮深度扫描审计完成**（CITY_LON 任务收尾）：
+  - **第 1 轮**（基础）：git/产物/测试/合规全绿，发现 3 个优化点（测试覆盖缺口/HANDOFF 未登记/省名歧义）
+  - **第 2 轮**（深度）：EXPORTS 101 项完整、规则库 1000 条健康、发现并修复 **Node alert bug**（commit `ec45e2d`，引擎 Node 下非法输入抛 ReferenceError → alert 兜底）、SKILL 版本号同步 1.3.6→1.3.7
+  - **第 3 轮**（终审）：ENGINE-CHANGES.md 补登 v1.3.7（权威变更记录，此前缺失）、.gitignore 忽略 compliance.js 派生产物、CI 新增 compliance 门禁（commit `5979006`）
+  - **已推送 + 打 tag + 建 Release**：5 个提交 push 到 origin/main（3bcd60b..5979006）；tag `v1.3.7` 已推送；GitHub Release v1.3.7 已创建（gh release create，Latest）
+- **2026-08-28 bazi-app 验证交接就绪**：compliance 版（724 城，MD5 `C5AFB04E...`）已同步 `bazi-app/web/engine.dist.js?v=5`；验证指令已交付，待 bazi-app 工作区新会话执行（黄冈/义乌/常熟/喀什校正 + 全流程回归）
 
 ### ✅ 历史进度（按时间倒序，commit 记录）
 
@@ -361,6 +367,7 @@ const dayName = BaziEngine.lunarDayName(15)                // '十五'
 
 ## 六、卡住的问题
 
+- ✅ **2026-08-28 CITY_LON 扩充全程无卡住**：三轮审计发现的 5 个问题全部修复（Node alert bug / ENGINE-CHANGES 缺失 / gitignore 噪音 / CI 合规门禁缺失 / SKILL 版本号滞后），无遗留阻塞
 - ✅ **本仓库无阻塞**：132 项任务清零 / 真人验收通过 / 双平台已上架 / 断语库 1000 条 / **v1.3.6**（三方审计 6 批次全量修复）/ 13 套回归全绿 + CI 门禁真实生效；**README 推广优化已完成（2026-08-20，HEAD `1d045cc`）**
 - 🔜 **bazi-app C 端真实闭环剩 2 个外部阻塞**（本地 mock 全链路已通，属部署/支付侧，需 bazi-app 对话推进；**速贴块已交付，Michael 粘贴即可启动**；⚠️ README 推广已上线，此阻塞**更紧迫**——引流访客来了若卡在支付环节会直接流失）：
   1. **服务器四件套更新**：线上 CentOS 仍是旧版（缺 `/api/redeem`、删除接口无鉴权、旧账号密码）——需上传 `web/index.html` + `web/admin.html` + `api/server.js` + `api/config.json` + **`web/paid/` 目录** → `pm2 restart benchu_api` → 新账号登录 → 重新生成兑换码（**执行到此处需要 Michael 提供服务器 SSH/宝塔凭据**）
@@ -369,6 +376,7 @@ const dayName = BaziEngine.lunarDayName(15)                // '十五'
 
 ## 七、下一步计划（按优先级）
 
+0a. 🔜 **[最高优先] bazi-app 工作区验证交接（2026-08-28 新增）**：引擎 v1.3.7（724 城）compliance 版已同步 `bazi-app/web/engine.dist.js?v=5`；切到 `E:\michael\DSHProjects\bazi-app` 新会话执行验证指令（黄冈 114.9°-20 分 / 义乌 120.1°+0 分 / 常熟 120.8°+3 分 / 喀什 75.9°-176 分 + 排盘/分享/PDF 回归）；注意验证前清 `localStorage.benchu.ctx.v2` 防旧结果恢复
 0. ✅ ~~SkillHub 申诉~~（2026-08-17 通过并上架）
 1. ✅ ~~ClawHub SkillSpector 扫描~~（已转 Published，海外发布闭环完成）
 2. **[推荐·最高优先] bazi-app C 端真实闭环收尾** → 引擎已同步（v1.3.6，dist MD5 `1A4722FA7B0974EB4F5CFA53C71AA9C3`），本地 mock 全链路 18/18 已通 + 一致性/冒烟零破坏确认 + 三方审计后引擎更稳；剩**服务器四件套更新** + **虎皮椒真实支付接入（微信渠道已开通，支付宝未）**。**⚠️ README 推广已于 2026-08-20 上线（本初链接 + 7 张配图 + 支持作者微信），引流通道已开，支付闭环未通会直接流失访客——本项应优先于一切**。**Michael 当前唯一要做的操作**：把本地归档 `E:\\michael\\Courses\\bazi-engine-internal\BAZI-APP-HANDOFF-v1.3.0.md` 顶部的速贴块粘贴给 bazi-app 对话 → 该对话按 ①~⑤ 推进；到 ③④ 步时把 **SSH 凭据** + **虎皮椒微信 appid/appsecret** 提供给 bazi-app 对话。若后续引擎升级，bazi-app 侧用 `python tools/compliance_soften.py web/engine.dist.js` 生成合规版（坑 #41 解决方案）
@@ -450,6 +458,12 @@ const dayName = BaziEngine.lunarDayName(15)                // '十五'
 47. **Windows 沙箱里 `System.Drawing` 读图片尺寸失败**（受限环境），改用 Node 读 PNG 头部字节：`buf.readUInt32BE(16)`（宽）/ `readUInt32BE(20)`（高），校验魔数 `0x89 0x50 0x4E 0x47`——临时脚本 `tools/tmp_*.js` 用完即删（坑 #3 延续）
 48. **DSH Web GUI 用户上传图片的下载途径**：`Invoke-WebRequest http://127.0.0.1:3080/describe-image/raw/sha256:<附件id>` → `[IO.File]::WriteAllBytes(本地路径, $resp.Content)` 可把会话里用户贴的图片存到工作区（本仓库 `assets/screenshots/contact-card.png` 即由此取得）；`$resp.Content` 是 byte[] 可直接写，勿转 string
 49. **ClawHub 市场卡片字段 ≠ 仓库文件**：ClawHub 页面「License」「Current version」是**后台手动维护的卡片字段**（实测 License 显示 MIT-0、版本显示 v0.1.0；仓库实为 MIT + CC BY-NC-SA 4.0 双许可 / v1.3.6）——改仓库 LICENSE 或 SKILL.md frontmatter 的 `license:` 字段**不会**自动改平台卡片（SKILL.md frontmatter 是 `license: MIT`，页面仍显示 MIT-0，证明非同步来源）；但 **SKILL.md frontmatter 的 `description:` 会同步为 ClawHub 页面描述**（已核实逐字一致）。处理 = 仓库侧改 README / SKILL.md description 声明双许可（push 生效，**SKILL.md description 会同步为页面 summary**，已核实）+ **用 CLI 重新发布新版本修复版本号**（`clawhub skill publish <目录> --slug baizi-engine --version 1.3.6`，2026-08-20 已执行成功：v0.1.0→v1.3.6，安全检查约 2-3 分钟转公开；非 TTY 下 CLI 退出码 1 是进度动画假象，加 `--json` 看 `ok:true` + `pending-publication` 即提交成功）。**License 字段无法修改**：ClawHub 平台强制所有 skill 以 MIT-0 发布（官方文档：`Publishing a skill means it is released under MIT-0 on ClawHub`，无 per-skill 选项），只能靠描述声明仓库双许可兜底。MIT-0 = MIT 免署名版，对数据 NC 条款是直接冲突，属法律风险点，已在描述中声明。**审计状态补记（2026-08-20）**：v1.3.6 审计 = Review 非 Pass——① tools/*.js 测试脚本 13 处 `vm` 动态执行标 Critical（规则引擎回归脚本，静态扫描误报，安装者不会运行）；② kb/05-reference/prompt-template.md 含面相/手相/健康内容超 Bazi 范围（实际未实现，仅未来参考）。**Michael 决定方向 A 接受现状**（Review 不阻塞安装，v1.3.6 已公开可装）；若日后追求干净审计，重发时排除 kb/05-reference + tools/ 即可转 Pass。**另更正**：ClawHub 的 Import from GitHub 是**一次性导入**（填仓库地址→Detect→发布），**非 git push 持续同步**（早期「GitHub 自动同步版」说法不准确）；要 push 自动发布需配 GitHub Actions workflow（openclaw/clawhub 的 skill-publish.yml + CLAWHUB_TOKEN secret）
+
+
+### CITY_LON 扩充类（2026-08-28，v1.3.7）
+50. **引擎 alert() 在 Node 环境抛 'alert is not defined'**：paipan 输入校验 7 处 alert 在 ENGINE 标记区内会进 dist，Node 下非法输入抛 ReferenceError 而非返回 null（README 承诺 Node 双端可用）——修复：引擎区段开头 `if (typeof alert === 'undefined') { var alert = function(){}; }`（commit `ec45e2d`）
+51. **Git tag ≠ GitHub Release**：`git tag -a v1.3.7 && git push origin v1.3.7` 只创建 Git 层 tag（Tags 页可见），**不会自动生成 GitHub Release**（Releases 页条目需单独创建）——用 `gh release create v1.3.7 --title ... --notes-file ...` 补建（账号需 repo 权限）
+52. **bazi-app 排盘结果被 localStorage 缓存恢复**：`localStorage.benchu.ctx.v2` 缓存上次排盘结果，改城市重排时若不清缓存，页面直接恢复旧结果不重新计算——验证/测试改城市前先 `localStorage.removeItem('benchu.ctx.v2')`
 
 ## 九、项目速查
 
