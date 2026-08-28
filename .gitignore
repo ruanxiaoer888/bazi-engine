@@ -39,3 +39,6 @@ docs/course-tools/
 .dsh-uploads/
 .tmp-*/
 .dumate/
+
+# C 端合规软化版（compliance_soften.py 派生产物，不入库；bazi-app 靠 Copy-Item 交付）
+engine/engine.compliance.js
