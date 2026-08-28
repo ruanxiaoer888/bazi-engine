@@ -35,5 +35,10 @@ jobs:
           node tools/verify_edu_rules.js
           node tools/test_xiyong.js
           node tools/check_conflicts.js
+      - name: Compliance soften + check (C-end gate)
+        run: |
+          cp engine/engine.dist.js engine/engine.compliance.js
+          python tools/compliance_soften.py engine/engine.compliance.js
+          python tools/compliance_soften.py engine/engine.compliance.js --check
       - name: Hit distribution audit (100 charts, fixed seed)
         run: node tools/audit_hit_distribution.js --sample=100 --seed=42
