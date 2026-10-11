@@ -45,3 +45,14 @@ engine/engine.compliance.js
 
 # 营销素材缓存（DSH 工具临时落盘，不入库）
 marketing-assets/
+
+# ── 2026-10 公开仓库公私分离 ──
+# 内部真相源 / 商业与发布材料：本机保留，但不进公开仓库（含定价、渠道、竞对、C 端运维信息）
+HANDOFF.md
+工作区说明.md
+docs/history/
+
+# 本地临时工作目录（历史清理用的干净克隆、一次性修复脚本等）
+_local/
+_clean/
+

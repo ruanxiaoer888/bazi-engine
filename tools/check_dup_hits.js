@@ -86,5 +86,19 @@ if (over.length) {
   over.forEach(x => console.error('   ' + x));
   process.exit(1);
 }
-console.log('\n✅ 无规则对超过双命中阈值；规则 id 全部有效。');
+
+// 门禁③：断语库逐字重复结论（不同 id 输出完全相同的句子）
+// 2026-10 修复前有 6 组共 12 条：wealth_jincai_1/2 与 yongshen_{jin,mu,shui,huo,tu}_1/2
+// ——阳干与阴干共用同一句，命盘命中任一即出现两条一模一样的断语。
+// 现按《滴天髓》庚辛/甲乙/壬癸/丙丁/戊己分论差异化，此门禁止回退。
+const concl = {};
+for (const r of RULES) { (concl[r.conclusion] = concl[r.conclusion] || []).push(r.id); }
+const dupConcl = Object.entries(concl).filter(([, ids]) => ids.length > 1);
+if (dupConcl.length) {
+  console.error('\n❌ 断语库存在逐字重复的结论（同一盘会重复显示同一句话）：');
+  dupConcl.forEach(([txt, ids]) => console.error(`   ${ids.join(', ')} :: ${txt.slice(0, 40)}`));
+  process.exit(1);
+}
+
+console.log('\n✅ 无规则对超过双命中阈值；规则 id 全部有效；无逐字重复结论。');
 process.exit(0);

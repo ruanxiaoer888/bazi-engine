@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """生成节气表 jieqi.json，并校验前端排盘算法与 lunar-python 一致性。"""
-import json, datetime
+import json, datetime, os, sys
 from lunar_python import Solar
 
 GAN = ['甲','乙','丙','丁','戊','己','庚','辛','壬','癸']
@@ -108,9 +108,14 @@ SAMPLES = [
 
 if __name__ == '__main__':
     jq = gen_jieqi()
-    with open(r'E:\michael\workBuddy\bazi-project\ui\jieqi.json', 'w', encoding='utf-8') as f:
+    # 2026-10：移除硬编码的本机绝对路径（曾写死 E:\michael\workBuddy\...\ui\jieqi.json）。
+    # 默认写到脚本所在目录，可用第一个参数指定输出路径。
+    out = sys.argv[1] if len(sys.argv) > 1 else os.path.join(
+        os.path.dirname(os.path.abspath(__file__)), 'jieqi.json')
+    with open(out, 'w', encoding='utf-8') as f:
         json.dump(jq, f, ensure_ascii=False)
-    print('jieqi.json written, years=%d, size~%dKB' % (
+    print('jieqi.json written -> %s' % out)
+    print('  years=%d, size~%dKB' % (
         len(jq['data']), len(json.dumps(jq, ensure_ascii=False))//1024))
     print('--- 校验 (前=本算法, 后=lunar) ---')
     fails = 0

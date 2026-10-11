@@ -2912,14 +2912,16 @@ function analyzeHe(A,B){
   else if(XING_PAIRS.some(pr=>(pr[0]===gzA&&pr[1]===gzB)||(pr[0]===gzB&&pr[1]===gzA))){ sc+=3; desc+='日支相刑（'+gzA+gzB+'），潜在摩擦；'; }
   else { sc+=5; desc+='日支无冲合，平稳；'; }
   // 2026-08-19 引擎审计 M2：维度 1 原最高 17（五合10+六合7），总分天花板 92，「天生佳偶≥85」几乎不可达。
-  // 扩充两子项至 25 可触达：日柱纳音相生 +5、日支三合局 +3（评分更细，评级语义不变）
+  //   当时扩充两子项（纳音相生 +5、日支三合 +3）以期达到 25。
+  // 2026-10 复核修正：六合与三合对同一对地支互斥（穷举 120×120 组日柱，同真 0 组），
+  //   故本维度真实上限 = 五合10 + 六合7（或日支同/无冲合 5 取最大）+ 纳音相生5 = 22，声明 25 永不触达。
   const nayinA=NAYIN_WX[dgzA]||'', nayinB=NAYIN_WX[dgzB]||'';
   if(nayinA&&nayinB&&WX_SK[nayinA]&&WX_SK[nayinA].生===nayinB){ sc+=5; desc+='日柱纳音相生（'+NAYIN[dgzA]+'→'+NAYIN[dgzB]+'），底蕴相济；'; }
   else if(nayinA&&nayinB&&WX_SK[nayinB]&&WX_SK[nayinB].生===nayinA){ sc+=5; desc+='日柱纳音相生（'+NAYIN[dgzB]+'→'+NAYIN[dgzA]+'），底蕴相济；'; }
   const sanhePair=SANHE.find(s=>gzA!==gzB&&s.includes(gzA)&&s.includes(gzB));
   if(sanhePair){ sc+=3; desc+='日支三合（'+gzA+gzB+'合'+wxOfSanhe(sanhePair)+'局），三合共鸣；'; }
-  sc=Math.min(sc,25);
-  dims.push({name:'日柱关系',max:25,sc:sc,desc:desc});
+  sc=Math.min(sc,22);
+  dims.push({name:'日柱关系',max:22,sc:sc,desc:desc});
   // 2. 五行互补（25）
   let sx=0,sxd='';
   WX_NAMES.forEach(w=>{
@@ -2981,7 +2983,12 @@ function analyzeHe(A,B){
   yd='甲方喜用为['+A.xiYong.join('、')+']，其中'+hit+'项在乙方命局较旺'+(ys>=4?'，互补佳':ys>=2?'，部分互补':'，互补有限')+'。';
   dims.push({name:'用神互补',max:5,sc:ys,desc:yd});
 
-  const total=dims.reduce((s,d)=>s+d.sc,0);
+  // 2026-10 复核修正：七维满分之和 = 22+25+10+15+10+10+5 = 97（≠100），
+  //   原实现把 0~97 的实际得分直接标注为"/ 100"（虚高上限、评级阈值失真）→
+  //   现按各维实测满分归一化到真正的 0~100，评级阈值（85/70/55/40）语义不变。
+  const raw=dims.reduce((s,d)=>s+d.sc,0);
+  const rawMax=dims.reduce((s,d)=>s+d.max,0);
+  const total=Math.round(raw*100/rawMax);
   let grade='';
   if(total>=85) grade='天生佳偶';
   else if(total>=70) grade='良好匹配，适当磨合';

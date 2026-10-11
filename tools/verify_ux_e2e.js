@@ -15,7 +15,7 @@ function _getEl(id){
 }
 var document={getElementById:_getEl,querySelectorAll:()=>[],querySelector:()=>null};
 var alert=(msg)=>{globalThis._alerts.push(String(msg));};`;
-const expose = ';globalThis.matchRules=matchRules;globalThis.paipan=paipan;globalThis.RULES=RULES;globalThis.SHENSHA=SHENSHA;globalThis.yearGZ=yearGZ;globalThis.monthGZ=monthGZ;globalThis.dayGZ=dayGZ;globalThis.hourGZ=hourGZ;globalThis.matchDayun=matchDayun;globalThis.matchLiuYue=matchLiuYue;globalThis.generate=generate;globalThis.runHe=runHe;globalThis.runLiu=runLiu;globalThis.runLiuYue=runLiuYue;globalThis.runLiuDay=runLiuDay;globalThis.runLiuQin=runLiuQin;globalThis.__setLast=function(x){LAST=x;LIU_OPEN=false;LIU_YUE_OPEN=false;LIU_DAY_OPEN=false;LIU_QIN_OPEN=false;};globalThis.__resetPanels=function(){LIU_OPEN=false;LIU_YUE_OPEN=false;LIU_DAY_OPEN=false;LIU_QIN_OPEN=false;};globalThis.LAST=null;';
+const expose = ';globalThis.matchRules=matchRules;globalThis.paipan=paipan;globalThis.RULES=RULES;globalThis.SHENSHA=SHENSHA;globalThis.yearGZ=yearGZ;globalThis.monthGZ=monthGZ;globalThis.dayGZ=dayGZ;globalThis.hourGZ=hourGZ;globalThis.matchDayun=matchDayun;globalThis.matchLiuYue=matchLiuYue;globalThis.generate=generate;globalThis.runHe=runHe;globalThis.runLiu=runLiu;globalThis.runLiuYue=runLiuYue;globalThis.runLiuDay=runLiuDay;globalThis.runLiuQin=runLiuQin;globalThis.__setLast=function(x){LAST=x;LIU_OPEN=false;LIU_YUE_OPEN=false;LIU_DAY_OPEN=false;LIU_QIN_OPEN=false;};globalThis.__resetPanels=function(){LIU_OPEN=false;LIU_YUE_OPEN=false;LIU_DAY_OPEN=false;LIU_QIN_OPEN=false;};globalThis.LAST=null;globalThis.analyzeHe=analyzeHe;';
 eval(stub + code + expose);
 
 let fails = 0, warns = 0;
@@ -237,6 +237,40 @@ for(const gc of gCases){
   }catch(e){ warn('G7 盘异常: '+gc.join('-')+' '+e.message); }
 }
 assert('G7 五盘六亲输出均正常', gOk===5, gOk+'/5');
+
+console.log('========== H. 合婚评分完整性（满分标定 + 百分制归一化） ==========');
+// 2026-10 修复：维度 1 声明满分 25，但六合与三合对同一对地支互斥（穷举 120×120 日柱同真 0 组），
+// 真实上限 22 → 七维满分和 97 却被显示为 "/ 100"。现维度 1 max=22 + 总分按实际满分归一化。
+// 本节锁定：维度齐全、满分和、日柱关系满分、sc≤max、总分归一化到 0~100。
+const heCases=[
+  [[1990,5,15,10,0,'男','广州市'],[1992,8,20,14,0,'女','上海市']],
+  [[1988,2,3,22,30,'男','成都市'],[1991,11,7,5,15,'女','天津市']],
+  [[1975,12,31,23,45,'女','武汉市'],[1980,6,6,12,0,'男','北京市']],
+  [[2000,1,1,0,5,'男','北京市'],[2003,3,3,3,3,'女','广州市']],
+  [[1960,7,7,7,7,'男','上海市'],[1962,9,9,9,9,'女','成都市']],
+];
+let hDimOk=0, hMaxSum=null, hDim1Max=null, hBad=[];
+for(const [ca,cb] of heCases){
+  const A=paipan('甲',ca[5],ca[0],ca[1],ca[2],ca[3],ca[4],ca[6],'yes');
+  const B=paipan('乙',cb[5],cb[0],cb[1],cb[2],cb[3],cb[4],cb[6],'yes');
+  if(!A||!B){ warn('H 盘构造失败: '+ca.join('-')+' / '+cb.join('-')); continue; }
+  const html=globalThis.analyzeHe(A,B);
+  const dims=[...html.matchAll(/<span>([^<]+)<\/span><span>(\d+) \/ (\d+)<\/span>/g)].map(x=>({name:x[1],sc:+x[2],max:+x[3]}));
+  if(dims.length!==7){ hBad.push('维度数='+dims.length); continue; }
+  const sumMax=dims.reduce((s,d)=>s+d.max,0);
+  const raw=dims.reduce((s,d)=>s+d.sc,0);
+  const shown=+(html.match(/score-big">(\d+)</)||[])[1];
+  const expect=Math.round(raw*100/sumMax);
+  if(hMaxSum===null) hMaxSum=sumMax;
+  hDim1Max=(dims.find(d=>d.name==='日柱关系')||{}).max;
+  if(dims.some(d=>d.sc>d.max)) hBad.push('维度超出满分');
+  if(shown!==expect) hBad.push('总分未归一化 '+shown+'≠'+expect);
+  if(!(shown>=0&&shown<=100)) hBad.push('总分越界 '+shown);
+  hDimOk++;
+}
+assert('H1 七维齐全 + 满分和 = 97', hDimOk===heCases.length && hMaxSum===97, '维数OK='+hDimOk+'/'+heCases.length+' 满分和='+hMaxSum);
+assert('H2 日柱关系满分 = 22（原声明 25 不可达）', hDim1Max===22, '实际='+hDim1Max);
+assert('H3 各维 sc≤max，总分按实际满分归一化到 0~100', hBad.length===0, hBad.slice(0,3).join('; '));
 
 console.log('\n===== 汇总 =====');
 console.log('FAIL: '+fails+' | WARN: '+warns);

@@ -13,13 +13,13 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      # TODO(2026-10 安全审计)：下列 action 用可移动标签（v4/v5），上游账号被投毒即可在 CI 内执行任意代码。
-      # 本机无外网未取到 SHA，联网后请固定，例如：gh api repos/actions/checkout/commits/v4 --jq .sha
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      # 2026-10 安全审计：action 已固定到 commit SHA（可移动标签 v4/v5 存在上游投毒 → CI 内任意代码执行的风险）
+      # 升级方式：gh api repos/<owner>/<repo>/git/ref/tags/<tag> --jq '.object.sha'（务必确认 object.type=commit，annotated tag 需再解引用）
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
         with:
           python-version: '3.11'
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: '20'
       - name: Build (ui/index.html + engine/engine.dist.js)
@@ -28,7 +28,7 @@ jobs:
         run: git diff --exit-code -- ui/index.html engine/engine.dist.js
       - name: JSON validity (rules.json)
         run: python -c "import json; d=json.load(open('kb/04-rules-db/rules.json',encoding='utf-8')); print('rules.json OK,', len(d['rules']), 'rules')"
-      - name: 13 regressions
+      - name: 回归套件（14 套）
         run: |
           node tools/test_engine.js
           node tools/test_lunar.js
@@ -43,6 +43,7 @@ jobs:
           node tools/verify_edu_rules.js
           node tools/test_xiyong.js
           node tools/check_conflicts.js
+          node tools/check_dup_hits.js
       - name: Compliance soften + check (C-end gate)
         run: |
           cp engine/engine.dist.js engine/engine.compliance.js

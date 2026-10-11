@@ -149,13 +149,13 @@ console.log(c.yg, c.mg, c.dg, c.hg); // 庚午 辛巳 庚辰 庚辰
 
 - **UI**：`ui/index.html` — 单文件离线（零外部依赖），内置 206 年节气数据 + 1000 条断语
 - **构建**：`tools/build_ui.py`（Python）内联节气与断语库生成 UI
-- **验证**：13 套回归脚本，覆盖引擎库、农历、夏令时、输入容错、边界场景、报告质量与端到端用户视角，CI 自动执行
+- **验证**：14 套回归脚本，覆盖引擎库、农历、夏令时、输入容错、边界场景、报告质量与端到端用户视角，CI 自动执行
 
   <details>
-  <summary>13 套回归脚本清单（点击展开）</summary>
+  <summary>14 套回归脚本清单（点击展开）</summary>
 
   ```
-  tools/test_engine.js       工具链审计（28 项，独立库直测）
+  tools/test_engine.js       工具链审计（43 项，独立库直测）
   tools/test_lunar.js        农历模块（27 项）
   tools/test_ui.js           UI 功能回归
   tools/test_eval_state.js   旺衰状态机
@@ -168,9 +168,10 @@ console.log(c.yg, c.mg, c.dg, c.hg); // 庚午 辛巳 庚辰 庚辰
   tools/verify_edu_rules.js  学业规则
   tools/test_xiyong.js       喜用神
   tools/check_conflicts.js   反义矛盾检测
+  tools/check_dup_hits.js    重复命中 + 逐字重复结论门禁（含 id 有效性校验）
   ```
   </details>
-- **CI 门禁**：`.github/workflows/ci.yml`（GitHub Actions）在每次 push / PR 时自动构建 UI 与引擎 dist、校验断语库 JSON、跑 13 套回归 + 命中分布审计，全绿方可合并——质量保障由机器人把关
+- **CI 门禁**：`.github/workflows/ci.yml`（GitHub Actions）在每次 push / PR 时自动构建 UI 与引擎 dist、校验断语库 JSON、跑 14 套回归 + 命中分布审计，全绿方可合并——质量保障由机器人把关
 - **跨平台一致性**：`.gitattributes` 强制构建产物与数据文件使用 LF 换行（Windows CRLF 曾导致 dist 字节不一致、MD5 无法跨平台对齐），保证本地 / CI / C 端三方字节一致
 - **质检工具**：`audit_hit_distribution.js`（命中分布审查）、`check_dup_hits.js`（重复命中检测）、`check_conflicts.js`（反义矛盾检测）
 

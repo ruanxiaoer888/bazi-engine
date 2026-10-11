@@ -147,13 +147,13 @@ Then:
 
 - **Runtime**: `ui/index.html` — single file, zero external dependencies, 206 years of solar-term data + 1000-rule database inlined
 - **Build**: `tools/build_ui.py` (Python) inlines solar terms + rules into the UI
-- **Verification**: 13 regression suites covering the engine library, lunar calendar, DST, input tolerance, boundary cases, report quality, and end-to-end user flows — run automatically by CI
+- **Verification**: 14 regression suites covering the engine library, lunar calendar, DST, input tolerance, boundary cases, report quality, and end-to-end user flows — run automatically by CI
 
   <details>
-  <summary>13 regression suites (click to expand)</summary>
+  <summary>14 regression suites (click to expand)</summary>
 
   ```
-  tools/test_engine.js       toolchain audit (28 checks, standalone lib)
+  tools/test_engine.js       toolchain audit (43 checks, standalone lib)
   tools/test_lunar.js        lunar calendar (27 checks)
   tools/test_ui.js           UI regression
   tools/test_eval_state.js   strength state machine
@@ -166,9 +166,10 @@ Then:
   tools/verify_edu_rules.js  education rules
   tools/test_xiyong.js       favorable-god rules
   tools/check_conflicts.js   contradiction detection
+  tools/check_dup_hits.js    duplicate-hit + duplicate-conclusion gate (incl. rule-id validity)
   ```
   </details>
-- **CI gate**: `.github/workflows/ci.yml` (GitHub Actions) builds the UI + engine dist, validates the rule-database JSON, and runs all 13 regressions + a hit-distribution audit on every push / PR — nothing merges until green
+- **CI gate**: `.github/workflows/ci.yml` (GitHub Actions) builds the UI + engine dist, validates the rule-database JSON, and runs all 14 regressions + a hit-distribution audit on every push / PR — nothing merges until green
 - **Cross-platform consistency**: `.gitattributes` enforces LF line endings on build artifacts & data files (Windows CRLF once made dist bytes differ, breaking MD5 alignment across platforms), keeping local / CI / consumer builds byte-identical
 - **Quality tooling**: `audit_hit_distribution.js` (hit-distribution audit), `check_dup_hits.js` (duplicate-hit detection), `check_conflicts.js` (contradictory-rule detection)
 
