@@ -10,6 +10,7 @@
 - ZIP 根放 SKILL.md（从 skill/SKILL.md 复制），与项目源 skill/SKILL.md 保持同步
 - 只打包可对外内容（ui/engine/kb/skill/tools + README.md），内部文档（HANDOFF/AI_CONTEXT/发布物料等）与 docs/assets 不进 ZIP
 """
+import re
 import sys
 import zipfile
 from pathlib import Path
@@ -35,6 +36,28 @@ EXCLUDE_SUB = {
     'kb/05-reference',  # 内部参考
 }
 EXCLUDE_NAMES = {'__pycache__', '.DS_Store', 'Thumbs.db'}
+
+# 2026-10 风险面扫描修复：THIRD-PARTY.md 声明"kb/03-classics/ 中的 docx 提取件不进商业交付包"，
+# 但当时 EXCLUDE_SUB 并未包含它们 → 声明与实际不符（发布包/Release 附件里实有 6 个 docx 提取件：
+# bazi-wuxing-table / ditian-sui / qiongtong-baojian / sanming-tonghui / workflow-full / yuanhai-ziping）。
+# 现改为**按文件头部的来源标记自动排除**，并在打包后做硬校验（见 main 的 docx_left 检查），
+# 保证"声明即事实"：以后任何新增的 docx 提取件也会自动被挡在交付包之外。
+DOCX_PROVENANCE_RE = re.compile(r'来源[：:].{0,60}\.docx', re.IGNORECASE)
+
+# 本次构建中被"docx 来源"规则自动排除的文件（打印出来，避免静默）
+DOCX_EXCLUDED = []
+
+
+def has_docx_provenance(path: Path) -> bool:
+    """文件头部 1500 字符内声明了 .docx 来源 → 第三方整理件，不进交付包"""
+    if path.suffix.lower() not in ('.md', '.txt'):
+        return False
+    try:
+        head = path.read_text(encoding='utf-8', errors='ignore')[:1500]
+    except Exception:
+        return False
+    return bool(DOCX_PROVENANCE_RE.search(head))
+
 
 
 def collect() -> list:
@@ -67,6 +90,9 @@ def collect() -> list:
             arc = p.relative_to(ROOT).as_posix()
             if any(arc.startswith(s) for s in EXCLUDE_SUB):
                 continue
+            if has_docx_provenance(p):
+                DOCX_EXCLUDED.append(arc)
+                continue
             if arc.endswith(('.tmp', '.bak')):
                 continue
             items.append((arc, p))
@@ -91,6 +117,19 @@ def main():
     print('根文件:', ', '.join(sorted(n for n in names if '/' not in n)))
     print('校验-排除名单残留:', bad_root if bad_root else '无')
     print('校验-根无嵌套:', 'OK' if not nested else f'异常: {nested}')
+    # 硬校验：交付包内不得含 docx 提取件（THIRD-PARTY.md 声明的"不进商业交付包"必须为真）
+    docx_left = []
+    for n in names:
+        if not n.lower().endswith(('.md', '.txt')):
+            continue
+        try:
+            head = z.read(n)[:1500].decode('utf-8', 'ignore')
+        except Exception:
+            continue
+        if DOCX_PROVENANCE_RE.search(head):
+            docx_left.append(n)
+    print('自动排除(来源标注为 .docx 的第三方整理件):', ', '.join(sorted(DOCX_EXCLUDED)) or '无')
+    print('校验-包内无 docx 提取件:', 'OK' if not docx_left else f'❌ 异常: {docx_left}')
     # 关键产物 MD5（发布验证，替代旧打包目录同步）
     import hashlib
     key_files = ['ui/index.html', 'engine/engine.dist.js', 'skill/SKILL.md', 'kb/04-rules-db/rules.json', 'SKILL.md']
@@ -99,6 +138,9 @@ def main():
         if src.exists():
             h = hashlib.md5(src.read_bytes()).hexdigest()
             print(f'MD5 {kf}: {h}')
+    if docx_left:
+        print('\n❌ 交付包仍含 docx 提取件（第三方整理，权利链不完整）：' + ', '.join(docx_left))
+        sys.exit(1)
 
 
 if __name__ == '__main__':

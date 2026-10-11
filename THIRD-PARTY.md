@@ -64,9 +64,17 @@
 以下内容**不随商业授权交付**，理由见上：
 
 1. `kb/02-rules/bazi-mbti.md`（来源为微信公众号/百家号文章，无作者、无 URL、无授权）
-2. `kb/03-classics/` 中的 docx 提取件（古籍原文属公有领域，转售无标的价值，且来源为第三方整理）
+2. `kb/03-classics/` 中的 docx 提取件（古籍原文属公有领域，转售无标的价值，且来源为第三方整理）。
+   **具体为 6 个文件**：`bazi-wuxing-table.md`、`ditian-sui.md`、`qiongtong-baojian.md`、
+   `sanming-tonghui.md`、`workflow-full.md`、`yuanhai-ziping.md`。
 3. `HANDOFF.md`、`工作区说明.md`、`docs/`（内部文档，非交付物）
 4. `assets/screenshots/`（含作者个人联系方式素材）
+
+> **本条已由构建脚本强制执行（不是纸面声明）**：`tools/build_release_zip.py` 会读取每个 `.md` 文件头部的
+> `来源：…docx` 标注，**自动排除**这类第三方整理件，并在打包后做硬校验——一旦交付包内仍存在此类文件则
+> **构建失败（exit 1）**。因此 `bazi-engine-*.zip`（GitHub Release 附件与 SkillHub 上传包）与本节声明一致；
+> 2026-10 风险面扫描曾发现此声明**未被执行**（旧包内含上述 6 个文件），现已修复并加门禁。
+
 
 ---
 
