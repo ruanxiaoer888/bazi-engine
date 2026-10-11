@@ -78,6 +78,10 @@ def collect() -> list:
     lic_data = ROOT / 'LICENSE-DATA'
     if lic_data.exists():
         items.append(('DATA-LICENSE.txt', lic_data))
+    # 2026-10：第三方权利与排除清单必须随包分发（否则包内数据无权利说明）
+    tp = ROOT / 'THIRD-PARTY.md'
+    if tp.exists():
+        items.append(('THIRD-PARTY.md', tp))
     # 白名单目录
     for d in sorted(ROOT.iterdir()):
         if not d.is_dir() or d.name not in INCLUDE_DIRS:
@@ -110,7 +114,7 @@ def main():
     z = zipfile.ZipFile(str(OUT))
     names = z.namelist()
     bad_root = [n for n in names if n.split('/')[0] in EXCLUDE_ROOT_FILES]
-    nested = [n for n in names if n.count('/') == 0 and n not in ('README.md', 'SKILL.md', 'DATA-LICENSE.txt')]
+    nested = [n for n in names if n.count('/') == 0 and n not in ('README.md', 'SKILL.md', 'DATA-LICENSE.txt', 'THIRD-PARTY.md')]
     print(f'ZIP 输出: {OUT}')
     print(f'ZIP 大小: {OUT.stat().st_size / 1024:.1f} KB')
     print(f'包含文件: {len(names)} 个')

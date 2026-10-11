@@ -10,6 +10,51 @@
 
 ---
 
+## v1.3.9（2026-10-11 · 内容合规与权利链修复：KB 重写 + 免责统一 + 第三方排除落地）
+
+> **引擎层变更（dist 变化，MD5 `d8c909b15dfc9f55f62a56ec6199968f`，454.4 KB），影响 C 端：否（功能性）**——
+> 本版只改 `RULES` 断语文本与 KB 文档，**未改排盘 / 大运 / 神煞 / 合婚评分算法**；C 端只调用
+> `paipan / applyDst / SHI_CHEN_MAP`、**不消费 `RULES`**，故**无需回归**（但 dist 字节已变，C 端若做 MD5 基线核对会显示不一致）。
+
+| 项 | 值 |
+|---|---|
+| dist MD5 | `d8c909b15dfc9f55f62a56ec6199968f` |
+| ui/index.html MD5 | `708f3baab30ab0cc695b1a8517cb0b3a` |
+| compliance 版 MD5 | `500f0a14f6479b7959770d9e09f94e77` |
+| rules.json MD5 | `06be9a4378446fcb0bdb1a840f0f0317` |
+| skill/SKILL.md MD5 | `6fdc02fe593c2a4e3a7ce1838a6bcfcb` |
+| 发布包 | `bazi-engine-v1.3.9.zip`（48 文件 / 715.1 KB / MD5 `aaa8aa98c95a5fdf0f47a118e40273f5`） |
+| 影响 C 端 | **否**（仅断语文本与 KB 文档；算法未变） |
+
+**变更内容**（风险面扫描后的收口包，14 套回归全绿）：
+
+1. **🔴 解除商业授权阻断**：`kb/01-basics/najin.md` 经实测与**无许可上游** `dshxliuyu-lang/bazimbtifenxi.skill`
+   的 `nayin-table.md` 逐字一致（4/4 特征句命中），`kb/02-rules/bazi-mbti.md` 同源 → **两者整体重写为原创版本**：
+   事实性表格保留（六十甲子纳音属传统公知事实），叙述、取象、类比与结构全部改写；`bazi-mbti.md`
+   另加 MBTI 商标声明与使用边界，篇幅 223 → 80 行。
+2. **🔴 健康类免责统一**：17 条此前"结论 / 建议 / 出处三处都没有免责"的健康断语补统一后缀
+   （身体类 →「命理参考，非医学依据；如有不适请及时就医」；心理类 →「…持续困扰请寻求心理专业帮助」）。
+   此前免责落点分散（结论内 16 / 仅建议 16 / 仅出处 14），现统一落在 `conclusion`（用户必然看到）。
+3. **措辞合规**：`必有`→「变动概率较高」（全库唯一真实绝对化表述）；`shensha_羊刃` 去「血光之虞」；
+   `shensha_流霞` / `流霞_伤官` / `health_神煞_流霞` 去「血光 / 流血」；`liuri_cs_死` / `liuyue_cs_死`
+   补「（十二长生术语，指气机收敛）」；`marriage_richen_jiecai` / `marriage_bijie_duo` 补
+   「传统称…现代多表现为…」对冲；`liuyue_chong_辰戌` 去「破耗争讼」。
+4. **置信度校准**：7 条重大负面 / 变动态由「高」降为「中」（`shensha_羊刃`、`liunian_岁运并临_天地皆冲`、
+   `liunian_太岁冲日`、`liunian_天克地冲日`、`liunian_岁运并临_伏吟`、`dayun_04`、`liuyue_chong_辰戌`）
+   → 置信度分布 高 75 → **68**。
+5. **交付包披露补齐**：包内新增 `THIRD-PARTY.md`；`LICENSE` 顶部加**适用范围**（仅覆盖代码，数据见 LICENSE-DATA）；
+   `LICENSE-DATA` 补 **GeoNames / modood（CC BY 4.0）** 与 **jinchenma94/bazi-skill（MIT，Copyright (c) 2025）** 署名；
+   `tools/test_dst.js` 真实姓名脱敏；`skill/SKILL.md` 移除已排除文件的悬空引用。
+6. **交付包排除第三方 docx 提取件**：`build_release_zip.py` 按文件头「来源：….docx」标记**自动排除 + 打包后硬校验**，
+   当前排除 6 个：`bazi-wuxing-table` / `ditian-sui` / `qiongtong-baojian` / `sanming-tonghui` /
+   `workflow-full` / `yuanhai-ziping`。
+
+**bazi-app 注意事项**：**不需要回归**（算法未变，C 端不消费 `RULES`）。若 C 端做 dist MD5 基线核对，
+会看到新基线 `d8c909b1…`（未软化）/ `500f0a14…`（软化）与之不同——这是文本类变更，**同步与否都不影响功能**；
+若要同步，照旧流程：`cp engine/engine.dist.js ../bazi-app/web/` → `python tools/compliance_soften.py web/engine.dist.js` → 升 `?v=`。
+
+---
+
 ## v1.3.8（2026-10-11 · 计算正确性修复 8 项 + 用神自洽 + 安全加固 + 双许可标记 · 10-11 追加 KB/合婚/门禁修复）
 
 > **引擎层变更（dist 变化，MD5 `F29A083F808A2FA5ED5A6078F823A30D`，463,861 B），影响 C 端：是。**

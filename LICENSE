@@ -1,3 +1,8 @@
+> **适用范围**：本文件仅覆盖本仓库的**代码部分**（`engine/`、`ui/` 的逻辑代码、`tools/`、`skill/` 等）。
+> 数据与文档部分（`kb/` 下的内容、`ui/jieqi.json`、内联断语数据等）适用
+> [LICENSE-DATA](LICENSE-DATA)（CC BY-NC-SA 4.0），**不因本文件而变为可商用**。
+> 第三方内容与商业交付排除清单见 [THIRD-PARTY.md](THIRD-PARTY.md)。
+>
 MIT License
 
 Copyright (c) 2026 ruanxiaoer

@@ -63,3 +63,23 @@
 ---
 
 *Copyright (c) 2026 ruanxiaoer · 代码部分见 LICENSE（MIT）· 数据部分见本文件（CC BY-NC-SA 4.0）*
+
+---
+
+## 附：第三方数据与代码署名（NOTICE）
+
+本仓库部分内容源自第三方，按各自许可要求署名如下：
+
+1. **城市经纬度数据（`CITY_LON`，内联于 `engine/engine.dist.js` 与 `ui/index.html`）**：
+   参考 **GeoNames**（<https://www.geonames.org/>，CC BY 4.0）及其开源行政区划衍生整理
+   （如 `modood/Administrative-divisions-of-China`）。按 CC BY 4.0 要求保留署名；
+   若将该数据集单独作为产品对外授权，须一并标注上述来源。
+2. **`jinchenma94/bazi-skill`（MIT）**：时辰对照等基础表参考其整理。
+   `Copyright (c) 2025 jinchenma94`，许可全文见
+   <https://github.com/jinchenma94/bazi-skill/blob/main/LICENSE>。
+   MIT 要求保留版权与许可声明，故本条随本文件一并保留。
+3. **已排除出交付包的第三方整理件**：`kb/03-classics/` 中来源标注为 `.docx` 的 6 个文件
+   （`bazi-wuxing-table` / `ditian-sui` / `qiongtong-baojian` / `sanming-tonghui` / `workflow-full` / `yuanhai-ziping`）
+   **不进入发布/商业交付包**，由 `tools/build_release_zip.py` 自动排除并硬校验。
+4. **已重写为本项目原创版本**：`kb/01-basics/najin.md`（表格数据为传统公知事实）、
+   `kb/02-rules/bazi-mbti.md`（2026-10 整体重写，原版作废）。

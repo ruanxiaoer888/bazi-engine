@@ -74,7 +74,7 @@ assert('D3 1992 无窗口 时柱=巳', d2&&d2.pillars[3][1]==='巳', d2?'时柱=
 assert('D4 ctx.dst 标记=0', d2&&d2.dst===0, 'dst='+(d2&&d2.dst));
 
 console.log('========== E. 时辰模式：跳过 DST + 真太阳时 ==========');
-// Michael 验收案例：1991-05-23 约9点多（按太阳/农活估算）→ 巳时
+// 验收案例 A：1991-05-23 约 9 点多（按太阳位置 / 农活时间估算）→ 巳时
 // 精确模式：10:00 是钟表时间 → DST −1h → 09:00 → 真太阳时 → 08:32 → 辰时
 // 时辰模式：选巳时 → midpoint 10:00 是真太阳时 → 跳过所有校正 → 巳时
 globalThis._inp = { gender:'男', year:'1991', month:'5', day:'23', timeMode:'exact', hour:'10', minute:'0', truesun:'yes', birthplace:'广州市' };

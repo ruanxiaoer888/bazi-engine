@@ -6,7 +6,7 @@ description: >
   适用场景：用户想算八字、看命盘、测运势、查合婚、补五行、看神煞、看流年，或提到"算命/四柱/命理/bazi/fortune"。
   即使只提"算命""八字"而未明确说用 skill，也应启用本 skill。
   本 Skill 采用双许可：代码 MIT / 数据 CC BY-NC-SA 4.0（详见仓库 LICENSE / LICENSE-DATA）。
-version: 1.3.8
+version: 1.3.9
 tags: [八字, 命理, 四柱, 排盘, 运势, bazi, fortune]
 category: 传统文化/命理占卜
 platforms: [WorkBuddy, QClaw, ima]
@@ -45,7 +45,7 @@ license-data: CC-BY-NC-SA-4.0
 - `kb/02-rules/marriage.md` — 合婚七大维度
 - `kb/02-rules/workflow.md` — 九步算命完整流程（资料核准→排盘→断事→流年）
 - `kb/02-rules/example.md` — 万年历推算完整案例与综合练习
-- `kb/02-rules/bazi-mbti.md` — 八字×MBTI 交叉映射参考（可选）
+
 - `kb/03-classics/shigan-lun.md` — 十天干调候用神（核心依据）
 - `kb/03-classics/ziping-zhenquan.md` — 用神格局取法（古籍精要）
 - `kb/03-classics/yuanhai-geshi.md` — 内外十八格歌诀速查
