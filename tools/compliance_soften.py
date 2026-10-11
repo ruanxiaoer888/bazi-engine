@@ -68,12 +68,30 @@ def main():
     paths = [a for a in args if not a.startswith('--')]
     src = paths[0] if paths else os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'engine', 'engine.dist.js')
     src = os.path.abspath(src)
+    # 2026-10 修正：--check 的默认对象改为"软化后产物"，原默认指向未软化的源文件 → 必然报残留并 exit 1（假失败）
+    if check and not paths:
+        softened_default = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'engine', 'engine.compliance.js')
+        if os.path.exists(softened_default):
+            src = os.path.abspath(softened_default)
 
     with open(src, 'r', encoding='utf-8') as f:
         content = f.read()
 
     if check:
-        hits = {w: content.count(w) for w in SENSITIVE if w in content}
+        # 2026-10 修正：原只查 SENSITIVE（5 词），而替换表还含"烂桃花/桃花正缘/流年"等未纳入 →
+        # 软化后仍有大量原词却报 PASS（假门禁）。现对替换表全部源词 + SENSITIVE 做残留检查。
+        # 例外：'桃花' 是引擎神煞内部 key（{name:'桃花'}/case '桃花:'/s.name==='桃花'），刻意保留不替换；
+        #      '流年' 中 `"流年":` 是 matchRules 条件键名，需扣除后才算文案残留。
+        KEY_WHITELIST = {'桃花'}
+        words = sorted(set([frm for frm, _ in REPLACEMENTS] + SENSITIVE))
+        hits = {}
+        for w in words:
+            if w in KEY_WHITELIST:
+                continue
+            n = content.count(w) - (content.count('"流年":') if w == '流年' else 0)
+            if n > 0:
+                hits[w] = n
+        print('检查对象:', src)
         print('敏感词残留:', hits if hits else '无 ✓（已软化）')
         sys.exit(1 if hits else 0)
 
@@ -81,8 +99,11 @@ def main():
     if softened == content:
         print('无需替换（已软化或无可替换项）')
         return
-    with open(src, 'w', encoding='utf-8', newline='\n') as f:
+    # 2026-10：原子写，避免中断时损坏引擎产物（原实现直接 open(src,'w') 就地覆盖）
+    tmp = src + '.tmp-soften'
+    with open(tmp, 'w', encoding='utf-8', newline='\n') as f:
         f.write(softened)
+    os.replace(tmp, src)
     import hashlib
     md5 = hashlib.md5(softened.encode('utf-8')).hexdigest().upper()
     print(f'已软化: {src}')

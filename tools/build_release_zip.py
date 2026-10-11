@@ -30,6 +30,7 @@ EXCLUDE_ROOT_FILES = {'LICENSE', 'LICENSE-DATA', 'README.en.md',
 # 目录内排除的子路径/文件模式
 EXCLUDE_SUB = {
     'kb/04-rules-db/drafts',        # 内部取材源
+    'kb/02-rules/bazi-mbti.md',     # 2026-10：来源为微信/百家号（无作者无 URL），不纳入对外/商用交付
     'tools/__pycache__', 'tools/_dbg', 'tools/archive',  # 归档脚本不进发布包（2026-08-19 审计修复）
     'kb/05-reference',  # 内部参考
 }
@@ -49,6 +50,11 @@ def collect() -> list:
     skill_src = ROOT / 'skill' / 'SKILL.md'
     if skill_src.exists():
         items.append(('SKILL.md', skill_src))
+    # 2026-10：数据许可随包分发。平台禁止 LICENSE/LICENSE-DATA 文件名，故改名为 DATA-LICENSE.txt，
+    # 避免"包内含 1000 条 NC 数据却无任何数据许可声明"（第三方据此主张 MIT/MIT-0 授权）。
+    lic_data = ROOT / 'LICENSE-DATA'
+    if lic_data.exists():
+        items.append(('DATA-LICENSE.txt', lic_data))
     # 白名单目录
     for d in sorted(ROOT.iterdir()):
         if not d.is_dir() or d.name not in INCLUDE_DIRS:
@@ -78,7 +84,7 @@ def main():
     z = zipfile.ZipFile(str(OUT))
     names = z.namelist()
     bad_root = [n for n in names if n.split('/')[0] in EXCLUDE_ROOT_FILES]
-    nested = [n for n in names if n.count('/') == 0 and n not in ('README.md', 'SKILL.md')]
+    nested = [n for n in names if n.count('/') == 0 and n not in ('README.md', 'SKILL.md', 'DATA-LICENSE.txt')]
     print(f'ZIP 输出: {OUT}')
     print(f'ZIP 大小: {OUT.stat().st_size / 1024:.1f} KB')
     print(f'包含文件: {len(names)} 个')

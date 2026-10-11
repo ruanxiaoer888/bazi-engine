@@ -5,7 +5,7 @@
 [![GitHub Stars](https://img.shields.io/github/stars/ruanxiaoer888/bazi-engine?style=flat-square&label=Stars&color=blue)](https://github.com/ruanxiaoer888/bazi-engine)
 [![CI](https://img.shields.io/github/actions/workflow/status/ruanxiaoer888/bazi-engine/ci.yml?style=flat-square&label=CI)](https://github.com/ruanxiaoer888/bazi-engine/actions)
 [![License](https://img.shields.io/badge/License-MIT%2FCC--BY--NC--SA%204.0-blue?style=flat-square)](LICENSE)
-[![SkillHub](https://img.shields.io/badge/SkillHub-%E5%B7%B2%E4%B8%8A%E6%9E%B6-purple?style=flat-square)](https://skillhub.com/)
+[![SkillHub](https://img.shields.io/badge/SkillHub-%E5%B7%B2%E4%B8%8A%E6%9E%B6-purple?style=flat-square)](https://skillhub.cn)
 [![ClawHub](https://img.shields.io/badge/ClawHub-%E5%B7%B2%E4%B8%8A%E6%9E%B6-green?style=flat-square)](https://clawhub.ai/ruanxiaoer888/skills/baizi-engine)
 
 > **English**: [README.en.md](README.en.md)  
@@ -53,11 +53,11 @@
 
 | | 项目 | 说明 |
 |---|---|---|
-| 🧩 | **bazi-engine**（本仓库） | 开源排盘引擎底座：Skill + 单文件 UI + 独立 JS 库（MIT），面向开发者与命理师 |
-| 📦 | **Skill 市场分发** | 已上架 [ClawHub](https://clawhub.ai/ruanxiaoer888/skills/baizi-engine)（OpenClaw 官方市场，安全审计 ✅ 通过）与 [SkillHub](https://skillhub.com/)（腾讯），AI 助手一键安装即用 |
+| 🧩 | **bazi-engine**（本仓库） | 开源排盘引擎底座：Skill + 单文件 UI + 独立 JS 库（**代码 MIT / 数据 CC BY-NC-SA 4.0**），面向开发者与命理师 |
+| 📦 | **Skill 市场分发** | 已上架 [ClawHub](https://clawhub.ai/ruanxiaoer888/skills/baizi-engine)（OpenClaw 官方市场）与 [SkillHub](https://skillhub.cn)（腾讯），AI 助手一键安装即用 |
 | 🚀 | **[本初](https://benchu.xiaoerpro.com/)** | 作者自有的 C 端在线产品：AI 八字报告（排盘 / 合婚 / 流年），付费解锁，微信支付 |
 
-**开源 → 商业闭环**：引擎开源于 GitHub 供社区使用与二次开发；C 端产品「本初」是作者自有的商业落地，与引擎共用同一确定性排盘内核——C 端仅消费 `paipan` / `applyDst` 等 **MIT 代码层** API，付费解读内容为 C 端自有实现，不涉及 NC 数据。开源获得社区打磨，产品验证商业价值，互相成就。
+**开源 → 商业闭环**：引擎开源于 GitHub 供社区使用与二次开发；C 端产品「本初」是作者自有的商业落地，与引擎共用同一确定性排盘内核。**C 端作为权利人可自用同一内核与数据**（作者对自有代码与数据享有完整权利）；**第三方**使用本仓库仍受双许可约束：代码 MIT、数据 [CC BY-NC-SA 4.0](LICENSE-DATA)，商业使用需另行取得授权。开源获得社区打磨，产品验证商业价值，互相成就。
 
 <p align="center">
   <img src="assets/screenshots/benchu/paipan.png" alt="本初 · 排盘结果页" width="700"/>
@@ -115,13 +115,15 @@ console.log(c.yg, c.mg, c.dg, c.hg); // 庚午 辛巳 庚辰 庚辰
 
 本 Skill 已上架两大 Skill 市场，均可一键安装：
 
-- **ClawHub**（OpenClaw 官方市场）：[clawhub.ai/ruanxiaoer888/skills/baizi-engine](https://clawhub.ai/ruanxiaoer888/skills/baizi-engine) · 安全审计 ✅ 通过 · 与 GitHub 仓库自动同步（push 即更新）
+- **ClawHub**（OpenClaw 官方市场）：[clawhub.ai/ruanxiaoer888/skills/baizi-engine](https://clawhub.ai/ruanxiaoer888/skills/baizi-engine)（平台导入为**一次性**，不会随 push 自动同步；发版后需用 `clawhub skill publish` 重新发布）
 
   ```bash
   openclaw skills install @ruanxiaoer888/baizi-engine
   ```
 
-- **SkillHub**（腾讯）：平台内搜索 `bazi-engine` 一键安装
+  > ⚠️ ClawHub 上另有一个**历史条目** `bazi-engine`（v1.0.0 / 504 条断语、描述中无数据许可声明），请勿安装；本仓库对应条目是 `baizi-engine`。
+
+- **SkillHub**（腾讯，入口 <https://skillhub.cn>）：平台内搜索 `bazi-engine` 一键安装
 
 安装后：
 
@@ -194,22 +196,25 @@ kb/                      古籍原文 + 规则手册 + 断语库
 
 本工具基于传统命理典籍（子平法）进行排盘与推演，结果仅供文化研究与娱乐参考，不构成医疗、投资、法律等任何专业建议。命理之说，信则有，不信则无，请理性看待。
 
-## 数据溯源指纹
+## 数据溯源与许可标记
 
-断语库（`kb/04-rules-db/rules.json`）内含**溯源指纹句**（水印，具体位置不公开）。未经许可复用本断语库（如直接搬运数据做商业产品），指纹句会原样出现在对方内容中，可据此识别与取证。遵守 [LICENSE](LICENSE) / [LICENSE-DATA](LICENSE-DATA) 的正常使用不受任何影响。
+断语库（`kb/04-rules-db/rules.json`）**预留了溯源机制**：商业授权交付版本会内嵌来源标记（嵌入位置不公开），用于识别未获授权的整库搬运并为维权取证提供依据。
+
+> ⚠️ **现状说明**：当前开源版本**尚未生成**指纹清单（本地私密清单 `.fingerprints.json` 不存在），因此请勿将上一段理解为"当前开源数据已可取证"。授权客户以授权协议附件中的交付版本与清单为准。
 
 ## License
 
 本仓库采用**双许可**结构：
 
-- **代码**（排盘引擎 / UI / 构建测试脚本 / Skill 定义）：[MIT](LICENSE) — 自由使用
+- **代码**（排盘引擎 / UI 逻辑 / 构建测试脚本 / Skill 定义）：[MIT](LICENSE) — 自由使用
 - **数据**（`kb/` 断语库与古籍汇编等）：[CC BY-NC-SA 4.0](LICENSE-DATA) — 署名 · 非商业 · 相同方式共享（古籍原文属公有领域，可自由引用）
+- **复合产物**（`ui/index.html`、`engine/engine.dist.js`）：**同一文件内"代码部分 MIT + 内联的 1000 条断语数据 CC BY-NC-SA 4.0"**。下载/引用这两个文件不等于获得断语数据的商用许可。
 
-> **商业边界**：「本初」为作者自有商业产品（作者对自有代码与数据享有完整权利）；第三方使用本仓库仍按上方双许可执行（代码 MIT / 数据 CC BY-NC-SA 4.0），商业授权请联系作者。
+> **商业边界**：「本初」为作者自有商业产品（作者对自有代码与数据享有完整权利）；**第三方**使用本仓库仍按上方双许可执行（代码 MIT / 数据 CC BY-NC-SA 4.0），商业授权请联系作者。
 >
-> **市场分发**：本 Skill 在 [ClawHub](https://clawhub.ai/ruanxiaoer888/skills/baizi-engine) / SkillHub 等市场分发时同样适用上述双许可——若市场页面的 License 字段与本仓库不一致，以本仓库 [LICENSE](LICENSE) / [LICENSE-DATA](LICENSE-DATA) 为准。
+> **市场分发**：本 Skill 在 [ClawHub](https://clawhub.ai/ruanxiaoer888/skills/baizi-engine) / [SkillHub](https://skillhub.cn) 等市场分发时同样适用上述双许可。**平台页面显示的 License 字段（ClawHub 因平台规则强制显示为 MIT-0）仅为平台元数据，不构成对数据部分的授权**；与本仓库不一致时，以 [LICENSE](LICENSE) / [LICENSE-DATA](LICENSE-DATA) 为准。
 >
-> 双许可边界、来源归属与商业授权说明详见 [LICENSE-DATA](LICENSE-DATA)。
+> 双许可边界、第三方来源清单（[THIRD-PARTY.md](THIRD-PARTY.md)）与商业授权说明详见 [LICENSE-DATA](LICENSE-DATA)。
 
 ## 支持作者
 

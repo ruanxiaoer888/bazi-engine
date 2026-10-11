@@ -32,6 +32,7 @@ TPL = r"""<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
+<!-- 许可：本文件代码部分为 MIT（见 LICENSE）；其中内联的断语数据（RULES，1000 条）为 CC BY-NC-SA 4.0（见 LICENSE-DATA），商业使用需另行取得授权 -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#07070d">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14' fill='%2307070d' stroke='%23c9a35f' stroke-width='2'/%3E%3Cpath d='M16 2a14 14 0 0 1 0 28z' fill='%23c9a35f'/%3E%3Ccircle cx='16' cy='8' r='3.5' fill='%2307070d'/%3E%3Ccircle cx='16' cy='24' r='3.5' fill='%23c9a35f'/%3E%3C/svg%3E">
@@ -722,8 +723,10 @@ TPL = r"""<!DOCTYPE html>
 const JIEQI = __JIEQI__;
 const RULES = __RULES__;
 
-// Node 双端兼容：alert 仅浏览器存在，Node 下兜底为 no-op（引擎输入校验在 Node 环境返回 null 而非抛异常）
-if (typeof alert === 'undefined') { var alert = function(){}; }
+// 双端 alert（2026-10 修正）：此处**不能**写 `var alert = …`——在同一作用域内声明同名变量会遮蔽
+// 浏览器全局 alert（UMD 工厂里尤甚：函数级提升使 typeof 恒为 undefined，浏览器弹窗也被静默替换）。
+// 改为"仅当确实没有 alert 时才补一个全局 no-op"：浏览器保留原生 alert，Node 下调用不抛异常。
+if (typeof alert === 'undefined' && typeof globalThis !== 'undefined' && typeof globalThis.alert !== 'function') { globalThis.alert = function(){}; }
 
 // ===== 基础数据 =====
 const GAN = ['甲','乙','丙','丁','戊','己','庚','辛','壬','癸'];
@@ -841,7 +844,7 @@ const CITY_LON = {
   禄丰市:102,个旧市:103.1,开远市:103.4,蒙自市:103.5,弥勒市:103.4,景洪市:100.9,瑞丽市:97.8,芒市:98.4,泸水市:98.9,香格里拉市:99.8,米林市:94,错那市:92.9,
   兴平市:108.5,彬州市:108.1,韩城市:110.4,华阴市:110.1,子长市:109.6,神木市:110.3,旬阳市:109.4,华亭市:106.6,玉门市:97.5,敦煌市:94.2,合作市:103.1,同仁市:102.1,
   格尔木市:92.7,德令哈市:97.2,茫崖市:90.9,灵武市:106.5,青铜峡市:106,阜康市:88.3,博乐市:81.9,阿拉山口市:82.8,库尔勒市:85.7,库车市:83.5,阿图什市:76.9,伊宁市:81.3,
-  奎屯市:85,霍尔果斯市:80.5,乌苏市:84.3,沙湾市:85.5,石河子市:86,阿拉尔市:81.3,图木舒克市:79.2,五家渠市:87.6,北屯市:87.8,铁门关市:86.2,双河市:82.4,可克达拉市:90.9,
+  奎屯市:85,霍尔果斯市:80.5,乌苏市:84.3,沙湾市:85.5,石河子市:86,阿拉尔市:81.3,图木舒克市:79.2,五家渠市:87.6,北屯市:87.8,铁门关市:86.2,双河市:82.4,可克达拉市:80.7,
   昆玉市:79.3,胡杨河市:84.8,新星市:93.5,白杨市:83.6
 };
 const PATTERN_NAME = {'比肩':'建禄格','劫财':'月劫格','食神':'食神格','伤官':'伤官格','正财':'正财格','偏财':'偏财格','正官':'正官格','七杀':'七杀格','正印':'正印格','偏印':'偏印格'};
@@ -928,7 +931,7 @@ const SHENSHA = [
   {name:'岁破',type:'凶',meaning:'破财变动，宜守不宜攻',get:p=>[z(SUIPO[p[0][1]])]},
   {name:'血刃',type:'凶',meaning:'血光之灾，注意安全',get:p=>[z(XUEREN[p[1][1]])]},
   {name:'流霞',type:'凶',meaning:'意外流血，防患未然',get:p=>[z(LIUXIA[p[2][0]])]},
-  {name:'勾绞',type:'凶',meaning:'口舌是非，纠缠不清',get:p=>{const i=ZHI.indexOf(p[0][1]);const yang=(i%2===0);return [z(ZHI[(yang?i-1:i+1+12)%12]),z(ZHI[(yang?i+2:i-2+12)%12])];}},
+  {name:'勾绞',type:'凶',meaning:'口舌是非，纠缠不清',get:p=>{const i=ZHI.indexOf(p[0][1]);const yang=(i%2===0);return [z(ZHI[((yang?i-1:i+1)+12)%12]),z(ZHI[((yang?i+2:i-2)+12)%12])];}},
   {name:'天罗地网',type:'凶',meaning:'困顿不顺（男忌天罗戌亥／女忌地网辰巳）',needGender:true,get:(p,gd)=>{return gd==='男'?[z('戌'),z('亥')]:[z('辰'),z('巳')];}}
 ];
 
@@ -1044,12 +1047,16 @@ function tenGod(otherGan, dmWx, dmYin){
 }
 function solarCorrection(place, bjTime){
   if(!place) return null;
-  let lon=null, best='';
-  // 最长名称优先：遍历全部命中，取名称最长者（如"宜昌市宜都市"→取"宜都"而非"宜昌"；"吉林市丰满区"→取"吉林"）
-  // 县级市键去"市"后缀同样参与匹配（填"义乌"可命中"义乌市"），地级市键本身不带"市"不受影响
+  let lon=null, best='', bestLen=0;
+  // 最长名称优先：比较**实际命中的子串长度**，而不是键长
+  // （2026-10 修正：原用 c.length 比较键长——键"津市市"以去"市"后的"津市"命中"天津市"时，
+  //  键长 3 > 键"天津"的 2，于是天津市经度被解析为 111.9°（津市市）而非 117.2°，真太阳时偏 21 分钟）
   for(const c in CITY_LON){
     const base=c.endsWith('市')?c.slice(0,-1):c;
-    if((place.indexOf(c)>=0||place.indexOf(base)>=0) && c.length>best.length){ best=c; lon=CITY_LON[c]; }
+    let m=null;
+    if(place.indexOf(c)>=0) m=c;                              // 完整键命中优先
+    else if(base!==c && place.indexOf(base)>=0) m=base;       // 去"市"后缀命中
+    if(m && m.length>bestLen){ bestLen=m.length; best=c; lon=CITY_LON[c]; }
   }
   if(lon===null) return {found:false};
   const diffMin=(lon-120)*4;
@@ -1082,7 +1089,10 @@ function getDaYun(y,m,d,hh,mm,yg,mg,gender){
   let target=null;
   if(shun){for(const c of cands){if(c[0]>born){target=c[0];break;}}}
   else{for(let i=cands.length-1;i>=0;i--){if(cands[i][0]<born){target=cands[i][0];break;}}}
-  if(target===null) target=born;
+  // 2026-10 修正：极端边界（1895 年初逆行 / 2100 年末顺行）时节气候选因缺数据被整年跳过，
+  // 原实现 fallback 到出生时刻本身 → 起运静默算成 0 岁；现标记 valid:false，由上层提示"边界年无法精确起运"。
+  let startAgeValid=true;
+  if(target===null){ target=born; startAgeValid=false; }
   // 含时刻的精确天数差：target 是 num 格式 YYYYMMDD.HHMM
   const tY=Math.floor(target/10000), tM=Math.floor(target/100)%100-1;
   const tD=Math.floor(target%100), tFrac=target-Math.floor(target);
@@ -1097,7 +1107,7 @@ function getDaYun(y,m,d,hh,mm,yg,mg,gender){
     const step=shun?k:-k;
     steps.push(GAN[((mi+step)%10+10)%10]+ZHI[((zi+step)%12+12)%12]);
   }
-  return {startAge:startAge, shun:shun, steps:steps};
+  return {startAge:startAge, shun:shun, steps:steps, valid:startAgeValid};
 }
 // 月令取格（《子平真诠》：透干取格优先；不透干则以月令本气定格）
 function getPattern(monthZhi, pillars, dmWx, dmYin){
@@ -1151,6 +1161,12 @@ function paipan(name,gender,y,m,d,hh,mm,place,truesun){
     const corr=solarCorrection(place,bj);
     if(corr && corr.found){ solarInfo=corr; const t=corr.time; useY=t.getFullYear();useM=t.getMonth()+1;useD=t.getDate();useH=t.getHours();useMin=t.getMinutes(); }
     else if(corr && !corr.found){ solarInfo={found:false}; }
+    // 2026-10 修正：真太阳时校正可能把日期推出节气库范围（如 1895-01-01 01:00 喀什 → 1894-12-31），
+    // 原实现继续进入 yearGZ 并访问 null[0]，抛 TypeError 使整段渲染中断（用户看不到任何结果）。
+    if(useY<JIEQI.range[0]||useY>JIEQI.range[1]){
+      alert('经真太阳时校正后出生日期为 '+useY+'-'+useM+'-'+useD+'，已超出节气库支持范围（'+JIEQI.range[0]+'-'+JIEQI.range[1]+'）');
+      return null;
+    }
   }
   const yg=yearGZ(useY,useM,useD,useH,useMin);
   const mg=monthGZ(useY,useM,useD,useH,useMin,yg[0]);
@@ -1179,7 +1195,10 @@ function paipan(name,gender,y,m,d,hh,mm,place,truesun){
   // 收紧为 主导行 ≥0.75 总量 + 最强他行 ≤0.15 双条件（传统专旺：该行绝对主导、异行极弱）
   const domWxName=WX_NAMES.find(w=>five[w]===maxWx);
   const othersMax=Math.max.apply(null, WX_NAMES.filter(w=>w!==domWxName).map(w=>five[w]));
-  if(maxWx>0.75*total && othersMax<=0.15*total) special.zhuanwang=true;
+  // 2026-10 修正：① 补"主导五行 == 日主五行"（原缺失 → 曾把日主癸水、金旺的盘标成"专旺·从革格"）；
+  // ② 阈值 0.75 使该格局实际不可达（2 万盘实测主导行最高仅 73.17%、0.75 命中 1 盘），
+  //    加日主约束后 2 万盘实测罕见度：>0.55→0.115%、>0.60→0.075%、>0.65→0.025%，取 0.65（罕见但可达）。
+  if(maxWx>0.65*total && othersMax<=0.15*total && domWxName===dmWx) special.zhuanwang=true;
   if(support<0.18*total) special.cong=true;
   const monthZhi=pillars[1][1], dayZhi=pillars[2][1];
   // 调候用神：日干×月令季节 → 调候五行（来源：《穷通宝鉴》）
@@ -1225,8 +1244,22 @@ function paipan(name,gender,y,m,d,hh,mm,place,truesun){
     else specialDetail='从格';
   }
   // 喜用神（2026-08-16 修复：中和不五行全列，按 ratio 细分偏强/偏弱/真中和）
+  // 2026-10 修正：特殊格局另论用神——原实现只按 strength(ratio) 推，与 special 无关，
+  // 会出现"从财格却喜印比（恰是破从之神）""专旺格却喜官杀"的自相矛盾（2 万盘抽样：从格 1.64%）。
   let xiYong=[], jiYong=[];
-  if(strength==='强'){
+  if(special.zhuanwang){
+    // 专旺格：喜顺泄（我生）+ 同类 + 印生，忌官杀（克）与财（耗）
+    xiYong=[WX_NAMES[woSheng],WX_NAMES[dmIdx],WX_NAMES[shengWo]];
+    jiYong=[WX_NAMES[keWo],WX_NAMES[woKe]];
+  } else if(special.cong){
+    // 从格：喜所从之神及生它之神（从财→财+食伤；从杀→官杀+财；从儿→食伤+财），忌印与比劫（生扶日主即破从）
+    const congXi=(specialDetail==='从格·从财格')?[WX_NAMES[woKe],WX_NAMES[woSheng]]
+              :(specialDetail==='从格·从杀格')?[WX_NAMES[keWo],WX_NAMES[woKe]]
+              :(specialDetail==='从格·从儿格')?[WX_NAMES[woSheng],WX_NAMES[woKe]]
+              :[WX_NAMES[woKe],WX_NAMES[keWo],WX_NAMES[woSheng]];
+    xiYong=congXi.slice();
+    jiYong=[WX_NAMES[shengWo],WX_NAMES[dmIdx]];
+  } else if(strength==='强'){
     xiYong=[WX_NAMES[keWo],WX_NAMES[woKe],WX_NAMES[woSheng]];
     jiYong=[WX_NAMES[dmIdx],WX_NAMES[shengWo]];
   } else if(strength==='弱'){
@@ -1547,7 +1580,7 @@ const SHI_CHEN_MAP={子:[0,0],丑:[2,0],寅:[4,0],卯:[6,0],辰:[8,0],巳:[10,0]
 const DST_WINDOWS=[
   {s:[1986,5,4], e:[1986,9,14]},
   {s:[1987,4,12],e:[1987,9,13]},
-  {s:[1988,4,10],e:[1988,9,11]},
+  {s:[1988,4,17],e:[1988,9,11]},  // 2026-10 修正：1988 年夏令时自 4/17 02:00 起（京政办发〔1988〕17号；Node tzdb 复核：4/16=+08:00、4/17=+09:00），原写 4/10 错 7 天
   {s:[1989,4,16],e:[1989,9,17]},
   {s:[1990,4,15],e:[1990,9,16]},
   {s:[1991,4,14],e:[1991,9,15]}
@@ -2079,7 +2112,7 @@ function matchDayun(ctx, gz){
 // [ENGINE:END]
 function renderDaYun(ctx){
   const dy=ctx.dy;
-  let html=`<p style="margin-bottom:12px">${ctx.gender==='男'?'男命':'女命'}年干${ctx.yg[0]}属${yang(ctx.yg[0])?'阳':'阴'}，大运${dy.shun?'顺排':'逆排'}，约 ${dy.startAge.toFixed(1)} 岁起运（起运岁数 = 出生距${dy.shun?'下一个':'上一个'}节的天数 ÷ 3）。</p><div class="dayun">`;
+  let html=`<p style="margin-bottom:12px">${ctx.gender==='男'?'男命':'女命'}年干${ctx.yg[0]}属${yang(ctx.yg[0])?'阳':'阴'}，大运${dy.shun?'顺排':'逆排'}，约 ${dy.startAge.toFixed(1)} 岁起运（起运岁数 = 出生距${dy.shun?'下一个':'上一个'}节的天数 ÷ 3）。${dy.valid===false?'<b style="color:var(--red)">注意：出生年位于节气库边界，起运岁数无法精确计算，仅供参考。</b>':''}</p><div class="dayun">`;
   dy.steps.forEach((gz,k)=>{
     const age=(dy.startAge+k*10);
     html+=`<div class="step"><div class="gz">${gz}</div><div class="age">${age.toFixed(0)}-${(age+10).toFixed(0)}岁</div></div>`;
@@ -2854,6 +2887,9 @@ function readHe(s){
   const dst=applyDst(y,m,d,hh);
   return {name,sex,y:dst.y,m:dst.m,d:dst.d,hh:dst.hh,mm,place,truesun,dst:dst.dst,shichenMode:false};
 }
+// 2026-10 安全修复：姓名等用户输入进入 innerHTML 前必须转义
+// （合婚页曾把 A.name/B.name 直接拼进 HTML 模板 → 输入 <img onerror=…> 即执行）
+function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 function analyzeHe(A,B){
   const dims=[];
   // 1. 日柱关系（25）
@@ -2953,7 +2989,7 @@ function analyzeHe(A,B){
   else if(total>=40) grade='较大挑战，需深度沟通';
   else grade='建议谨慎考虑';
 
-  let html=`<div style="text-align:center;font-size:15px;margin-bottom:6px">${A.name}（${A.dayMasterFull}·${SHENGX[ZHI.indexOf(A.pillars[0][1])]}） × ${B.name}（${B.dayMasterFull}·${SHENGX[ZHI.indexOf(B.pillars[0][1])]}）</div>`;
+  let html=`<div style="text-align:center;font-size:15px;margin-bottom:6px">${esc(A.name)}（${A.dayMasterFull}·${SHENGX[ZHI.indexOf(A.pillars[0][1])]}） × ${esc(B.name)}（${B.dayMasterFull}·${SHENGX[ZHI.indexOf(B.pillars[0][1])]}）</div>`;
   html+=`<div class="score-big">${total}<small> / 100</small></div>`;
   html+=`<div style="text-align:center;color:var(--gold);font-weight:700;margin-bottom:14px">综合评级：${grade}</div>`;
   dims.forEach(d=>{
@@ -3210,6 +3246,8 @@ DIST_TPL = """/* bazi-engine 独立引擎库 —— 由 tools/build_ui.py 自动
  * 无 DOM 依赖。浏览器与 Node 双端可用：
  *   浏览器：<script src="engine.dist.js"></script> → window.BaziEngine
  *   Node：  const BaziEngine = require('./engine.dist.js');
+ * 许可：代码部分为 MIT（见 LICENSE）；本文件内联的 RULES 断语数据（1000 条）为 CC BY-NC-SA 4.0（见 LICENSE-DATA）。
+ *       取得本文件不等于获得断语数据的商用许可，商业使用需另行取得授权。
  */
 (function(root, factory){
   if (typeof module === 'object' && module.exports) { module.exports = factory(); }

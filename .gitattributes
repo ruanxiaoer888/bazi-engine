@@ -7,3 +7,6 @@ skill/SKILL.md text eol=lf
 tools/*.js text eol=lf
 tools/*.py text eol=lf
 *.md text eol=lf
+# 2026-10 兜底：原清单漏了 ui/jieqi.json、tools/archive/*（tools/*.js 不递归）、.github/workflows/ci.yml、
+# tools/publish_clawhub.ps1、LICENSE/LICENSE-DATA 等；靠 core.autocrlf 兜底不可移植（换一台 autocrlf=false 的机器即失稳）
+* text=auto eol=lf

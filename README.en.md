@@ -5,7 +5,7 @@ A deterministic, zero-dependency BaZi (Chinese Four Pillars) charting and analys
 [![GitHub Stars](https://img.shields.io/github/stars/ruanxiaoer888/bazi-engine?style=flat-square&label=Stars&color=blue)](https://github.com/ruanxiaoer888/bazi-engine)
 [![CI](https://img.shields.io/github/actions/workflow/status/ruanxiaoer888/bazi-engine/ci.yml?style=flat-square&label=CI)](https://github.com/ruanxiaoer888/bazi-engine/actions)
 [![License](https://img.shields.io/badge/License-MIT%2FCC--BY--NC--SA%204.0-blue?style=flat-square)](LICENSE)
-[![SkillHub](https://img.shields.io/badge/SkillHub-Published-purple?style=flat-square)](https://skillhub.com/)
+[![SkillHub](https://img.shields.io/badge/SkillHub-Published-purple?style=flat-square)](https://skillhub.cn)
 [![ClawHub](https://img.shields.io/badge/ClawHub-Published-green?style=flat-square)](https://clawhub.ai/ruanxiaoer888/skills/baizi-engine)
 
 > Single-file offline runtime — open in a browser and it works. No API keys, no external services, no build step.  
@@ -51,11 +51,11 @@ Same birth data in, same chart out — every single time.
 
 | | Project | Description |
 |---|---|---|
-| 🧩 | **bazi-engine** (this repo) | Open-source engine foundation: Skill + single-file UI + standalone JS library (MIT), for developers & practitioners |
-| 📦 | **Skill marketplaces** | Live on [ClawHub](https://clawhub.ai/ruanxiaoer888/skills/baizi-engine) (OpenClaw's official marketplace, security audit ✅ passed) and [SkillHub](https://skillhub.com/) (Tencent) — one-click install in AI assistants |
+| 🧩 | **bazi-engine** (this repo) | Open-source engine foundation: Skill + single-file UI + standalone JS library (**MIT for code / CC BY-NC-SA 4.0 for data**), for developers & practitioners |
+| 📦 | **Skill marketplaces** | Live on [ClawHub](https://clawhub.ai/ruanxiaoer888/skills/baizi-engine) (OpenClaw's official marketplace) and [SkillHub](https://skillhub.cn) (Tencent) — one-click install in AI assistants |
 | 🚀 | **[Benchu](https://benchu.xiaoerpro.com/)** | The author's own consumer web product: AI BaZi reports (chart / compatibility / yearly), paid unlock, WeChat Pay |
 
-**Open source → commercial loop**: the engine is open-sourced on GitHub for community use and redevelopment; **Benchu** is the author's own commercial landing built on the same deterministic charting core — the consumer product consumes only **MIT code-layer** APIs (`paipan` / `applyDst`), and its paid readings are its own implementation, not NC-licensed data. Open source gains community polish, the product validates commercial value — each feeds the other.
+**Open source → commercial loop**: the engine is open-sourced on GitHub for community use and redevelopment; **Benchu** is the author's own commercial landing built on the same deterministic charting core — **as the rights holder, the consumer product may use the same kernel and data** (the author holds full rights to their own code and data); **third parties** remain bound by the dual license: MIT for code, [CC BY-NC-SA 4.0](LICENSE-DATA) for data, with commercial use requiring separate authorization. Open source gains community polish, the product validates commercial value — each feeds the other.
 
 <p align="center">
   <img src="assets/screenshots/benchu/paipan.png" alt="Benchu · chart result page" width="700"/>
@@ -113,13 +113,15 @@ Import the skill into a Skill-capable assistant (WorkBuddy / DeepSeek Harness / 
 
 The skill is live on two Skill marketplaces, each with one-click install:
 
-- **ClawHub** (OpenClaw's official marketplace): [clawhub.ai/ruanxiaoer888/skills/baizi-engine](https://clawhub.ai/ruanxiaoer888/skills/baizi-engine) · security audit ✅ passed · auto-synced from this GitHub repo (updates on push)
+- **ClawHub** (OpenClaw's official marketplace): [clawhub.ai/ruanxiaoer888/skills/baizi-engine](https://clawhub.ai/ruanxiaoer888/skills/baizi-engine) (the platform import is **one-time** and does not auto-sync on push; after a release, republish with `clawhub skill publish`)
 
   ```bash
   openclaw skills install @ruanxiaoer888/baizi-engine
   ```
 
-- **SkillHub** (Tencent): search `bazi-engine` in the marketplace and install
+  > ⚠️ ClawHub also carries a **legacy entry** named `bazi-engine` (v1.0.0 / 504 rules, with no data-license statement in its description) — do not install it; the entry corresponding to this repository is `baizi-engine`.
+
+- **SkillHub** (Tencent, entry point <https://skillhub.cn>): search `bazi-engine` in the marketplace and install
 
 Then:
 
@@ -192,22 +194,25 @@ kb/                      Classical texts + rule handbooks + 1000-rule database
 
 This tool performs charting and divination based on traditional Chinese metaphysics (Zi Ping method). Output is provided for cultural study and entertainment only, and does not constitute medical, investment, legal, or any other professional advice. Treat it with an open but rational mind.
 
-## Data Provenance Fingerprints
+## Data Provenance & License Markers
 
-The rule database (`kb/04-rules-db/rules.json`) contains embedded **provenance fingerprint phrases** (watermarks; exact locations undisclosed). Any unauthorized reuse of the database (e.g., republishing it into a commercial product) will carry these phrases verbatim, enabling identification and evidence collection. Compliant use under [LICENSE](LICENSE) / [LICENSE-DATA](LICENSE-DATA) is unaffected.
+The rule database (`kb/04-rules-db/rules.json`) **has a provenance mechanism reserved**: commercially licensed delivery builds embed source markers (embedding locations undisclosed), which serve to identify unauthorized wholesale copying of the database and to support evidence collection.
+
+> ⚠️ **Current status**: the present open-source version has **not yet generated** a fingerprint list (the private local list `.fingerprints.json` does not exist), so the paragraph above must not be read as "the current open-source data is already traceable". Licensed customers should rely on the delivery build and list attached to their license agreement.
 
 ## License
 
 This repository uses a **dual-license** structure:
 
-- **Code** (charting engine / UI / build & test scripts / Skill definition): [MIT](LICENSE) — free to use
+- **Code** (charting engine / UI logic / build & test scripts / Skill definition): [MIT](LICENSE) — free to use
 - **Data** (`kb/` verdict library & classical-text compilations): [CC BY-NC-SA 4.0](LICENSE-DATA) — Attribution · NonCommercial · ShareAlike (classical texts are public domain and freely quotable)
+- **Composite artifacts** (`ui/index.html`, `engine/engine.dist.js`): **within a single file, the code portion is MIT while the 1000 inlined rule entries are CC BY-NC-SA 4.0**. Downloading or referencing these two files does not grant a commercial license to the rule data.
 
-> **Commercial boundary**: **Benchu** is the author's own commercial product (the author retains full rights to their own code and data); third-party use of this repository still follows the dual license above (MIT for code / CC BY-NC-SA 4.0 for data). For commercial licensing, contact the author.
+> **Commercial boundary**: **Benchu** is the author's own commercial product (the author retains full rights to their own code and data); **third-party** use of this repository still follows the dual license above (MIT for code / CC BY-NC-SA 4.0 for data). For commercial licensing, contact the author.
 >
-> **Marketplace distribution**: when this Skill is distributed via [ClawHub](https://clawhub.ai/ruanxiaoer888/skills/baizi-engine) / SkillHub, the same dual license applies — if a marketplace page shows a License field that differs from this repository, this repository's [LICENSE](LICENSE) / [LICENSE-DATA](LICENSE-DATA) prevails.
+> **Marketplace distribution**: when this Skill is distributed via [ClawHub](https://clawhub.ai/ruanxiaoer888/skills/baizi-engine) / [SkillHub](https://skillhub.cn), the same dual license applies. **A License field displayed on a platform page (ClawHub, bound by platform rules, is forced to display MIT-0) is platform metadata only and does not constitute authorization for the data portion**; where it differs from this repository, this repository's [LICENSE](LICENSE) / [LICENSE-DATA](LICENSE-DATA) prevails.
 >
-> See [LICENSE-DATA](LICENSE-DATA) for the exact boundaries, source attribution, and commercial licensing.
+> See [LICENSE-DATA](LICENSE-DATA) for the exact boundaries, the third-party source list ([THIRD-PARTY.md](THIRD-PARTY.md)), and commercial licensing.
 
 ## Support the Author
 

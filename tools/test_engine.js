@@ -78,5 +78,35 @@ console.log('== 五行补救 ==');
 const rem = BaziEngine.getRemedy('弱', c1.five, c1.avgFive, c1.xiYong, c1.pillars[1][1]);
 assert('弱态按喜用神输出补救项', rem.items.length>0 && rem.note.length>0);
 
+console.log('== 2026-10 修复回归 ==');
+// ① "天津市"经度曾被"津市市"(111.9°) 抢占（匹配时比较的是"键长"而非"实际命中串长"），正确应为 天津 117.2°
+const tj = BaziEngine.paipan('测试','男',1990,6,1,14,0,'天津市','yes');
+assert('填"天津市"解析为天津 117.2°（不被津市市抢占）', tj.solarInfo && tj.solarInfo.lon===117.2, JSON.stringify(tj.solarInfo));
+const tjq = BaziEngine.paipan('测试','男',1990,6,1,14,0,'天津市和平区','yes');
+assert('填"天津市和平区"同样解析为 117.2°', tjq.solarInfo && tjq.solarInfo.lon===117.2, JSON.stringify(tjq.solarInfo));
+// ② 可克达拉市经度修正（原 90.9 与所在伊犁地区邻市 80.5~85 矛盾，偏东约 10.2°≈41 分钟）
+assert('CITY_LON 可克达拉市≈80.7', Math.abs(BaziEngine.CITY_LON['可克达拉市']-80.7)<0.001, 'v='+BaziEngine.CITY_LON['可克达拉市']);
+// ③ 真太阳时校正把日期推出节气库范围时应安全返回 null，不得抛异常
+let cyThrew=false, cyNull=false;
+try { const r=BaziEngine.paipan('测试','男',1895,1,1,1,0,'喀什','yes'); cyNull=(r===null); } catch(e){ cyThrew=true; }
+assert('1895-01-01 喀什 真太阳时跨年 → 返回 null 不抛异常', !cyThrew && cyNull, 'threw='+cyThrew);
+// ④ 勾绞在"子年"不再丢失（ZHI[(0-1+12)%12] 曾产生 undefined）
+const gz08 = BaziEngine.paipan('测试','男',2008,6,28,22,0,'北京市','no');
+assert('2008 戊子年神煞含勾绞（子年支越界修复）', (gz08.shenSha||[]).some(s=>s.name==='勾绞'), (gz08.shenSha||[]).map(s=>s.name).join(','));
+// ⑤ 专旺格须"主导五行 == 日主五行"（曾把日主癸水、金旺的盘标成"专旺·从革格"）
+const WX5=['木','火','土','金','水'];
+let zwSeen=0, zwBad=0;
+for(let i=0;i<3000;i++){
+  const y=1950+(i*7)%150, m=1+(i*5)%12, d=1+(i*11)%28, hh=i%24, mm=(i*13)%60;
+  const c=BaziEngine.paipan('T', i%2?'男':'女', y,m,d,hh,mm,'北京市','no');
+  if(!c) continue;
+  const f=c.five, mx=Math.max(...WX5.map(k=>f[k])), dom=WX5.find(k=>f[k]===mx);
+  if(c.special && c.special.zhuanwang){ zwSeen++; if(dom!==c.dmWx) zwBad++; }
+}
+assert('专旺格主导五行恒等于日主五行（3000 盘抽样）', zwBad===0, 'zwSeen='+zwSeen+' zwBad='+zwBad);
+// ⑥ 极端边界年：起运不再静默算 0 岁，而是标记 valid=false 供 UI 提示
+const edge = BaziEngine.paipan('T','男',2100,12,31,12,0,'北京市','no');
+assert('2100 年末起运标记 valid=false（不再静默 0 岁）', edge && edge.dy && edge.dy.valid===false, edge?JSON.stringify({v:edge.dy.valid,age:Math.round(edge.dy.startAge*100)/100}):'null');
+
 console.log('\n结果: ' + pass + ' PASS, ' + fail + ' FAIL');
 if (fail > 0) process.exit(1);
