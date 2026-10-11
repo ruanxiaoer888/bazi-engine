@@ -108,7 +108,7 @@ SAMPLES = [
 
 if __name__ == '__main__':
     jq = gen_jieqi()
-    # 2026-10：移除硬编码的本机绝对路径（曾写死 E:\michael\workBuddy\...\ui\jieqi.json）。
+    # 2026-10：移除硬编码的本机绝对路径（原先写死某个本地工作区路径）。
     # 默认写到脚本所在目录，可用第一个参数指定输出路径。
     out = sys.argv[1] if len(sys.argv) > 1 else os.path.join(
         os.path.dirname(os.path.abspath(__file__)), 'jieqi.json')

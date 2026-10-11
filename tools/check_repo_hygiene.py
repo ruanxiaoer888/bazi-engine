@@ -36,10 +36,26 @@ FORBIDDEN = [
     (r"(^|/)\.fingerprints\.json$", "溯源指纹（公开即失效）"),
 ]
 
-# 高置信度的低级泄密特征（只在暂存内容上做很窄的匹配，避免误报）
-SECRET_PATTERNS = [
+# 内容级特征（在文件**内容**里匹配；两种模式都查）。2026-10 由风险面扫描补充：
+# 公开仓库里不该出现本机盘符路径与本地工具链路径——它们会泄漏 Windows 用户名、目录结构与所用平台。
+# 这些模式只在**行内**匹配，且不含 URL（`https://`、`file://` 不会命中）。
+CONTENT_PATTERNS = [
     (r"-----BEGIN [A-Z ]*PRIVATE KEY-----", "私钥内容"),
+    (r"[A-Za-z]:\\[A-Za-z]", "本机 Windows 盘符路径（泄漏用户名/目录结构）"),
+    (r"[A-Za-z]:/(?:Users|Program|Windows|home|tmp|opt|michael)/", "本机绝对路径"),
+    (r"\.workbuddy\b", "本地工具链路径（泄漏平台与用户名）"),
+    (r"/home/[A-Za-z][\w.-]*/", "本机 POSIX 绝对路径"),
 ]
+
+# 本文件自身含上述模式字符串（作为检测规则），跳过自检
+SELF = "tools/check_repo_hygiene.py"
+
+# .gitignore / .gitattributes 的职责就是列出本地目录与文件名，对"本地目录名"类规则豁免（仍查私钥与盘符路径）
+LOCAL_DIR_OK = {".gitignore", ".gitattributes"}
+LOCAL_DIR_RULES = (r"\.workbuddy\b", r"/home/[A-Za-z][\w.-]*/")
+
+# 二进制/压缩文件不做内容扫描
+SKIP_EXT = {".png", ".jpg", ".jpeg", ".gif", ".ico", ".zip", ".gz", ".woff", ".woff2", ".ttf", ".pdf"}
 
 HOOK = """#!/bin/sh
 # 由 tools/check_repo_hygiene.py --install-hook 安装：提交前拦截内部文档/私密文件
@@ -94,35 +110,47 @@ def main():
                 hits.append((f, why))
                 break
 
-    secret_hits = []
-    if staged:
-        root = repo_root()
-        for f in files:
-            full = os.path.join(root, f)
-            if not os.path.isfile(full):
+    content_hits = []
+    root = repo_root()
+    for f in files:
+        if f == SELF:
+            continue
+        full = os.path.join(root, f)
+        if not os.path.isfile(full):
+            continue
+        if os.path.splitext(f)[1].lower() in SKIP_EXT:
+            continue
+        try:
+            if os.path.getsize(full) > 3 * 1024 * 1024:
                 continue
-            try:
-                with io.open(full, "r", encoding="utf-8", errors="ignore") as fh:
-                    head = fh.read(200000)
-            except Exception:
-                continue
-            for pat, why in SECRET_PATTERNS:
-                if re.search(pat, head):
-                    secret_hits.append((f, why))
+            with io.open(full, "r", encoding="utf-8", errors="ignore") as fh:
+                for i, line in enumerate(fh, 1):
+                    if len(line) > 20000:      # 内联大数据行（dist / index.html 的 RULES）
+                        continue
+                    for pat, why in CONTENT_PATTERNS:
+                        if f in LOCAL_DIR_OK and pat in LOCAL_DIR_RULES:
+                            continue
+                        if re.search(pat, line):
+                            content_hits.append((f, i, why, line.strip()[:80]))
+                            break
+        except Exception:
+            continue
 
-    if hits or secret_hits:
-        print("❌ 公开仓库卫生门禁未通过（%s，共 %d 项）：" % (scope, len(hits) + len(secret_hits)))
+    if hits or content_hits:
+        total = len(hits) + len(content_hits)
+        print("❌ 公开仓库卫生门禁未通过（%s，共 %d 项）：" % (scope, total))
         for f, why in hits:
             print("   🔴 %s   ← %s" % (f, why))
-        for f, why in secret_hits:
-            print("   🔴 %s   ← 疑似%s" % (f, why))
+        for f, i, why, sample in content_hits:
+            print("   🔴 %s:%d   ← %s" % (f, i, why))
+            print("        例: %s" % sample)
         print()
         print("   这些内容属于内部/商业资料，不得进入公开仓库（2026-10 曾因此删库重建）。")
-        print("   正确做法：放进本地归档 E:\\michael\\DSHProjects\\Courses\\bazi-engine-internal\\，")
+        print("   正确做法：移出仓库，放进你在仓库外自建的本地归档目录，并写入 .gitignore。")
         print("   并用 .gitignore 忽略。确认确实需要提交时：git commit --no-verify（请三思）。")
         return 1
 
-    print("✅ 公开仓库卫生门禁通过（%s %d 个文件，无内部/商业文档）" % (scope, len(files)))
+    print("✅ 公开仓库卫生门禁通过（%s %d 个文件：无内部/商业文档、无本机路径或私钥特征）" % (scope, len(files)))
     return 0
 
 

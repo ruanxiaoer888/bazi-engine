@@ -1,5 +1,16 @@
 // 浏览器端到端走查脚本（修正版：用真实 id 与按钮文本选择器）
-const pw = require('C:/Users/34743/.workbuddy/binaries/node/workspace/node_modules/playwright');
+// 2026-10 修复：原先硬编码本机 Playwright 绝对路径（泄漏 Windows 用户名与本地工具链路径，且他人无法运行）。
+// 现在按常规方式解析：优先环境变量 PLAYWRIGHT_PATH，否则用模块名，失败时给出明确指引。
+const pw = (() => {
+  const target = process.env.PLAYWRIGHT_PATH || 'playwright';
+  try {
+    return require(target);
+  } catch (e) {
+    console.error('缺少 playwright：请先执行 `npm i -D playwright && npx playwright install chromium`，');
+    console.error('或用 PLAYWRIGHT_PATH 指向其安装目录。原始错误：' + e.message);
+    process.exit(1);
+  }
+})();
 const fs = require('fs');
 
 (async()=>{
