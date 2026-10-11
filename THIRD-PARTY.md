@@ -31,7 +31,8 @@
 | 许可 | **无许可证声明**（GitHub API `license = null`）→ 依默认规则"保留一切权利" |
 | 本项目使用方式 | `kb/README.md` 曾将其列为数据来源之一（`kb/02-rules/bazi-mbti.md` 与本项目的早期整理存在主题重叠） |
 | 结论 | **作者无权就该项目的表达性内容对外转授许可**，也不得将其纳入商业授权交付包 |
-| 处置 | ① `kb/02-rules/bazi-mbti.md` **已从发布包与商业交付包中排除**（见 `tools/build_release_zip.py` 的 `EXCLUDE_SUB`）；② 该文件不属于 `kb/04-rules-db/rules.json`（断语库 1000 条中无该来源条目）；③ 后续如需继续使用，应重写为原创表达或取得原作者书面许可 |
+| 处置 | ① `kb/02-rules/bazi-mbti.md` **已整体重写为本项目原创版本**，并从发布包与商业交付包中排除（见 `tools/build_release_zip.py` 的 `EXCLUDE_SUB`）；② `kb/01-basics/najin.md` 早期版本曾在第三方整理件基础上形成，已于 2026-10 **整体重写**（现版本的结构编排、文字表述与解读均为本项目原创）；③ 两者均与 `kb/04-rules-db/rules.json` 无关（断语库 1000 条中无该来源条目）；④ `kb/README.md` 已移除对本项目的来源引用；⑤ 历史版本处置见 §6 |
+| 影响范围 | 不进入交付包、不构成可授权标的 |
 
 ---
 
@@ -42,6 +43,9 @@
 
 - 目录：`kb/03-classics/`（含由 docx 提取整理的全文梳理件）
 - 说明：`rules.json` 每条规则的 `source` 字段标注古籍出处，属引用与溯源，不主张对原文的权利。
+- **引用溯源说明**：`kb/03-classics/shigan-lun.md` 中标注【原文】的段落均为上述**公有领域原文**的引用；
+  内部取材阶段曾参考第三方整理的 docx 全文（`qiongtong-baojian.md` 等 6 件），但该整理件**不随发布/商业交付包分发**（见 §4），
+  交付内容为原文引用 + 本项目原创的编排、取舍与解读，不包含第三方整理者的表达性内容。
 
 ---
 
@@ -69,6 +73,8 @@
    `sanming-tonghui.md`、`workflow-full.md`、`yuanhai-ziping.md`。
 3. `HANDOFF.md`、`工作区说明.md`、`docs/`（内部文档，非交付物）
 4. `assets/screenshots/`（含作者个人联系方式素材）
+5. 因第 4 条，**发布包内 `README.md` 的图片链接（`assets/screenshots/contact-card.png`）会失效**；
+   包内 README 的联系方式文本（微信 / 公众号）不受影响——这是已知且预期的现象，不是打包缺陷。
 
 > **本条已由构建脚本强制执行（不是纸面声明）**：`tools/build_release_zip.py` 会读取每个 `.md` 文件头部的
 > `来源：…docx` 标注，**自动排除**这类第三方整理件，并在打包后做硬校验——一旦交付包内仍存在此类文件则
@@ -85,6 +91,28 @@
 - `kb/04-rules-db/rules.json`：1000 条结构化断语（触发条件 / 结论 / 古籍出处 / 置信度 / 行动建议）
 - 质检流水线（`tools/audit_hit_distribution.js`、`check_conflicts.js`、`check_dup_hits.js` 等）
 - 规则条件化编译方法、`suggestion` 行动建议文案、置信度标注
+
+> `kb/04-rules-db/rules.json` 顶层已**内嵌许可标识**（`license` / `license_url` / `copyright` / `license_note` /
+> `commercial_license` / `third_party_notices`），因此该数据文件单独流转时也自带许可声明，
+> 不依赖随附的 `LICENSE-DATA` 文件或平台页面上的 License 字段。
+
+---
+
+## 6. 历史版本作废声明（Historical versions void）
+
+`kb/01-basics/najin.md` 与 `kb/02-rules/bazi-mbti.md` 在 2026-10 之前存在"在第三方整理件基础上形成"的版本。
+两个文件已于 2026-10 **整体重写为原创表达**，重写后的版本自 commit `b2a444e`（v1.3.9）起生效。
+
+| 文件 | 重写前的旧版本（git 历史中仍可检索到） | 重写后 |
+|---|---|---|
+| `kb/01-basics/najin.md` | `838538b:kb/01-basics/najin.md`（与现版差异 75 insertions / 61 deletions） | 结构编排、文字表述与解读均为本项目原创 |
+| `kb/02-rules/bazi-mbti.md` | `838538b:kb/02-rules/bazi-mbti.md`（较现版多 199 行） | 223→80 行整体重写，含 MBTI 商标与使用边界声明 |
+
+**声明**：git 历史中仍可检索到的上述旧版本内容**已作废**，未被任何当前版本、发布包或商业交付包使用；
+旧版本的表达性内容不构成本项目可对外授权标的，也不应被继续引用或再分发。
+
+> 若需从历史中彻底移除，可对该两个路径执行 `git filter-repo --path <path> --invert-paths` 重写历史
+> （需强推 + 删除并重打全部 tag + 重传 Release 资产）。**截至本版本尚未执行**，属已知残留，在此明示。
 
 ---
 

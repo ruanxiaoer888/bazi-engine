@@ -1,4 +1,4 @@
-"""bazi-engine 发布包构建（SkillHub 专用，平台无关版）
+"""bazi-engine 发布包构建（通用市场分发版，平台无关）
 
 用法：
     python tools/build_release_zip.py            # 打包当前工作区 → bazi-engine-v1.3.0.zip
@@ -6,7 +6,7 @@
 
 要点（对齐 HANDOFF 踩坑 #17/#18/#22）：
 - ZIP 内文件直接在根，无外层嵌套目录
-- 排除 SkillHub 禁止的 LICENSE / LICENSE-DATA / README.en.md
+- 排除平台禁止的 LICENSE / LICENSE-DATA / README.en.md（数据许可改以 DATA-LICENSE.txt 随包分发）
 - ZIP 根放 SKILL.md（从 skill/SKILL.md 复制），与项目源 skill/SKILL.md 保持同步
 - 只打包可对外内容（ui/engine/kb/skill/tools + README.md），内部文档（HANDOFF/AI_CONTEXT/发布物料等）与 docs/assets 不进 ZIP
 """
@@ -31,9 +31,12 @@ EXCLUDE_ROOT_FILES = {'LICENSE', 'LICENSE-DATA', 'README.en.md',
 # 目录内排除的子路径/文件模式
 EXCLUDE_SUB = {
     'kb/04-rules-db/drafts',        # 内部取材源
-    'kb/02-rules/bazi-mbti.md',     # 2026-10：来源为微信/百家号（无作者无 URL），不纳入对外/商用交付
+    'kb/02-rules/bazi-mbti.md',     # 2026-10：早期版本来源不明（无作者无 URL），现版已重写但按约定仍不纳入对外/商用交付
     'tools/__pycache__', 'tools/_dbg', 'tools/archive',  # 归档脚本不进发布包（2026-08-19 审计修复）
     'kb/05-reference',  # 内部参考
+    # 2026-10-11：作者运维工具不进市场包（compliance_soften 涉及自有 C 端产品口径，publish_clawhub 为发布操作脚本），
+    # 与交付标的无关且会暴露内部业务流程
+    'tools/compliance_soften.py', 'tools/publish_clawhub.ps1',
 }
 EXCLUDE_NAMES = {'__pycache__', '.DS_Store', 'Thumbs.db'}
 

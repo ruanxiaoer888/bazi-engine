@@ -6,7 +6,7 @@ description: >
   适用场景：用户想算八字、看命盘、测运势、查合婚、补五行、看神煞、看流年，或提到"算命/四柱/命理/bazi/fortune"。
   即使只提"算命""八字"而未明确说用 skill，也应启用本 skill。
   本 Skill 采用双许可：代码 MIT / 数据 CC BY-NC-SA 4.0（详见仓库 LICENSE / LICENSE-DATA）。
-version: 1.3.9
+version: 1.3.10
 tags: [八字, 命理, 四柱, 排盘, 运势, bazi, fortune]
 category: 传统文化/命理占卜
 platforms: [WorkBuddy, QClaw, ima]
@@ -50,15 +50,15 @@ license-data: CC-BY-NC-SA-4.0
 - `kb/03-classics/ziping-zhenquan.md` — 用神格局取法（古籍精要）
 - `kb/03-classics/yuanhai-geshi.md` — 内外十八格歌诀速查
 - `kb/03-classics/ditian-sui-zhushu.md` — 干支体象与命理通则
-- `kb/04-rules-db/rules.json` — 生产断语库（**1000 条，suggestion 建议字段 100% 覆盖**，按 condition 匹配输出；含流日类别 liuri_01~05；手写种子 + `tools/gen_rules.py` 批量扩充）
+- `kb/04-rules-db/rules.json` — 生产断语库（**1000 条，suggestion 建议字段 100% 覆盖**，按 condition 匹配输出；含流日类别 liuri_01~05；手写种子 + `tools/gen_rules.py` 批量扩充）。**数据许可 CC BY-NC-SA 4.0**（文件顶层已内嵌 `license` 等字段），商业使用需另行取得作者授权
 - `kb/04-rules-db/rules-template.json` — 断语库 schema 与示例（编写新规则时参考）
-- `kb/05-reference/viz-spec.md` — SVG 图表设计标准（排盘表/五行图/十神关系图等），含配色方案与渲染示例
-- `kb/05-reference/prompt-template.md` — 八字+紫微+面相+手相四法合一完整提示词（当前项目仅实现八字部分，余为未来扩展参考）
+- （仅本仓库可读，**不随发布包分发**）`kb/05-reference/viz-spec.md` — SVG 图表设计标准（排盘表/五行图/十神关系图等），含配色方案与渲染示例
+- （仅本仓库可读，**不随发布包分发**）`kb/05-reference/prompt-template.md` — 八字+紫微+面相+手相四法合一完整提示词（当前项目仅实现八字部分，余为未来扩展参考）
 - `tools/build_ui.py` — 构建单文件 `ui/index.html`（注入 jieqi.json + 断语库）
 - `tools/gen_rules.py` — 批量扩充断语库（修改后重跑 build_ui.py）
 - `tools/test_ui.js` — node 校验脚本（四柱/晚子时/立春界/藏干五行/断语/流年/合婚/纳音/神煞/五行补救/十神真值表）
 - `tools/test_eval_state.js` — evalState 状态条件引擎回归测试（状态条件真判断/字段引用/文本逻辑）
-- `tools/archive/patch_suggestions.py` — 批量补全断语库缺失的 suggestion 建议字段（已归档；按 id 精确映射，仅补缺失、其余字段不动）
+- （仅本仓库可读，**不随发布包分发**）`tools/archive/patch_suggestions.py` — 批量补全断语库缺失的 suggestion 建议字段（已归档；按 id 精确映射，仅补缺失、其余字段不动）
 - `tools/audit_hit_distribution.js` — **断语库大样本命中分布审查**（全17类别覆盖，随机盘×N 统计每条规则命中率，揪出 100% 无条件命中的坏规则；支持 `--sample`/`--rules`/`--cat` 参数）
 - `tools/verify_sleep_rules.js` — **58 条模板规则渲染接入验证**（大运 dayun_01~20 / 流月 liuyue_01~20 / 流年 liu_21~30 / 合婚 he_13~20 四面板命中断言；含 vm 沙箱增强 stub：对象缓存 + `__setLast` 驱动 runLiu/runLiuYue）
 - `tools/check_dup_hits.js` — **同文案规则同盘重复命中检测**（大样本统计互为反义/同文案规则对的同盘双命中率，揪出会重复展示的近似规则；修复模式：同文案规则合并为一条，或差异化文案转互补）
@@ -67,7 +67,7 @@ license-data: CC-BY-NC-SA-4.0
 - `tools/test_dst.js` — **中国夏令时（1986-1991）窗口/边界校正回归**（29 项：窗口内 +1 小时、窗口边界、非窗口年份等）
 - `tools/test_liuri_v2.js` — **流日规则 v2 回归**（10 项：liuri_01~05 基础 + 十神/六冲/六合/三合/五合/十二长生/天克地冲/伏吟细分）
 - `tools/test_liuyue_v2.js` — **流月规则 v2 回归**（10 项：liuyue_01~20 模板 + 12长生/六冲细分/天干五合/特殊）
-- `tools/archive/monitor_usage.js` — **断语库使用监控**（已归档；读本地私密 `.fingerprints.json`，调 GitHub Code Search API 搜指纹句定位疑似盗用方；该指纹清单当前尚未生成，见仓库 README「数据溯源」说明）
+- （仅本仓库可读，**不随发布包分发**）`tools/archive/monitor_usage.js` — **断语库使用监控**（已归档；读本地私密 `.fingerprints.json`，调 GitHub Code Search API 搜指纹句定位疑似盗用方；该指纹清单当前尚未生成，见仓库 README「数据溯源」说明）
 - `tools/verify_edu_rules.js` — **空 condition 排除 + 学业规则复活回归**（400 随机盘统计 edu_17~20 命中率：须 ≥1 次命中证明规则可用、<60% 证明非无条件显示；另校验 qinq_27~30 不再进入主渲染六亲类别）
 
 ## 第一阶段：信息收集（引导式，逐步问）

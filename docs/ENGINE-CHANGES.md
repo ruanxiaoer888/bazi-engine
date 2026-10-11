@@ -10,6 +10,54 @@
 
 ---
 
+## v1.3.10（2026-10-11 · 交付面 / 权利面收口：包内不再自认无许可来源 + 数据文件自带许可标识 + 打包白名单收窄）
+
+> **引擎层变更（dist 未变，MD5 仍为 `d8c909b15dfc9f55f62a56ec6199968f`），影响 C 端：否**——
+> 本版只改交付面文档与 JSON 元数据（`rules.json` 顶层新增许可字段，而 `build_ui.py` 只读取其中的 `rules` 数组），
+> **dist / ui/index.html 字节完全未变**（`git diff --exit-code -- ui/index.html engine/engine.dist.js` 通过）。
+
+| 项 | 值 |
+|---|---|
+| dist MD5 | `d8c909b15dfc9f55f62a56ec6199968f`（未变） |
+| ui/index.html MD5 | `708f3baab30ab0cc695b1a8517cb0b3a`（未变） |
+| compliance 版 MD5 | `500f0a14f6479b7959770d9e09f94e77`（未变） |
+| rules.json MD5 | `90f9e2a4b38bd2a248a58d72923698da`（新增许可字段） |
+| skill/SKILL.md MD5 | `7f2a7f8cc6f1e64060c30e0824a3364d` |
+| THIRD-PARTY.md MD5 | `217146275dd133077e36d6479801b3dc` |
+| kb/README.md MD5 | `8a1fa5178805ed1034e2bb33b076d20f` |
+| 发布包 | `bazi-engine-v1.3.10.zip`（46 文件 / 712.5 KB / MD5 `99c8ef4d195cf07a39c73b85b853425e`） |
+| 影响 C 端 | **否**（dist 字节未变，无需同步） |
+
+**变更内容**（对另一台机器扫描报告逐条实测后的收口；14 套回归全绿 + 打包硬校验通过）：
+
+1. **🔴 `kb/README.md` 删除对无许可上游的来源自认**：原文第 6 行把 `dshxliuyu-lang/bazimbtifenxi.skill` 列为"数据来源"，
+   而该文件**随发布包分发** → 与 `LICENSE-DATA`「本项目原创编译」正面矛盾，等于向买家自认源自"保留一切权利"的库。
+   现改为只列古籍公有领域原文与 MIT 来源（`jinchenma94/bazi-skill`），并指向 `THIRD-PARTY.md`。
+2. **🔴 `kb/README.md` 目录树改为真实文件名**：原树用的是改名前的 24 个中文文件名（`天干地支五行表.md` 等，实际一个都不存在），
+   且把已声明"不进商业交付包"的 6 个 docx 整理件与 `bazi-mbti.md` 列入结构说明 → 全部更正并逐项标注排除状态。
+3. **🔴 去除包内本机路径**：`kb/README.md` 原引用 `八字命理/新历农历对照表.xlsx`（仅存在于作者本机的校验素材），已删除。
+4. **`kb/04-rules-db/rules.json` 顶层内嵌许可标识**：新增 `license` / `license_url` / `copyright` / `license_note` /
+   `commercial_license` / `third_party_notices` 六个字段，使数据文件**单独流转时也自带许可声明**
+   （不再依赖随附文件或平台页面 License 字段）；`tools/gen_rules.py` 写出口同步补齐，避免下次重跑被抹掉。
+5. **`THIRD-PARTY.md` 补齐**：§1.2 处置更新（`najin.md` 已是重写版，而非仅"排除 mbti"）；§2 增引用溯源说明
+   （`shigan-lun.md` 的【原文】为公有领域原文引用 + 本项目原创编排）；§4 增"包内 README 图片链接失效属预期"；
+   新增 **§6 历史版本作废声明**（旧版 `najin.md` / `bazi-mbti.md` 仍可从 git 历史检索到 → 明示作废、不作为可授权标的；
+   彻底移除需 filter-repo 重写历史，截至本版**未执行**）。
+6. **`skill/SKILL.md` 悬空引用标注**：`kb/05-reference/*`、`tools/archive/*` 标注"仅本仓库可读，不随发布包分发"；
+   `rules.json` 条目补数据许可说明；`version: 1.3.10`。
+7. **打包白名单收窄**：`tools/build_release_zip.py` 新增排除 `tools/compliance_soften.py`（涉及自有 C 端产品口径）与
+   `tools/publish_clawhub.ps1`（发布操作脚本）；docstring 去掉"SkillHub 专用"。发布包 48 → **46 文件**。
+8. **`kb/03-classics/shigan-lun.md` 与 `kb/02-rules/example.md`**：引文来源说明与旧文件名引用更正。
+
+**对另一台机器扫描报告的核对结论（实测）**：其中「`LICENSE-DATA` 写 `knowledge-base/`」与「`rules.json` 描述写 789 条」**两条不成立**
+（当前分别为 `kb/` 与 1000 条，789 仅出现在版本演进串 504→801→789→1000）；「包内无数据许可声明」**不成立**
+（`DATA-LICENSE.txt` 自 v1.3.8 起随包、`THIRD-PARTY.md` 自 v1.3.9 起随包；实测下载 v1.3.8/v1.3.9 Release 资产均内含，
+且均不含 6 个 docx 提取件）；「GitHub 侧栏显示 MIT」已反转为 **Other / NOASSERTION**
+（`LICENSE` 顶部适用范围声明所致，经确认**保留该状态**，以免被解读为"全仓库 MIT"）。
+真正成立的是：数据文件缺许可标识（本条已修）、`kb/README.md` 来源自认与目录口径错误（本条已修）、历史旧版本仍可检索（已声明作废）。
+
+---
+
 ## v1.3.9（2026-10-11 · 内容合规与权利链修复：KB 重写 + 免责统一 + 第三方排除落地）
 
 > **引擎层变更（dist 变化，MD5 `d8c909b15dfc9f55f62a56ec6199968f`，454.4 KB），影响 C 端：否（功能性）**——

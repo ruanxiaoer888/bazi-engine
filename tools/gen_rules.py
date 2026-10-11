@@ -413,6 +413,12 @@ for r in all_rules:
 
 out = {
  'schema_version':'3.0',
+ 'license':'CC-BY-NC-SA-4.0',
+ 'license_url':'https://creativecommons.org/licenses/by-nc-sa/4.0/',
+ 'copyright':'Copyright (c) 2026 ruanxiaoer',
+ 'license_note':'本数据文件（断语库）适用 CC BY-NC-SA 4.0：署名、非商业、相同方式共享。代码部分（engine/、ui/ 逻辑、tools/、skill/）为 MIT，见仓库 LICENSE。本文件内嵌于 ui/index.html 与 engine/engine.dist.js 时不随该文件的 MIT 声明变为可商用；任何平台/市场页面显示的 License 字段（如 MIT-0）仅为平台元数据，不构成对本数据部分的授权。',
+ 'commercial_license':'商业使用（含嵌入付费产品/SaaS/API、改文案后对外提供、转售数据集）需另行取得作者书面授权。',
+ 'third_party_notices':'见仓库根目录 THIRD-PARTY.md（第三方来源、许可与商业交付排除清单）',
  'description':'八字断语库（生产版 v3）— 结构化规则 '+str(len(all_rules))+' 条。字段：触发条件(condition)、断语结论(conclusion)、古籍出处(source)、置信度(confidence)、建议(suggestion)。condition 支持：日主/旺衰/十神/五行/状态/性别/位置/组合/格局。命中即输出结论并标注 source。',
  'rules':all_rules,
  'usage_note':'分析时先排盘得日主/月令/十神/五行分布/格局/身强身弱，逐条匹配 condition（字段按实际裁剪），命中即输出 conclusion 并标注 source。未命中规则的部分不强行断语，仅作趋势提示。健康类断语置信度低，须提示以医学为准。'
