@@ -6,7 +6,7 @@ description: >
   适用场景：用户想算八字、看命盘、测运势、查合婚、补五行、看神煞、看流年，或提到"算命/四柱/命理/bazi/fortune"。
   即使只提"算命""八字"而未明确说用 skill，也应启用本 skill。
   本 Skill 采用双许可：代码 MIT / 数据 CC BY-NC-SA 4.0（详见仓库 LICENSE / LICENSE-DATA）。
-version: 1.3.10
+version: 1.3.11
 tags: [八字, 命理, 四柱, 排盘, 运势, bazi, fortune]
 category: 传统文化/命理占卜
 platforms: [WorkBuddy, QClaw, ima]
@@ -69,6 +69,9 @@ license-data: CC-BY-NC-SA-4.0
 - `tools/test_liuyue_v2.js` — **流月规则 v2 回归**（10 项：liuyue_01~20 模板 + 12长生/六冲细分/天干五合/特殊）
 - （仅本仓库可读，**不随发布包分发**）`tools/archive/monitor_usage.js` — **断语库使用监控**（已归档；读本地私密 `.fingerprints.json`，调 GitHub Code Search API 搜指纹句定位疑似盗用方；该指纹清单当前尚未生成，见仓库 README「数据溯源」说明）
 - `tools/verify_edu_rules.js` — **空 condition 排除 + 学业规则复活回归**（400 随机盘统计 edu_17~20 命中率：须 ≥1 次命中证明规则可用、<60% 证明非无条件显示；另校验 qinq_27~30 不再进入主渲染六亲类别）
+- `tools/check_same_condition.js` — **同条件多规则门禁**（同类别 + 同 condition 的"互斥/近重复"检测；v1.3.11 就是为修 `yongshen_寒月`/`yongshen_暑月` 在 50.1% 命盘上同时命中而新增）
+- `tools/check_reachability.js` — **断语可达性门禁**（固定网格 + 极端样例盘，揪出"库里写了但用户永远看不到"的规则；`pattern_专旺_水` 长期缺失即由此发现）
+- `tools/check_content_lexicon.py` — **内容合规词表门禁**（绝对化表述 / 恐吓性表述 / 健康类就医兜底 / 传统性别表述对冲）
 
 ## 第一阶段：信息收集（引导式，逐步问）
 

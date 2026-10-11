@@ -215,11 +215,13 @@ console.log('== 特殊格局细分 ==');
 // 马云身强(ratio>0.6) 但 maxWx不超60%→无专旺
 assert('马云无专旺格', !c1.special.zhuanwang);
 assert('马云无specialDetail', c1.specialDetail===null);
-// 构造强木局测试专旺细分
-let strongWood = paipan('木王','男',1975,2,4,8,0,'北京市','no');
-// 1975-02-04 is close to 立春, need to check exact date... Actually let me think about this differently.
-// Let me check what the actual c1 (马云) special looks like: ratio depends on the support/drain calculation.
-// Instead of constructing a specific case, let me just verify the fields exist
+// 极端格局回归（v1.3.11 补）：此前这里只断言"字段存在"，从未验证专旺细分规则真的可达——
+// 后果：pattern_专旺_水 长期缺失、木/火/金细分在 3.9 万盘网格 0 命中却无人发现。
+// 下面两个样例盘经 24.4 万盘深搜确认可复现（配套门禁 tools/check_reachability.js）。
+const zwMu = paipan('专旺木','男',1938,3,23,21,41,'','no');
+assert('专旺·木（曲直格）', zwMu && zwMu.specialDetail==='专旺·曲直格', 'detail='+(zwMu&&zwMu.specialDetail));
+const zwShui = paipan('专旺水','男',1948,11,23,0,17,'','no');
+assert('专旺·水（润下格）', zwShui && zwShui.specialDetail==='专旺·润下格', 'detail='+(zwShui&&zwShui.specialDetail));
 assert('specialDetail字段存在', c1.hasOwnProperty('specialDetail'));
 
 console.log('== 十神真值表（防 tenGod 回归）==');

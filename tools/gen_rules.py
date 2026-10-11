@@ -1,11 +1,19 @@
 # -*- coding: utf-8 -*-
-"""扩展八字断语库至 200+ 条。
+"""⚠️ 一次性历史脚本（one-shot）——不要对当前 rules.json 重跑。
+
+它把「当前 rules.json」当种子再追加本文件里的 new_rules，因此对**已合并**的文件重跑会把整库复制一遍。
+2026-10-12（v1.3.11）加固：
+  · 写文件**之前**先做 id 唯一性校验（原实现先 json.dump 再 assert → 会先写坏 rules.json 再报错）；
+  · 若 new_rules 的 id 已存在于种子中，直接拒绝执行并给出提示；
+  · 新增规则请直接编辑 kb/04-rules-db/rules.json，并把条目同步到本文件的 new_rules 段留档。
+
+原始用途：扩展八字断语库（504 → 801 → 1000）。
 
 策略：
-1. 载入现有 断语库.json（约 60 条，作为种子保留）
+1. 载入现有 rules.json 作为种子保留
 2. 以结构化数据 + 古籍口径批量生成新规则，覆盖：
    性格×旺衰 / 事业×十神×旺衰 / 财运 / 婚姻×日支十神×性别 / 健康×五行旺弱 / 格局 / 用神喜忌×旺衰 / 十神组合 / 学业 / 六亲
-3. 合并去重（按 id），输出新的 断语库.json
+3. 合并去重（按 id），输出新的 rules.json
 4. 打印各分类条数与总条数
 
 condition 字段约定（与 ui 匹配器对齐）：
@@ -19,10 +27,23 @@ condition 字段约定（与 ui 匹配器对齐）：
   组合: 数组，ctx.tens 须全部包含
   格局: 格局名（由月令透干判定）
 """
-import json, os
+import json, os, sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 RULE_PATH = os.path.join(ROOT, 'kb', '04-rules-db', 'rules.json')
+
+# 2026-10-12（v1.3.11）**硬闸门**（2026-10-12 实测踩到）：直接重跑本脚本会——
+#   ① 把 11 条早已被删除的历史规则（含 v1.2.2 清理掉的死规则）重新塞回库中（1000 → 1011）；
+#   ② 用本文件里陈旧的 description/usage_note 覆盖生产版元数据（v4.2 → v3）；
+#   ③ 重排顶层字段顺序，导致 rules.json MD5 变化。
+# 脚本内部的 add() 只跳过"id 已存在"的条目，拦不住上面三种情况，故改为默认拒绝执行。
+if '--one-shot' not in sys.argv:
+    raise SystemExit(
+        '❌ gen_rules.py 是一次性历史脚本，默认拒绝执行。\n'
+        '   直接重跑会：把历史删除的规则塞回库中 / 用旧元数据覆盖生产版 description / 重排字段顺序。\n'
+        '   新增规则请直接编辑 kb/04-rules-db/rules.json，并同步本文件的 new_rules 段留档。\n'
+        '   确实需要重跑时：先备份 rules.json，再加 --one-shot 执行。'
+    )
 
 GAN = ['甲','乙','丙','丁','戊','己','庚','辛','壬','癸']
 GAN_WX = {'甲':'木','乙':'木','丙':'火','丁':'火','戊':'土','己':'土','庚':'金','辛':'金','壬':'水','癸':'水'}
@@ -406,7 +427,22 @@ add('kin_parent_guan','六亲',{'十神':['正官','七杀'],'旺衰':'弱'},
 # ============================================================
 # 合并去重并写出
 # ============================================================
+_seed_ids = seed_ids
+_dup_with_seed = [r['id'] for r in new_rules if r['id'] in _seed_ids]
+if _dup_with_seed:
+    raise SystemExit(
+        '❌ 拒绝执行：new_rules 中有 %d 条 id 已存在于当前 rules.json（例：%s）。\n'
+        '   本脚本是一次性历史脚本，不能对已合并的 rules.json 重跑（否则整库被复制一遍）。\n'
+        '   新增规则请直接编辑 kb/04-rules-db/rules.json，并同步本文件 new_rules 段留档。'
+        % (len(_dup_with_seed), '、'.join(_dup_with_seed[:5]))
+    )
+
 all_rules = seed_rules + new_rules
+ids = [r['id'] for r in all_rules]
+if len(ids) != len(set(ids)):
+    _dups = sorted({i for i in ids if ids.count(i) > 1})
+    raise SystemExit('❌ 拒绝写出：合并后存在重复 id：%s' % '、'.join(_dups[:10]))
+
 by_cat = {}
 for r in all_rules:
     by_cat[r['category']] = by_cat.get(r['category'],0)+1
@@ -424,13 +460,10 @@ out = {
  'usage_note':'分析时先排盘得日主/月令/十神/五行分布/格局/身强身弱，逐条匹配 condition（字段按实际裁剪），命中即输出 conclusion 并标注 source。未命中规则的部分不强行断语，仅作趋势提示。健康类断语置信度低，须提示以医学为准。'
 }
 with open(RULE_PATH,'w',encoding='utf-8') as f:
-    json.dump(out, f, ensure_ascii=False, indent=2)
+    json.dump(out, f, ensure_ascii=False, indent=1)   # 与仓库现有 rules.json 的 1 空格缩进保持一致
 
 print('合并完成：种子 %d + 新增 %d = 总 %d 条'%(len(seed_rules),len(new_rules),len(all_rules)))
 print('分类统计：')
 for k in sorted(by_cat):
     print('  %-8s %d'%(k,by_cat[k]))
-# 校验 id 唯一
-ids=[r['id'] for r in all_rules]
-assert len(ids)==len(set(ids)), '存在重复 id！'
-print('id 唯一性校验通过')
+print('id 唯一性校验通过（已在写文件之前完成）')

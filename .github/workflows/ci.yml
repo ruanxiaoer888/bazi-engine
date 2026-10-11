@@ -46,6 +46,18 @@ jobs:
           node tools/test_xiyong.js
           node tools/check_conflicts.js
           node tools/check_dup_hits.js
+      # 2026-10-12（v1.3.11）新增三道内容/可达性门禁——它们各自对应一次真实漏检：
+      #   check_content_lexicon  ← v1.3.9 手工清"必有/血光"没有机器兜底
+      #   check_same_condition   ← yongshen_寒月 与 yongshen_暑月 同条件互斥、50.1% 命盘同时命中
+      #   check_reachability     ← pattern_专旺_水 缺失、专旺细分规则网格 0 命中
+      - name: 内容合规词表（绝对化 / 恐吓性 / 健康兜底 / 性别对冲）
+        run: python tools/check_content_lexicon.py
+      - name: 同条件多规则（互斥 / 近重复）
+        run: node tools/check_same_condition.js
+      - name: 断语可达性（固定网格 + 极端样例盘）
+        run: node tools/check_reachability.js
+      - name: 交付包契约（干跑，不写 ZIP）
+        run: python tools/build_release_zip.py --check
       - name: Compliance soften + check (C-end gate)
         run: |
           cp engine/engine.dist.js engine/engine.compliance.js

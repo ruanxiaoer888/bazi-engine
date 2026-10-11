@@ -1336,6 +1336,12 @@ function evalState(st, c, ctx){
       const mz=ctx.pillars[1][1];
       return ['亥','子','丑'].includes(mz)||['巳','午','未'].includes(mz);
     }
+    // 2026-10-12 修复（v1.3.11）：寒月 / 暑月必须可区分。
+    // 此前 yongshen_寒月 与 yongshen_暑月 共用 状态:"调候"，两条在 50.1% 的命盘上同时命中
+    // → 每张寒/暑月盘都会输出一条与自己命局相反的调候断语（实测未月盘出现"命局偏寒"）。
+    // 现拆分为独立状态：调候 = 寒月∪暑月（保持既有语义），寒月/暑月各自单选。
+    case '寒月': return ['亥','子','丑'].includes(ctx.pillars[1][1]);
+    case '暑月': return ['巳','午','未'].includes(ctx.pillars[1][1]);
     case '偏枯有药': {
       // 真正偏枯：某行极旺(≥1.8×avg)且另一行极弱(≤0.4×avg) 旺弱并存（"病"），
       // 且喜用神（"药"）存在感 ≥0.5×avg。
@@ -1475,7 +1481,12 @@ function matchRules(ctx){
     if(Object.keys(c).length===0){ hit=false; }
     for(const k in c){
       const v=c[k];
-      if(k==='日主'){ if(v!==ctx.dayMasterFull) hit=false; }
+      if(k==='日主'){
+        // 2026-10-12（v1.3.11）：支持数组（同一元素的两个日干共用一条断语，如 壬水/癸水 → 润下格）。
+        // 原先仅支持标量，导致专旺格断语只能覆盖阳干（甲/丙/戊/庚），阴干日主（乙/己/癸）永远拿不到格局断语。
+        if(Array.isArray(v)){ if(!v.includes(ctx.dayMasterFull)) hit=false; }
+        else if(v!==ctx.dayMasterFull) hit=false;
+      }
       else if(k==='旺衰'){ if(v!==ctx.strength) hit=false; }
       else if(k==='十神'){ tenArr=Array.isArray(v)?v:[v]; }
       else if(k==='五行'){ wx=v; }
