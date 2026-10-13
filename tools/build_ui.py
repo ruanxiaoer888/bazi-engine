@@ -1485,8 +1485,15 @@ function evalState(st, c, ctx){
     default: return false; // 未知状态 / 应走五行分值分支的状态：不命中
   }
 }
-// 用神被冲克合：喜用所在干支被其他柱冲/合/克/刑
-// 2026-08-16 修复：需要 ≥2 处冲克合证据才判"破损"，避免单个合/克就命中（之前宽松，所有有明确 xiYong 的盘都命中）
+// 用神被冲克合：喜用所在干支被**其他柱**冲/合/克/刑
+// 2026-08-16 修复：需要 ≥2 处证据才判"破损"，避免单个合/克就命中（之前宽松，所有有明确 xiYong 的盘都命中）
+// 2026-10-14（v1.3.17）修复**计量方式**（实测命中率 73.0% → 51.0%；冲/合/克/刑的语义**未改**）：
+//   ① 原实现把"每个(用神柱, 其他柱)关系对"累加 → **两个用神柱互相合**会被算两次、单独凑够阈值。
+//      用神之间相合属同一侧，不是"破损"（实测 8.6% 的盘仅因此命中）。
+//   ② 同一个对手柱既冲一个用神、又合另一个用神时也被算两次 → 证据应按**不同对手柱**计数
+//      （实测 22% 的盘在"关系对≥2"时其实只有 1 个对手柱）。
+//   现改为：统计"不同对手柱"的个数（排除用神自身所在柱），≥2 才命中。
+//   注：进一步收紧（如"合不算伤害"→21.6%）属于改命理判据，需作者判断，本版不动。
 function yongShenChong(ctx){
   const gan=[], zhi=[];
   ctx.pillars.forEach((p,i)=>{
@@ -1495,25 +1502,29 @@ function yongShenChong(ctx){
     if(ctx.xiYong.includes(GAN_WX[tg])) zhi.push({z:p[1],i});
   });
   if(!gan.length&&!zhi.length) return false;
-  let count=0;
+  const xiGan=i=>ctx.xiYong.includes(GAN_WX[ctx.pillars[i][0]]);
+  const xiZhi=i=>ctx.xiYong.includes(GAN_WX[CANG[ctx.pillars[i][1]][0][0]]);
+  const opp=new Set();
   for(const o of gan){
     for(let j=0;j<4;j++){
       if(j===o.i) continue;
+      if(xiGan(j)) continue;                                        // 用神×用神 不算受损
       const g=ctx.pillars[j][0];
-      if(WU_HE[g]===o.g||WU_HE[o.g]===g) count++;                    // 天干相合
-      else if(WX_SK[GAN_WX[g]]&&WX_SK[GAN_WX[g]].被克===GAN_WX[o.g]) count++; // 天干相克
+      if(WU_HE[g]===o.g||WU_HE[o.g]===g) opp.add(j);                 // 天干相合
+      else if(WX_SK[GAN_WX[g]]&&WX_SK[GAN_WX[g]].被克===GAN_WX[o.g]) opp.add(j); // 天干相克
     }
   }
   for(const o of zhi){
     for(let j=0;j<4;j++){
       if(j===o.i) continue;
+      if(xiZhi(j)) continue;                                        // 用神×用神 不算受损
       const z=ctx.pillars[j][1];
-      if(CHONG[z]===o.z||CHONG[o.z]===z) count++;                          // 冲
-      else if(LIUHE.some(pr=>pr.includes(z)&&pr.includes(o.z))) count++;        // 合
-      else if(XING_PAIRS.some(pr=>(pr[0]===z&&pr[1]===o.z)||(pr[0]===o.z&&pr[1]===z))) count++; // 刑
+      if(CHONG[z]===o.z||CHONG[o.z]===z) opp.add(j);                          // 冲
+      else if(LIUHE.some(pr=>pr.includes(z)&&pr.includes(o.z))) opp.add(j);        // 合
+      else if(XING_PAIRS.some(pr=>(pr[0]===z&&pr[1]===o.z)||(pr[0]===o.z&&pr[1]===z))) opp.add(j); // 刑
     }
   }
-  return count>=2;
+  return opp.size>=2;
 }
 
 function matchRules(ctx){

@@ -178,5 +178,19 @@ let e2=null; try{ BaziEngine.matchRules(null); }catch(e){ e2=e; }
 assert('matchRules(null) → CTX_INVALID', e2 && e2.code==='CTX_INVALID', e2?e2.code:'未抛错');
 assert('合法 ctx 不受入口检查影响（命中数不变）', Object.values(BaziEngine.matchRules(c1)).reduce((s,a)=>s+a.length,0)===Object.values(cats).reduce((s,a)=>s+a.length,0));
 
+console.log('== 用神被冲克合 计量修复（v1.3.17）==');
+// ⑰ 缺陷①：两个用神柱互相合，原实现按"关系对"累加两次 → 单独凑够阈值，误判"格局破损"
+const fxA = BaziEngine.paipan('A','男',2059,2,20,17,41,'','no');
+assert('用神×用神互合不再判为用神被冲克合', BaziEngine.yongShenChong(fxA)===false, fxA.pillars.join(' '));
+assert('该盘不再命中 pattern_yongshen_chong', !(BaziEngine.matchRules(fxA)['格局']||[]).some(r=>r.id==='pattern_yongshen_chong'));
+// ⑱ 缺陷②：只有 1 个"对手柱"时，原实现因该柱同时冲/合不同用神而算成 2 处
+const fxB = BaziEngine.paipan('B','女',1996,5,5,8,44,'','no');
+assert('仅 1 个对手柱不再判为用神被冲克合', BaziEngine.yongShenChong(fxB)===false, fxB.pillars.join(' '));
+assert('该盘不再命中 career_用神被冲', !(BaziEngine.matchRules(fxB)['事业']||[]).some(r=>r.id==='career_用神被冲'));
+// ⑲ 反向哨兵：真·≥2 个对手柱仍须命中（证明规则没被改死）
+const fxC = BaziEngine.paipan('C','女',1940,1,1,0,0,'','no');
+assert('≥2 个对手柱仍判为用神被冲克合', BaziEngine.yongShenChong(fxC)===true, fxC.pillars.join(' '));
+assert('该盘仍命中 pattern_yongshen_chong', (BaziEngine.matchRules(fxC)['格局']||[]).some(r=>r.id==='pattern_yongshen_chong'));
+
 console.log('\n结果: ' + pass + ' PASS, ' + fail + ' FAIL');
 if (fail > 0) process.exit(1);
