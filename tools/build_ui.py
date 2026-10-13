@@ -1517,6 +1517,21 @@ function yongShenChong(ctx){
 }
 
 function matchRules(ctx){
+  // 2026-11（v1.3.14）：入口体检。此前 ctx 缺字段会抛原始 TypeError
+  // （如 `Cannot read properties of undefined (reading 'includes')`，不含字段名、无修复提示）。
+  // 这里只检查 matchRules **真正解引用、缺了必然抛错**的字段；其余字段的缺失行为保持不变
+  // （仍按原逻辑静默降级），完整自洽性检查请用 validateCtx()。
+  if(!ctx || typeof ctx!=='object'){
+    const e=new Error('matchRules(ctx)：ctx 必须是对象，收到 '+(ctx===null?'null':typeof ctx)
+      +'。可用 validateCtx(ctx) 体检，或用 paipan() / paipanStrict() 生成 ctx。');
+    e.code='CTX_INVALID'; e.fields=[]; throw e;
+  }
+  const miss=CTX_CRASH.filter(f=>ctx[f]===undefined||ctx[f]===null);
+  if(miss.length){
+    const e=new Error('matchRules(ctx)：缺少必需字段 ['+miss.join(', ')+']（缺这些字段本该抛 TypeError，现改为可读报错）。'
+      +'完整清单用 validateCtx(ctx) 查看，或用 paipan() / paipanStrict() 生成 ctx。');
+    e.code='CTX_MISSING_FIELD'; e.fields=miss; throw e;
+  }
   const cats={};
   RULES.forEach(r=>{ if(!cats[r.category]) cats[r.category]=[]; });
   RULES.forEach(r=>{
@@ -1626,6 +1641,168 @@ function matchRules(ctx){
     if(hit) cats[r.category].push(r);
   });
   return cats;
+}
+
+// ===== ctx 体检（2026-11 新增，v1.3.14）=====
+// 为什么需要：客户常拿**自己排盘系统**的结果手工拼 ctx（本项目《接入说明》第 1 条注意就是
+// "十神必须以日干为基准，否则十神/组合/位置类断语会静默少命中"）。实测：缺 shenSha 静默少 32 条、
+// 缺 strength 少 13 条；十神整体错位 +1/+2/+5 时命中数 122→120/121/140，**全程零报错**。
+// 客户遇到的是"你这库怎么才这么几条"，而不是"我 ctx 写错了"。
+//
+// 设计原则：**只做自洽性检查，绝不自动补值或纠正**——自动补值会把错误藏起来，比报错更危险。
+// 返回 {ok, errors, warnings, expected, summary}：
+//   errors   = 会抛错，或结果不可信（必须修）
+//   warnings = 结果可能偏差（建议核对）
+//   expected = 引擎按 pillars 推算出的正确值（可直接对照修改）
+const CTX_REQUIRED = ['dayMasterFull','dmWx','dmYin','gender','strength','pillars','tens','five',
+  'sumFive','avgFive','xiYong','jiYong','special','shenSha','kongWang',
+  'pattern','dayZhiTG','dayZhiTG_ten','caiGuanPos','monthZhi','dayZhi'];
+const CTX_CRASH = ['pillars','tens','five','xiYong','jiYong','special'];
+const PILLAR_NAMES = ['年','月','日','时'];
+
+function validateCtx(ctx){
+  const errors=[], warnings=[], missing=[];
+  const mk=(arr,f,m,g)=>arr.push({field:f, message:m, got:(g===undefined?'undefined':String(g))});
+  const E=(f,m,g)=>mk(errors,f,m,g), W=(f,m,g)=>mk(warnings,f,m,g);
+  const expected={};
+
+  if(!ctx || typeof ctx!=='object'){
+    E('ctx','ctx 必须是对象，收到 '+(ctx===null?'null':typeof ctx));
+    return {ok:false, errors:errors, warnings:warnings, expected:expected, missing:missing,
+      summary:{fieldsTotal:CTX_REQUIRED.length, fieldsMissing:CTX_REQUIRED.length, errors:errors.length, warnings:warnings.length}};
+  }
+
+  // ① 必填字段存在性：区分"会崩"与"会静默偏差"
+  CTX_REQUIRED.forEach(f=>{
+    if(ctx[f]===undefined || ctx[f]===null){
+      missing.push(f);
+      if(CTX_CRASH.indexOf(f)>=0) E(f,'缺少必需字段（matchRules 会直接抛错）');
+      else W(f,'缺少字段（会导致相关断语静默少命中）');
+    }
+  });
+
+  // ② pillars 形状 + 日主自洽 + **十神逐位重算**（本函数最值钱的一条）
+  const P=ctx.pillars;
+  let dm=null, dmWx=null, dmYin=null;
+  if(Array.isArray(P)){
+    if(P.length!==4){
+      E('pillars','应为 4 柱（年/月/日/时），收到 '+P.length+' 柱');
+    } else {
+      // paipan 产出的形状是 4 个 2 字干支**字符串**（['庚午','辛巳','庚辰','辛巳']）；
+      // [天干,地支] 数组也能被引擎正确处理（p[0]/p[1] 取值一致），故一并接受。
+      const parts=P.map(p=>{
+        if(typeof p==='string' && p.length===2) return [p[0],p[1]];
+        if(Array.isArray(p) && p.length===2 && typeof p[0]==='string' && typeof p[1]==='string') return [p[0],p[1]];
+        return null;
+      });
+      if(parts.some(x=>x===null)){
+        E('pillars','每柱应为 2 字干支（如 "庚午"）或 [天干, 地支] 数组', JSON.stringify(P));
+      } else {
+        const G=parts.map(x=>x[0]), Z=parts.map(x=>x[1]);
+        const badG=G.filter(g=>GAN.indexOf(g)<0);
+        const badZ=Z.filter(z=>ZHI.indexOf(z)<0);
+        if(badG.length) E('pillars','含非法天干: '+badG.join(','));
+        if(badZ.length) E('pillars','含非法地支: '+badZ.join(','));
+        if(!badG.length && !badZ.length){
+          dm=G[2]; dmWx=GAN_WX[dm]; dmYin=yang(dm);
+          expected.dayMasterFull=dm+dmWx; expected.dmWx=dmWx; expected.dmYin=dmYin;
+          expected.monthZhi=Z[1]; expected.dayZhi=Z[2];
+          expected.tens=G.map(g=>tenGod(g,dmWx,dmYin));
+          if(ctx.dmWx!==dmWx) E('dmWx','与日柱天干不符：日干 '+dm+' 应为 '+dmWx+'，收到 '+ctx.dmWx);
+          if(ctx.dmYin!==dmYin) E('dmYin','与日柱天干不符：日干 '+dm+' 应为 '+(dmYin?'阳':'阴')+'，收到 '+(ctx.dmYin?'阳':'阴'));
+          if(ctx.dayMasterFull!==expected.dayMasterFull)
+            E('dayMasterFull','应为「日柱天干+日干五行」= '+expected.dayMasterFull+'，收到 '+ctx.dayMasterFull);
+          if(ctx.monthZhi!==undefined && ctx.monthZhi!==Z[1])
+            W('monthZhi','与月柱地支不符：应为 '+Z[1]+'，收到 '+ctx.monthZhi);
+          if(ctx.dayZhi!==undefined && ctx.dayZhi!==Z[2])
+            W('dayZhi','与日柱地支不符：应为 '+Z[2]+'，收到 '+ctx.dayZhi);
+          // ★ 十神：客户最容易错、错了完全无提示的地方
+          if(Array.isArray(ctx.tens)){
+            const bad=[];
+            if(ctx.tens.length!==4) bad.push('数组长度应为 4，收到 '+ctx.tens.length);
+            for(let i=0;i<4 && i<ctx.tens.length;i++)
+              if(ctx.tens[i]!==expected.tens[i])
+                bad.push(PILLAR_NAMES[i]+'干 '+G[i]+'：应为 '+expected.tens[i]+'，收到 '+ctx.tens[i]);
+            if(bad.length)
+              E('tens','十神与"以日干为基准"的推算不符（十神错 → 十神/组合/位置/格局类断语会静默少命中或错命中）：'+bad.join('；'),JSON.stringify(ctx.tens));
+          }
+          // 日支本气藏干及其十神
+          if(ctx.dayZhiTG!==undefined && CANG[Z[2]]){
+            expected.dayZhiTG=CANG[Z[2]][0][0];
+            expected.dayZhiTG_ten=tenGod(expected.dayZhiTG,dmWx,dmYin);
+            if(ctx.dayZhiTG!==expected.dayZhiTG)
+              E('dayZhiTG','应为日支 '+Z[2]+' 的本气藏干 '+expected.dayZhiTG+'，收到 '+ctx.dayZhiTG);
+            if(ctx.dayZhiTG_ten!==undefined && ctx.dayZhiTG_ten!==expected.dayZhiTG_ten)
+              E('dayZhiTG_ten','应为本气藏干 '+expected.dayZhiTG+' 的十神 '+expected.dayZhiTG_ten+'，收到 '+ctx.dayZhiTG_ten);
+          }
+        }
+      }
+    }
+  } else if(P!==undefined){
+    E('pillars','应为数组，收到 '+typeof P);
+  }
+
+  // ③ 五行分值自洽
+  if(ctx.five && typeof ctx.five==='object' && !Array.isArray(ctx.five)){
+    const bad=WX_NAMES.filter(w=>!Number.isFinite(ctx.five[w])||ctx.five[w]<0);
+    const missW=WX_NAMES.filter(w=>typeof ctx.five[w]!=='number');
+    if(missW.length) E('five','应含木/火/土/金/水五个数值键，缺少: '+missW.join(','));
+    else if(bad.length) E('five','存在非法数值（负数或 NaN）: '+bad.join(','));
+    else {
+      const s=WX_NAMES.reduce((a,w)=>a+ctx.five[w],0);
+      expected.sumFive=s; expected.avgFive=s/5;
+      if(ctx.sumFive!==undefined && Math.abs(ctx.sumFive-s)>1e-6)
+        E('sumFive','应等于 five 五项之和 '+s+'，收到 '+ctx.sumFive);
+      if(ctx.avgFive!==undefined && Math.abs(ctx.avgFive-s/5)>1e-6)
+        E('avgFive','应等于 five 之和 / 5 = '+(s/5)+'，收到 '+ctx.avgFive);
+    }
+  }
+  if(ctx.sumFive!==undefined && (!Number.isFinite(ctx.sumFive)||ctx.sumFive<=0))
+    E('sumFive','应为正数（五行分值总和），收到 '+ctx.sumFive);
+
+  // ④ 喜用 / 忌神
+  ['xiYong','jiYong'].forEach(f=>{
+    const v=ctx[f];
+    if(v===undefined||v===null) return;
+    if(!Array.isArray(v)){ E(f,'应为五行数组，收到 '+typeof v); return; }
+    const bad=v.filter(w=>WX_NAMES.indexOf(w)<0);
+    if(bad.length) E(f,'含非五行元素: '+bad.join(',')+'（应为 木/火/土/金/水）',JSON.stringify(v));
+    const dup=[...new Set(v.filter((w,i)=>v.indexOf(w)!==i))];
+    if(dup.length) W(f,'存在重复项: '+dup.join(','));
+  });
+  if(Array.isArray(ctx.xiYong) && Array.isArray(ctx.jiYong)){
+    const both=ctx.xiYong.filter(w=>ctx.jiYong.indexOf(w)>=0);
+    if(both.length) E('xiYong/jiYong','同一五行不能同时为喜用与忌神: '+both.join(','));
+    if(ctx.xiYong.length===5) W('xiYong','喜用含全部五行——只有真正的中和命局才如此；若并非中和盘，说明旺衰判定有误');
+  }
+
+  // ⑤ 其余字段的取值范围 / 形状
+  if(ctx.gender!==undefined && ctx.gender!=='男' && ctx.gender!=='女')
+    E('gender','应为「男」或「女」，收到 '+ctx.gender);
+  if(ctx.strength!==undefined && ['强','弱','中和'].indexOf(ctx.strength)<0)
+    E('strength','应为 强/弱/中和 之一，收到 '+ctx.strength);
+  if(ctx.special!==undefined){
+    if(!ctx.special||typeof ctx.special!=='object') E('special','应为对象 {zhuanwang,cong,tiaohou}',typeof ctx.special);
+    else ['zhuanwang','cong','tiaohou'].forEach(k=>{
+      if(typeof ctx.special[k]!=='boolean') E('special.'+k,'应为布尔值（true/false），收到 '+typeof ctx.special[k]);
+    });
+  }
+  if(ctx.shenSha!==undefined){
+    if(!Array.isArray(ctx.shenSha)) E('shenSha','应为数组，收到 '+typeof ctx.shenSha);
+    else {
+      const bad=ctx.shenSha.filter(s=>!s||typeof s.name!=='string');
+      if(bad.length) E('shenSha','每项应为 {name,type,pos...}，有 '+bad.length+' 项缺少 name（神煞类断语会整类漏掉）',JSON.stringify(bad[0]));
+    }
+  }
+  if(ctx.kongWang!==undefined){
+    if(!Array.isArray(ctx.kongWang)||ctx.kongWang.some(z=>ZHI.indexOf(z)<0))
+      E('kongWang','应为 2 个地支组成的数组（如 ["子","丑"]），收到 '+JSON.stringify(ctx.kongWang));
+  }
+  if(ctx.caiGuanPos!==undefined && ['年月','日时','双','无'].indexOf(ctx.caiGuanPos)<0)
+    E('caiGuanPos','应为 年月/日时/双/无 之一，收到 '+ctx.caiGuanPos);
+
+  return {ok:errors.length===0, errors:errors, warnings:warnings, expected:expected, missing:missing,
+    summary:{fieldsTotal:CTX_REQUIRED.length, fieldsMissing:missing.length, errors:errors.length, warnings:warnings.length}};
 }
 // [ENGINE:END]
 
@@ -3298,7 +3475,7 @@ if len(regions) != 7:
     raise SystemExit("引擎标记区段数异常：期望 7，实际 %d" % len(regions))
 engine_js = "\n\n".join(r.rstrip() for r in regions)
 
-EXPORTS = """paipan, paipanStrict, getLastError, getLastWarning, dayGZ, yearGZ, monthGZ, hourGZ, tenGod, computeFive, getDaYun, getPattern,
+EXPORTS = """paipan, paipanStrict, getLastError, getLastWarning, validateCtx, dayGZ, yearGZ, monthGZ, hourGZ, tenGod, computeFive, getDaYun, getPattern,
 calcTaiYuan, calcMingGong, calcShenGong, calcKongWang, calcChangSheng, calcShenSha, getRemedy,
 solarCorrection, matchRules, evalState, yongShenChong, findRule, matchDayun, matchLiuDay, matchLiuYue,
 analyzeLiuDeep, applyDst, dstOffset, getMonthBrief, wxOfSanhe, liuTenDesc, GAN_WX_OfTen, liuRelDesc,

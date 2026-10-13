@@ -137,5 +137,46 @@ assert('警告 detail 回传原始地名与城市数', (BaziEngine.getLastWarnin
 assert('合法排盘后警告被清空', BaziEngine.paipan('T','男',1990,5,15,10,30,'北京市','no') && BaziEngine.getLastWarning()===null);
 assert('未填地名 + truesun=yes → 结构不变（solarInfo 仍为 null）', BaziEngine.paipan('匿名','男',1990,5,15,10,0,'','yes').solarInfo===null);
 
+console.log('== ctx 体检 validateCtx（v1.3.14）==');
+const clone = o => JSON.parse(JSON.stringify(o));
+const vGood = BaziEngine.validateCtx(c1);
+// ⑪ 最重要的一条：正常盘必须零误报（体检工具一旦误报就没人用了）
+assert('正常盘 ok=true 且 errors=0', vGood.ok===true && vGood.errors.length===0, JSON.stringify(vGood.errors.slice(0,2)));
+assert('正常盘 warnings=0', vGood.warnings.length===0, JSON.stringify(vGood.warnings.slice(0,3)));
+// ⑫ 十神基准错（本项目《接入说明》第 1 条注意）：必须被抓到，并给出正确值
+const vTens = clone(c1); vTens.tens = [vTens.tens[1], vTens.tens[0], vTens.tens[2], vTens.tens[3]];
+const rTens = BaziEngine.validateCtx(vTens);
+assert('十神错位 → ok=false', rTens.ok===false);
+assert('十神错位 → 报错字段为 tens', rTens.errors.some(x=>x.field==='tens'), JSON.stringify(rTens.errors.map(x=>x.field)));
+assert('十神错位 → expected.tens 给出正确值', Array.isArray(rTens.expected.tens) && rTens.expected.tens.join()===c1.tens.join(), (rTens.expected.tens||[]).join());
+assert('十神错位 → 错误信息含"哪一柱错了"', /年干|月干|日干|时干/.test(rTens.errors.map(x=>x.message).join('')));
+// ⑬ 其余自洽性检查
+const vDm = clone(c1); vDm.dayMasterFull='甲木';
+assert('dayMasterFull 与日柱不符 → error', BaziEngine.validateCtx(vDm).errors.some(x=>x.field==='dayMasterFull'));
+const vXs = clone(c1); vXs.xiYong=['火','火','金']; vXs.jiYong=['火'];
+assert('喜用与忌神重叠 → error', BaziEngine.validateCtx(vXs).errors.some(x=>x.field==='xiYong/jiYong'));
+const vSs = clone(c1); vSs.shenSha=[{type:'吉'}];
+assert('神煞项缺 name → error', BaziEngine.validateCtx(vSs).errors.some(x=>x.field==='shenSha'));
+const vP5 = clone(c1); vP5.pillars=['庚午','辛巳','庚辰','辛巳','甲子'];
+assert('支柱数≠4 → error', BaziEngine.validateCtx(vP5).errors.some(x=>x.field==='pillars'));
+const vAlt = clone(c1); vAlt.pillars=c1.pillars.map(p=>[p[0],p[1]]);
+assert('[天干,地支] 数组形状也接受（ok=true）', BaziEngine.validateCtx(vAlt).ok===true, JSON.stringify(BaziEngine.validateCtx(vAlt).errors.slice(0,2)));
+// ⑭ 缺字段：崩溃类报 error、静默偏差类报 warning（且 matchRules 对后者行为不变）
+const vNoSS = clone(c1); delete vNoSS.shenSha;
+const rNoSS = BaziEngine.validateCtx(vNoSS);
+assert('缺 shenSha → warning（非 error）', rNoSS.warnings.some(x=>x.field==='shenSha') && !rNoSS.errors.some(x=>x.field==='shenSha'));
+assert('缺 shenSha → matchRules 仍可用（行为不变，命中减少）', Object.values(BaziEngine.matchRules(vNoSS)).reduce((s,a)=>s+a.length,0) < Object.values(cats).reduce((s,a)=>s+a.length,0));
+// ⑮ validateCtx 自身绝不能在非法输入上崩
+assert('validateCtx(null) 不抛且 ok=false', BaziEngine.validateCtx(null).ok===false);
+assert('validateCtx({}) 不抛且列出缺失字段', (()=>{ const r=BaziEngine.validateCtx({}); return r.ok===false && r.missing.length>0; })());
+assert('validateCtx("字符串") 不抛', BaziEngine.validateCtx('x').ok===false);
+// ⑯ matchRules 入口：把原始 TypeError 换成可读错误
+let e1=null; try{ BaziEngine.matchRules({}); }catch(e){ e1=e; }
+assert('matchRules({}) → CTX_MISSING_FIELD 且列出字段', e1 && e1.code==='CTX_MISSING_FIELD' && e1.fields.includes('pillars'), e1?e1.code:'未抛错');
+assert('matchRules({}) 错误信息可读（含字段名，不再是 reading \'includes\'）', e1 && /pillars/.test(e1.message) && !/reading '/.test(e1.message));
+let e2=null; try{ BaziEngine.matchRules(null); }catch(e){ e2=e; }
+assert('matchRules(null) → CTX_INVALID', e2 && e2.code==='CTX_INVALID', e2?e2.code:'未抛错');
+assert('合法 ctx 不受入口检查影响（命中数不变）', Object.values(BaziEngine.matchRules(c1)).reduce((s,a)=>s+a.length,0)===Object.values(cats).reduce((s,a)=>s+a.length,0));
+
 console.log('\n结果: ' + pass + ' PASS, ' + fail + ' FAIL');
 if (fail > 0) process.exit(1);

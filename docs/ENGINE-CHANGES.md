@@ -12,6 +12,68 @@
 
 ---
 
+## v1.3.14（2026-10-13 · `validateCtx` ctx 体检 + `matchRules` 入口可读报错）
+
+> **引擎层变更（dist 变化，MD5 `c42478f8095c454057e442f1968fe2a1`），影响 C 端：是（低风险，纯新增）**——
+> 排盘 / 断语匹配算法**零改动**。新增 `validateCtx(ctx)`；`matchRules` 入口新增"缺了必然抛 TypeError 的字段"检查
+> （把原始 `Cannot read properties of undefined (reading 'includes')` 换成可读错误 + 字段名）。
+> **合法 ctx 的行为逐字节不变**（14 套回归零断言改动通过）。
+
+| 项 | 值 |
+|---|---|
+| dist MD5 | `c42478f8095c454057e442f1968fe2a1` |
+| ui/index.html MD5 | `380b9ea14a4abdf830167f8f141ed569`（内联同一份引擎，故同变） |
+| compliance 版 MD5 | `e006405418af33f24baafe8ba0a62ed8` |
+| rules.json MD5 | `3196ed776cdb73937d37dab4edf43b78`（**未变**） |
+| skill/SKILL.md MD5 | `c323a9cb00a8891f8b25340c153e3318` |
+| README.md MD5 | `edd39dcd9020ff7d18524c493487ba09` |
+| tools/test_engine.js MD5 | `ecddbbd35669981ed2f4394900cef8fc`（60 → **80** 项） |
+| 导出 API | 104 → **105**（新增 `validateCtx`） |
+| 发布包 | `bazi-engine-v1.3.14.zip`（MD5 `463c8c6d439941e41e89dc9357a7c5bf`） |
+| 影响 C 端 | **是（低风险）**：合法 ctx 行为不变；缺字段的错误信息变可读 |
+
+**为什么做这个（商业决策，不是技术洁癖）**
+
+本项目的商业画像是"客户已有自己的排盘系统，买断语库"。因此客户**一定会手工拼 ctx**，
+而《接入说明》第 1 条注意就是"十神必须以日干为基准，否则会静默少命中"——**我们警告了，却没给任何检测手段**。
+实测（`_local/scan8_engine.js`，逐个删除字段）：
+
+| 情况 | 结果 |
+|---|---|
+| 缺 `pillars`/`tens`/`five`/`xiYong`/`jiYong`/`special` 任一 | 抛原始 `TypeError`，**不含字段名** |
+| 缺 `shenSha` / `strength` / `dayMasterFull` / `avgFive` | 静默 −32 / −13 / −12 / −12 条 |
+| `tens` 整体错位 +1 / +2 / +5 / 全填"比肩" | 命中 122→120/121/140/113，**全程零报错** |
+
+客户的结论不会是"我 ctx 写错了"，而是"你这库怎么才这么几条"——在 ¥299 + 12 个月支持的语境下，
+这是**预测得到的第一个售后工单**。故在客户对接窗口内先行堵掉。
+
+**新增 `validateCtx(ctx)` → `{ok, errors[], warnings[], expected, missing, summary}`**
+
+- **最值钱的一条：重算十神**。用引擎自己的 `tenGod()` 从「日柱天干 + 四柱天干」推一遍，与 `ctx.tens` 逐位比对，
+  报错精确到"年干 庚：应为 比肩，收到 劫财"；`expected.tens` 直接给出正确数组。
+- 自洽性检查：`dayMasterFull` / `dmWx` / `dmYin` 与日柱是否一致；`monthZhi` / `dayZhi` 是否与月/日柱相符；
+  `five` 五项之和是否等于 `sumFive`、是否等于 `avgFive×5`；`xiYong` 与 `jiYong` 是否重叠或含非五行元素；
+  `shenSha` 项是否缺 `name`；`kongWang` 是否为 2 地支；`caiGuanPos` / `strength` / `gender` / `special.*` 取值是否合法。
+- **区分 `errors` 与 `warnings`**：`errors` = 会崩或结果不可信；`warnings` = 结果可能偏差。
+- **镜像兼容**：`pillars` 既接受 paipan 产出的 4 个 2 字干支字符串，也接受 `[天干,地支]` 数组（两者引擎都能正确处理）。
+- **设计原则：只做自洽性检查，绝不自动补值或纠正** —— 自动补值会把错误藏起来，比报错更危险。
+
+**`matchRules` 入口体检**
+
+只拦"缺了必然抛 `TypeError`"的 6 个字段，抛 `err.code='CTX_MISSING_FIELD'` + `err.fields=[...]`；
+`ctx` 非对象抛 `err.code='CTX_INVALID'`。**其余字段的缺失行为刻意不变**（仍按原逻辑静默降级），
+不做成"全字段强制"是为了不改变既有调用方语义——完整检查交给 `validateCtx`（调用方主动选择）。
+
+**回归**：`tools/test_engine.js` 60 → **80** 项，新增 20 项覆盖——
+正常盘**零误报**（体检工具一旦误报就没人用）、十神错位被抓到且 `expected` 正确、
+喜忌重叠 / 神煞缺 name / 支柱数≠4 报错、`[天干,地支]` 形状兼容、缺 `shenSha` 报 warning 且 `matchRules` 行为不变、
+`validateCtx(null/{}/字符串)` 自身不崩、`matchRules({})`/`matchRules(null)` 错误码与消息可读、
+合法 ctx 命中数不受入口检查影响。
+
+**验证**：14/14 回归套件 PASS + 6 道门禁全绿；`kb/04-rules-db/rules.json` 未变。
+
+---
+
 ## v1.3.13（2026-10-13 · 合规软化越界修复：C 端产物凭空多出断语）
 
 > **引擎层变更（dist 仅头注释版本号变化，MD5 `b82b2502fe04c79e0e0e6a4c31aa1724`），影响 C 端：是（潜伏缺陷，当前无用户可见影响）**——

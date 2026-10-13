@@ -107,7 +107,7 @@ const c = BaziEngine.paipan('李明远', '男', 1990, 5, 15, d.hh, d.mm, '广州
 console.log(c.yg, c.mg, c.dg, c.hg); // 庚午 辛巳 庚辰 庚辰
 ```
 
-核心 API：`paipan`（排盘）/ `paipanStrict`（排盘，参数非法时抛错）/ `matchRules`（断语匹配）/ `applyDst`（夏令时校正）/ `lunarToSolar`（农历转阳历）/ `calcShenSha`（神煞）/ `getDaYun`（大运）等。
+核心 API：`paipan`（排盘）/ `paipanStrict`（排盘，参数非法时抛错）/ `matchRules`（断语匹配）/ `validateCtx`（ctx 体检）/ `applyDst`（夏令时校正）/ `lunarToSolar`（农历转阳历）/ `calcShenSha`（神煞）/ `getDaYun`（大运）等。
 
 **排盘失败怎么拿到原因（v1.3.12 起）**：`paipan()` 沿用旧契约——参数非法时返回 `null`（浏览器同时弹窗提示，不再静默）；失败原因通过 `getLastError()` 读取，返回 `{code, message, detail}`：
 
@@ -129,6 +129,25 @@ catch (err) { console.log(err.code, err.message); }  // INVALID_MONTH 月份需�
 ```
 
 非致命降级走 `getLastWarning()`：`truesun='yes'` 但出生地不在内置 724 城经度表（或未提供）时，真太阳时会被跳过、按北京时间出盘，此时返回 `{code:'SOLAR_TIME_SKIPPED', message, detail:{place, cityCount}}`。**这是最容易悄悄算错的一处，服务端建议判空后提示用户核实出生地。**
+
+**用自己的排盘系统？先跑 ctx 体检（v1.3.14 起）**：把你自己排盘的结果映射成 ctx 后，先体检一次再匹配：
+
+```js
+const ctx = { /* 你的排盘结果，字段见 ctx 契约 */ };
+const v = BaziEngine.validateCtx(ctx);
+if (!v.ok) {
+  console.log(v.errors);   // [{field, message, got}] —— 必须修
+  console.log(v.expected); // 引擎按四柱推算出的正确值（tens / dayMasterFull / sumFive / avgFive …）
+}
+console.log(v.warnings);   // 结果可能偏差，建议核对
+const cats = BaziEngine.matchRules(ctx);   // 缺字段会抛可读错误，而非 Cannot read properties of undefined
+```
+
+`validateCtx` 最值钱的一条是**重算十神**：用引擎自己的 `tenGod()` 从「日柱天干 + 四柱天干」推一遍，与 `ctx.tens` 逐位比对。十神基准错是这份数据最常见的静默错误（实测命中数 122 → 113，全程零报错）。它还检查 `dayMasterFull`/`dmWx`/`dmYin` 与日柱是否自洽、`five` 之和是否等于 `sumFive`、喜用与忌神是否重叠、神煞项是否缺 `name` 等。
+
+> 设计原则：**只做自洽性检查，绝不自动补值或纠正**——自动补值会把错误藏起来，比报错更危险。
+> `matchRules` 入口只拦"缺了必然抛 `TypeError`"的字段（`pillars`/`tens`/`five`/`xiYong`/`jiYong`/`special`），
+> 抛 `err.code = 'CTX_MISSING_FIELD'` 并列出字段名；其余字段的缺失行为保持不变（不改变既有调用方语义）。
 
 ### 🤖 AI 助手 —— 调用 Skill
 
