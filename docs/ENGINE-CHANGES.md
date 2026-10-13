@@ -10,6 +10,59 @@
 
 ---
 
+---
+
+## v1.3.12（2026-10-13 · 排盘失败不再静默 + `applyDst` 分钟透传 + dist 版本标记）
+
+> **引擎层变更（dist 变化，MD5 `ef4384378e96daa1a8ea98114e741bd0`，470,228 B），影响 C 端：是（低风险）**——
+> ① `applyDst` **新增可选第 5 参 `mm` 并原样透传**（纯新增字段，不传时默认 `0`，旧调用方行为不变）；
+> ② `paipan()` **返回值语义完全不变**（非法参数仍返回 `null`），仅新增旁路诊断 `getLastError()` / `getLastWarning()`；
+> ③ 新增 `paipanStrict()`。排盘 / 大运 / 神煞 / 合婚评分 **算法零改动**，结论不会变，
+> 但 dist 字节已变（MD5 基线会不一致），且 dist 头注释开始印版本号。
+
+| 项 | 值 |
+|---|---|
+| dist MD5 | `ef4384378e96daa1a8ea98114e741bd0` |
+| ui/index.html MD5 | `fb7fe8da6896b232f660a16dd2a36b8b` |
+| compliance 版 MD5 | `9a1e7fa7798cf109e462b5bac4e0dbed` |
+| rules.json MD5 | `3196ed776cdb73937d37dab4edf43b78`（**未变**） |
+| skill/SKILL.md MD5 | `4aa7532e46a757bb5227a86ec73f3dc1` |
+| README.md MD5 | `94fef739ff65a28f1f4d7c7ab960a752` |
+| 发布包 | `bazi-engine-v1.3.12.zip`（48 文件 / 615.7 KB / MD5 `5fa29b159bfe1f6b03472e2ea2987fab`） |
+| 影响 C 端 | **是（低风险）**：默认行为不变；若 C 端将来用 `d.mm` 或 `getLastError()` 需拉取本版 |
+
+**起因：一次真实对接事故（客户接入最小应用时踩到）**
+
+调用方按最自然的写法 `const d = applyDst(y,m,d,hh); paipan(..., d.hh, d.mm, ...)` 接引擎，结果：
+`applyDst` 返回对象里**没有 `mm`** → `d.mm === undefined` → `paipan` 内 `Number(undefined) = NaN`
+→ 校验失败 → **返回 `null`**（Node 下只调了一个 no-op 的 `alert`，没有任何日志）
+→ 报错堆栈落在调用方后续那一行 `Cannot read properties of null`，与真实原因相距甚远。
+
+**本版四项修复**：
+
+1. **🔴 排盘失败可读化**：`paipan` 的全部 7 处校验改走 `reportError(code,msg,detail)`，
+   失败时记录 `{code,message,detail}` 且在**非浏览器环境 `console.warn('[bazi-engine] CODE: msg')`**。
+   码表：`INVALID_NUMBER` / `YEAR_OUT_OF_RANGE` / `INVALID_MONTH` / `INVALID_HOUR` / `INVALID_MINUTE` /
+   `INVALID_DATE` / `INVALID_GENDER` / `TRUESUN_OUT_OF_RANGE`。
+   通过 `getLastError()` 读取；`paipan` 的 `null` 契约与浏览器弹窗**均保持不变**（14 套回归零改动通过）。
+2. **🟢 新增 `paipanStrict()`**：同样的诊断信息但**抛错**（`err.code` / `err.detail`），供服务端 fail-fast。
+3. **🔴 `applyDst(y,m,d,hh,mm)` 增加分钟透传**：夏令时只平移小时、分钟不变，返回值补 `mm`（不传则 `0`）。
+   同时用回归证明分钟**不是装饰**：`1986-07-15 广州` 下 `10:30 →(DST 9:30)→(真太阳时 9:03)= 巳时`，
+   而 `10:00 →(9:00)→(8:33)= 辰时`——分钟会改变时柱。
+4. **🟠 真太阳时被跳过时给警告**：`truesun='yes'` 但出生地不在内置 724 城经度表（或未提供）时，
+   原先只有 `solarInfo.found=false`（且未填地名时连这个都没有），现已补 `getLastWarning()`
+   → `{code:'SOLAR_TIME_SKIPPED', detail:{place, cityCount}}`；**返回结构刻意未改**（未填地名仍为 `null`），
+   以避免既有调用方行为漂移。另新增 dist 头注释版本行（读 `skill/SKILL.md` frontmatter，单一来源，不可漂移）。
+
+**新增回归断言**（14 套套件内扩充，未新增套件）：
+- `tools/test_engine.js` 43 → **60 项**：新增"排盘失败可读诊断"12 项（码表 / detail / `paipanStrict` / 警告 / 结构不漂移）。
+- `tools/test_dst.js` → **41 项**：新增 `applyDst` 分钟透传 4 项 + `applyDst→paipan` 端到端 2 项 + 分钟跨时辰 1 项。
+
+**一处刻意的"不修"**：不改 `paipan` 让它抛错。19 处既有断言与 UI 层都依赖 `null` 契约，
+改成抛错属于破坏性变更；诊断 + `paipanStrict` 已覆盖同一需求且零破坏。
+
+---
+
 ## v1.3.11（2026-10-12 · 内容正确性三修 + 三道机器门禁 + 交付包可复现）
 
 > **引擎层变更（dist 变化，MD5 `56f1aca966ee73daf70c1bfbffa88c2a`，466,380 B），影响 C 端：否**——

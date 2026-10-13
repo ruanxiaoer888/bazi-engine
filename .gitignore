@@ -17,6 +17,10 @@ _dbg_*.js
 _dbg_*.py
 *.tmp
 
+# Python 字节码（tools/*.py 被 build_release_zip.py / make_licensed_delivery.py import 时会生成）
+__pycache__/
+*.pyc
+
 # WorkBuddy local cache
 .workbuddy/
 

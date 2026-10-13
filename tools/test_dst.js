@@ -47,6 +47,27 @@ let b2=applyDst(1985,7,15,10);
 assert('B2 窗口外不动', b2.hh===10&&b2.dst===0, JSON.stringify(b2));
 let b3=applyDst(1986,9,14,0);
 assert('B3 跨天回退一日', b3.y===1986&&b3.m===9&&b3.d===13&&b3.hh===23&&b3.dst===1, JSON.stringify(b3));
+// 2026-11（v1.3.12）修正回归：applyDst 原先只返回 {y,m,d,hh,dst}，调用方写 paipan(...,d.mm,...) 得到 undefined
+// → Number(undefined)=NaN → paipan 静默返回 null（真实对接事故：Cannot read properties of null）
+let b4=applyDst(1986,7,15,10,30);
+assert('B4 透传分钟 mm=30（窗口内）', b4.mm===30&&b4.hh===9&&b4.dst===1, JSON.stringify(b4));
+let b5=applyDst(1992,7,15,10,37);
+assert('B5 透传分钟 mm=37（窗口外）', b5.mm===37&&b5.hh===10&&b5.dst===0, JSON.stringify(b5));
+let b6=applyDst(1986,9,14,0,45);
+assert('B6 跨天回退时分钟仍透传 mm=45', b6.d===13&&b6.hh===23&&b6.mm===45, JSON.stringify(b6));
+assert('B7 不传 mm 时默认 0（旧调用方行为不变）', applyDst(1986,7,15,10).mm===0, JSON.stringify(applyDst(1986,7,15,10)));
+// 端到端：applyDst 返回值原样喂 paipan（这是最容易踩的对接写法）
+let b8=applyDst(1986,7,15,10,30);
+let cb8=paipan('透传','男',b8.y,b8.m,b8.d,b8.hh,b8.mm,'广州市','no');
+assert('B8 applyDst→paipan 分钟真的入盘（useH=9/useMin=30）', cb8!==null&&cb8.useH===9&&cb8.useMin===30, cb8?('时柱='+cb8.pillars[3]+' useH='+cb8.useH+' useMin='+cb8.useMin):'null');
+// 分钟不是装饰：10:30 →(DST 9:30)→(真太阳时 9:03)= 巳时；10:00 →(9:00)→(8:33)= 辰时。
+// 若 mm 丢失（旧 applyDst），后者会被当成 9:00 之外的乱值甚至直接 null。
+let b9a=applyDst(1986,7,15,10,30), b9b=applyDst(1986,7,15,10,0);
+let c9a=paipan('分钟30','男',b9a.y,b9a.m,b9a.d,b9a.hh,b9a.mm,'广州市','yes');
+let c9b=paipan('分钟0','男',b9b.y,b9b.m,b9b.d,b9b.hh,b9b.mm,'广州市','yes');
+assert('B9 分钟参与真太阳时校正并跨时辰（10:30→巳时 / 10:00→辰时）',
+  !!c9a&&!!c9b&&c9a.pillars[3][1]==='巳'&&c9b.pillars[3][1]==='辰',
+  (c9a?c9a.pillars[3]+'/useMin='+c9a.useMin:'null')+' vs '+(c9b?c9b.pillars[3]+'/useMin='+c9b.useMin:'null'));
 
 console.log('========== C. 集成：UI 层链路(applyDst→paipan) 时柱变化 ==========');
 let r1=applyDst(1986,7,15,10);

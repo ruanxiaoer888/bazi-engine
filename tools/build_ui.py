@@ -728,6 +728,32 @@ const RULES = __RULES__;
 // 改为"仅当确实没有 alert 时才补一个全局 no-op"：浏览器保留原生 alert，Node 下调用不抛异常。
 if (typeof alert === 'undefined' && typeof globalThis !== 'undefined' && typeof globalThis.alert !== 'function') { globalThis.alert = function(){}; }
 
+// 双端错误/警告通道（2026-11 新增，v1.3.12）：原实现校验失败只调 alert（Node 下是 no-op）后 return null，
+// 调用方只拿到 null 不知道原因，堆栈指向其后那一行（典型报错：Cannot read properties of null）。
+// 现统一走 reportError/reportWarn 记录结构化诊断（code/message/detail），并在非浏览器环境打到 stderr。
+let LAST_ERROR = null, LAST_WARN = null;
+function __isBrowser(){ return typeof globalThis !== 'undefined' && !!globalThis.document; }
+function __log(code, msg){
+  if (__isBrowser()) return; // 浏览器已有 alert 弹窗，不再刷控制台
+  if (typeof console === 'undefined' || !console || typeof console.warn !== 'function') return;
+  console.warn('[bazi-engine] ' + code + ': ' + msg);
+}
+// 致命：记录诊断 + 原样弹窗（浏览器）+ 非浏览器打日志，并返回 null 供 `return reportError(...)` 直用
+function reportError(code, msg, detail){
+  LAST_ERROR = {code:code, message:msg, detail:(detail===undefined?null:detail)};
+  if (typeof alert === 'function') { try { alert(msg); } catch(e){} }
+  __log(code, msg);
+  return null;
+}
+// 非致命：排盘仍成功，但结果被降级（如真太阳时被跳过），调用方应检查 getLastWarning()
+function reportWarn(code, msg, detail){
+  LAST_WARN = {code:code, message:msg, detail:(detail===undefined?null:detail)};
+  __log(code, msg);
+  return null;
+}
+function getLastError(){ return LAST_ERROR; }
+function getLastWarning(){ return LAST_WARN; }
+
 // ===== 基础数据 =====
 const GAN = ['甲','乙','丙','丁','戊','己','庚','辛','壬','癸'];
 const ZHI = ['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
@@ -1144,28 +1170,37 @@ function calcShenGong(yg,mg,hg){
 // 完整排盘，返回 ctx
 function paipan(name,gender,y,m,d,hh,mm,place,truesun){
   // 输入校验：类型/范围/日期真实性
+  // v1.3.12：不再静默 return null——统一走 reportError 记录 code/message/detail，
+  //         需要 fail-fast 的服务端请用 paipanStrict()（同样信息，但抛 Error）。
+  LAST_ERROR = null; LAST_WARN = null;
   y=Number(y); m=Number(m); d=Number(d); hh=Number(hh); mm=Number(mm);
   if(!Number.isFinite(y)||!Number.isFinite(m)||!Number.isFinite(d)||!Number.isFinite(hh)||!Number.isFinite(mm)){
-    alert('请输入有效的出生日期时间'); return null;
+    return reportError('INVALID_NUMBER','请输入有效的出生日期时间',{y:y,m:m,d:d,hh:hh,mm:mm});
   }
-  if(y<JIEQI.range[0]||y>JIEQI.range[1]){ alert('出生年份超出支持范围（'+JIEQI.range[0]+'-'+JIEQI.range[1]+'）'); return null; }
-  if(m<1||m>12||Math.floor(m)!==m){ alert('月份需为 1-12'); return null; }
-  if(hh<0||hh>23||Math.floor(hh)!==hh){ alert('小时需为 0-23'); return null; }
-  if(mm<0||mm>59||Math.floor(mm)!==mm){ alert('分钟需为 0-59'); return null; }
+  if(y<JIEQI.range[0]||y>JIEQI.range[1]){ return reportError('YEAR_OUT_OF_RANGE','出生年份超出支持范围（'+JIEQI.range[0]+'-'+JIEQI.range[1]+'）',{y:y,min:JIEQI.range[0],max:JIEQI.range[1]}); }
+  if(m<1||m>12||Math.floor(m)!==m){ return reportError('INVALID_MONTH','月份需为 1-12',{m:m}); }
+  if(hh<0||hh>23||Math.floor(hh)!==hh){ return reportError('INVALID_HOUR','小时需为 0-23',{hh:hh}); }
+  if(mm<0||mm>59||Math.floor(mm)!==mm){ return reportError('INVALID_MINUTE','分钟需为 0-59',{mm:mm}); }
   const dv=new Date(y,m-1,d);
-  if(dv.getFullYear()!==y||dv.getMonth()!==m-1||dv.getDate()!==d){ alert('日期无效（如 2 月没有 30/31 日）'); return null; }
-  if(gender!=='男'&&gender!=='女'){ alert('性别需为男或女'); return null; }
+  if(dv.getFullYear()!==y||dv.getMonth()!==m-1||dv.getDate()!==d){ return reportError('INVALID_DATE','日期无效（如 2 月没有 30/31 日）',{y:y,m:m,d:d}); }
+  if(gender!=='男'&&gender!=='女'){ return reportError('INVALID_GENDER','性别需为男或女',{gender:(gender===undefined?null:String(gender))}); }
   let solarInfo=null, useY=y,useM=m,useD=d,useH=hh,useMin=mm;
   if(truesun==='yes'){
     const bj=new Date(y,m-1,d,hh,mm);
     const corr=solarCorrection(place,bj);
     if(corr && corr.found){ solarInfo=corr; const t=corr.time; useY=t.getFullYear();useM=t.getMonth()+1;useD=t.getDate();useH=t.getHours();useMin=t.getMinutes(); }
-    else if(corr && !corr.found){ solarInfo={found:false}; }
+    else {
+      // v1.3.12：原实现静默跳过真太阳时（place 为空时连 solarInfo 都不置位）→ 结果悄悄按北京时间出盘。
+      // 现补记可读警告，**返回结构保持不变**（未知地名 → {found:false}，未填地名 → null），避免既有调用方行为漂移。
+      if(corr && !corr.found) solarInfo={found:false};
+      reportWarn('SOLAR_TIME_SKIPPED',
+        (place? '出生地「'+place+'」不在内置城市经度表内' : '未提供出生地')+'，已跳过真太阳时校正，结果按北京时间计算',
+        {place:(place===undefined||place===null?null:String(place)), cityCount:Object.keys(CITY_LON).length});
+    }
     // 2026-10 修正：真太阳时校正可能把日期推出节气库范围（如 1895-01-01 01:00 喀什 → 1894-12-31），
     // 原实现继续进入 yearGZ 并访问 null[0]，抛 TypeError 使整段渲染中断（用户看不到任何结果）。
     if(useY<JIEQI.range[0]||useY>JIEQI.range[1]){
-      alert('经真太阳时校正后出生日期为 '+useY+'-'+useM+'-'+useD+'，已超出节气库支持范围（'+JIEQI.range[0]+'-'+JIEQI.range[1]+'）');
-      return null;
+      return reportError('TRUESUN_OUT_OF_RANGE','经真太阳时校正后出生日期为 '+useY+'-'+useM+'-'+useD+'，已超出节气库支持范围（'+JIEQI.range[0]+'-'+JIEQI.range[1]+'）',{y:useY,m:useM,d:useD});
     }
   }
   const yg=yearGZ(useY,useM,useD,useH,useMin);
@@ -1304,6 +1339,17 @@ function paipan(name,gender,y,m,d,hh,mm,place,truesun){
     naYinYear:NAYIN[yg], shenSha:shenSha, remedy:remedy, kongWang:kongWang,
     taiYuan:taiYuan, mingGong:mingGong, shenGong:shenGong,
     useH:useH, useMin:useMin};
+}
+
+// 严格排盘（2026-11 新增，v1.3.12）：参数非法时**抛错**而不是返回 null，供服务端 fail-fast。
+// 错误对象带 code/detail（与 getLastError() 同源）；paipan() 仍保持返回 null 的旧契约以兼容既有调用方。
+function paipanStrict(name,gender,y,m,d,hh,mm,place,truesun){
+  const ctx=paipan(name,gender,y,m,d,hh,mm,place,truesun);
+  if(ctx) return ctx;
+  const diag=LAST_ERROR||{code:'PAIPAN_FAILED',message:'排盘失败',detail:null};
+  const err=new Error(diag.message);
+  err.code=diag.code; err.detail=diag.detail;
+  throw err;
 }
 
 // 五行生克关系
@@ -1605,15 +1651,20 @@ function dstOffset(y,m,d,hh){
   }
   return 0;
 }
-function applyDst(y,m,d,hh){
-  if(!dstOffset(y,m,d,hh)) return {y,m,d,hh,dst:0};
+// 夏令时校正（1986-1991 中国实行时段，见 DST_WINDOWS）
+// v1.3.12：新增可选第 5 参 mm 并原样透传（夏令时只平移小时，分钟不变）。
+//          原实现只返回 {y,m,d,hh,dst}，调用方若写 paipan(...,d.mm,...) 会传入 undefined
+//          → paipan 校验失败返回 null（静默），典型表现为 Cannot read properties of null。
+function applyDst(y,m,d,hh,mm){
+  const mi=(mm===undefined||mm===null||mm==='')?0:Number(mm);
+  if(!dstOffset(y,m,d,hh)) return {y,m,d,hh,mm:mi,dst:0};
   hh-=1;
   if(hh<0){
     hh+=24;
     const dt=new Date(y,m-1,d-1);
     y=dt.getFullYear(); m=dt.getMonth()+1; d=dt.getDate();
   }
-  return {y,m,d,hh,dst:1};
+  return {y,m,d,hh,mm:mi,dst:1};
 }
 // [ENGINE:END]
 
@@ -3247,7 +3298,7 @@ if len(regions) != 7:
     raise SystemExit("引擎标记区段数异常：期望 7，实际 %d" % len(regions))
 engine_js = "\n\n".join(r.rstrip() for r in regions)
 
-EXPORTS = """paipan, dayGZ, yearGZ, monthGZ, hourGZ, tenGod, computeFive, getDaYun, getPattern,
+EXPORTS = """paipan, paipanStrict, getLastError, getLastWarning, dayGZ, yearGZ, monthGZ, hourGZ, tenGod, computeFive, getDaYun, getPattern,
 calcTaiYuan, calcMingGong, calcShenGong, calcKongWang, calcChangSheng, calcShenSha, getRemedy,
 solarCorrection, matchRules, evalState, yongShenChong, findRule, matchDayun, matchLiuDay, matchLiuYue,
 analyzeLiuDeep, applyDst, dstOffset, getMonthBrief, wxOfSanhe, liuTenDesc, GAN_WX_OfTen, liuRelDesc,
@@ -3259,7 +3310,16 @@ LUSHEN, XUETANG, JINYU, YIMA, TAOHUA, HUAGAI, HONGLUAN, JIANGXING, TIANDE, YUEDE
 JIESHA, WANGSHEN, ZAISHA, GUCHEN, GUASU, SUIPO, XUEREN, LIUXIA,
 LUNAR_INFO, LUNAR_MONTH_NAMES, leapMonth, leapDays, monthDays, lunarToSolar, lunarDayName"""
 
+# 版本号单一来源 = skill/SKILL.md frontmatter（v1.3.12 起）：dist 头注释直接印版本，
+# 避免"下载到的 dist 不知道是哪版"（此前 dist 无任何版本标记，只能靠 MD5 反查）。
+with open(os.path.join(ROOT, "skill", "SKILL.md"), encoding="utf-8") as _f:
+    _vm = re.search(r"^version:[ \t]*([0-9][0-9A-Za-z.\-]*)", _f.read(), re.M)
+ENGINE_VERSION = _vm.group(1) if _vm else "0.0.0"
+if ENGINE_VERSION == "0.0.0":
+    raise SystemExit("无法从 skill/SKILL.md 解析 version（frontmatter 格式可能被改坏）")
+
 DIST_TPL = """/* bazi-engine 独立引擎库 —— 由 tools/build_ui.py 自动生成，请勿手改
+ * 版本：v__VERSION__（与 skill/SKILL.md frontmatter 同步）
  * 纯计算层：四柱排盘 / 五行身强弱 / 大运 / 神煞 / 断语匹配 / 流年流月流日规则 / 合婚数据 / 夏令时与真太阳时校正。
  * 无 DOM 依赖。浏览器与 Node 双端可用：
  *   浏览器：<script src="engine.dist.js"></script> → window.BaziEngine
@@ -3279,11 +3339,15 @@ __EXPORTS__
 };
 });
 """
-dist = DIST_TPL.replace("__ENGINE__", engine_js).replace("__EXPORTS__", EXPORTS)
+dist = (
+    DIST_TPL.replace("__ENGINE__", engine_js)
+    .replace("__EXPORTS__", EXPORTS)
+    .replace("__VERSION__", ENGINE_VERSION)
+)
 os.makedirs(os.path.join(ROOT, "engine"), exist_ok=True)
 with open(os.path.join(ROOT, "engine", "engine.dist.js"), "w", encoding="utf-8", newline="\n") as f:
     f.write(dist)
 print(
-    "engine/engine.dist.js built, size=%dKB, regions=%d"
-    % (len(dist.encode("utf-8")) // 1024, len(regions))
+    "engine/engine.dist.js built, size=%dKB, regions=%d, version=%s"
+    % (len(dist.encode("utf-8")) // 1024, len(regions), ENGINE_VERSION)
 )

@@ -86,15 +86,15 @@
 
 ### 🧑‍💻 开发者 —— 接入引擎
 
-`engine/engine.dist.js` 是独立的 UMD 引擎库（零依赖，导出 101 个 API），浏览器 / Node 双端可用：
+`engine/engine.dist.js` 是独立的 UMD 引擎库（零依赖，导出 104 个 API），浏览器 / Node 双端可用：
 
 ```html
 <!-- 浏览器 -->
 <script src="engine/engine.dist.js"></script>
 <script>
-  // 性别参数须为 '男' / '女'；applyDst 回拨夏令时（1990 年中国曾实行）
-  const d = window.BaziEngine.applyDst(1990, 5, 15, 10);           // {hh: 9, dst: 1}
-  const c = window.BaziEngine.paipan('李明远', '男', 1990, 5, 15, d.hh, 0, '广州市', 'yes');
+  // 性别参数须为 '男' / '女'；applyDst 回拨夏令时（1986-1991 年中国曾实行）
+  const d = window.BaziEngine.applyDst(1990, 5, 15, 10, 0);        // {y:1990,m:5,d:15,hh:9,mm:0,dst:1}
+  const c = window.BaziEngine.paipan('李明远', '男', 1990, 5, 15, d.hh, d.mm, '广州市', 'yes');
   console.log(c.yg, c.mg, c.dg, c.hg); // 庚午 辛巳 庚辰 庚辰
 </script>
 ```
@@ -102,12 +102,33 @@
 ```js
 // Node.js
 const BaziEngine = require('./engine/engine.dist.js');
-const d = BaziEngine.applyDst(1990, 5, 15, 10);
-const c = BaziEngine.paipan('李明远', '男', 1990, 5, 15, d.hh, 0, '广州市', 'yes');
+const d = BaziEngine.applyDst(1990, 5, 15, 10, 0);
+const c = BaziEngine.paipan('李明远', '男', 1990, 5, 15, d.hh, d.mm, '广州市', 'yes');
 console.log(c.yg, c.mg, c.dg, c.hg); // 庚午 辛巳 庚辰 庚辰
 ```
 
-核心 API：`paipan`（排盘）/ `matchRules`（断语匹配）/ `applyDst`（夏令时校正）/ `lunarToSolar`（农历转阳历）/ `calcShenSha`（神煞）/ `getDaYun`（大运）等。
+核心 API：`paipan`（排盘）/ `paipanStrict`（排盘，参数非法时抛错）/ `matchRules`（断语匹配）/ `applyDst`（夏令时校正）/ `lunarToSolar`（农历转阳历）/ `calcShenSha`（神煞）/ `getDaYun`（大运）等。
+
+**排盘失败怎么拿到原因（v1.3.12 起）**：`paipan()` 沿用旧契约——参数非法时返回 `null`（浏览器同时弹窗提示，不再静默）；失败原因通过 `getLastError()` 读取，返回 `{code, message, detail}`：
+
+| code | 含义 |
+|---|---|
+| `INVALID_NUMBER` | 日期/时间含非数字（如 `undefined`、`''`） |
+| `YEAR_OUT_OF_RANGE` | 年份超出节气库范围（1895-2100） |
+| `INVALID_MONTH` / `INVALID_HOUR` / `INVALID_MINUTE` | 月 1-12 / 时 0-23 / 分 0-59 |
+| `INVALID_DATE` | 日期不存在（如 2 月 30 日） |
+| `INVALID_GENDER` | 性别非 `'男'` / `'女'` |
+| `TRUESUN_OUT_OF_RANGE` | 真太阳时校正后跨出节气库范围 |
+
+```js
+const c = BaziEngine.paipan('李明远','男',1990,13,15,10,0,'','no'); // null
+const e = BaziEngine.getLastError();   // {code:'INVALID_MONTH', message:'月份需为 1-12', detail:{m:13}}
+// 需要 fail-fast 的服务端直接用严格版：
+try { BaziEngine.paipanStrict('李明远','男',1990,13,15,10,0,'','no'); }
+catch (err) { console.log(err.code, err.message); }  // INVALID_MONTH 月份需为 1-12
+```
+
+非致命降级走 `getLastWarning()`：`truesun='yes'` 但出生地不在内置 724 城经度表（或未提供）时，真太阳时会被跳过、按北京时间出盘，此时返回 `{code:'SOLAR_TIME_SKIPPED', message, detail:{place, cityCount}}`。**这是最容易悄悄算错的一处，服务端建议判空后提示用户核实出生地。**
 
 ### 🤖 AI 助手 —— 调用 Skill
 
@@ -149,20 +170,20 @@ console.log(c.yg, c.mg, c.dg, c.hg); // 庚午 辛巳 庚辰 庚辰
 
 - **UI**：`ui/index.html` — 单文件离线（零外部依赖），内置 206 年节气数据 + 1000 条断语
 - **构建**：`tools/build_ui.py`（Python）内联节气与断语库生成 UI
-- **验证**：14 套回归脚本 + 3 道内容/可达性门禁，覆盖引擎库、农历、夏令时、输入容错、边界场景、报告质量与端到端用户视角，CI 自动执行
+- **验证**：14 套回归脚本 + 4 道内容/可达性/交付门禁，覆盖引擎库、农历、夏令时、输入容错、边界场景、报告质量与端到端用户视角，CI 自动执行
 
   <details>
-  <summary>14 套回归脚本 + 3 道门禁清单（点击展开）</summary>
+  <summary>14 套回归脚本 + 4 道门禁清单（点击展开）</summary>
 
   ```
-  tools/test_engine.js       工具链审计（43 项，独立库直测）
+  tools/test_engine.js       引擎库直测（60 项：排盘/断语/神煞/大运/夏令时/真太阳时/排盘失败可读诊断）
   tools/test_lunar.js        农历模块（27 项）
   tools/test_ui.js           UI 功能回归
   tools/test_eval_state.js   旺衰状态机
   tools/test_p1_fixes.js     P1 修复回归
   tools/verify_sleep_rules.js 十二长生规则
   tools/verify_ux_e2e.js     端到端用户视角
-  tools/test_dst.js          夏令时
+  tools/test_dst.js          夏令时（41 项，含 applyDst 分钟透传与真太阳时联调）
   tools/test_liuri_v2.js     流日分析
   tools/test_liuyue_v2.js    流月分析
   tools/verify_edu_rules.js  学业规则
@@ -172,6 +193,7 @@ console.log(c.yg, c.mg, c.dg, c.hg); // 庚午 辛巳 庚辰 庚辰
   tools/check_same_condition.js  同条件多规则门禁（互斥 / 近重复结论）
   tools/check_reachability.js    断语可达性门禁（固定网格 + 极端样例盘）
   tools/check_content_lexicon.py 内容合规词表（绝对化 / 恐吓性 / 健康兜底 / 性别对冲）
+  tools/build_release_zip.py --check 交付包契约（根文件齐全 / 禁入合规派生件 / 拒 docx 提取件）
   ```
   </details>
 - **CI 门禁**：`.github/workflows/ci.yml`（GitHub Actions）在每次 push / PR 时自动构建 UI 与引擎 dist、校验断语库 JSON、跑 14 套回归 + 4 道门禁（内容词表 / 同条件多规则 / 可达性 / 交付包契约干跑）+ 命中分布审计，全绿方可合并——质量保障由机器人把关

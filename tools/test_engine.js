@@ -108,5 +108,34 @@ assert('专旺格主导五行恒等于日主五行（3000 盘抽样）', zwBad==
 const edge = BaziEngine.paipan('T','男',2100,12,31,12,0,'北京市','no');
 assert('2100 年末起运标记 valid=false（不再静默 0 岁）', edge && edge.dy && edge.dy.valid===false, edge?JSON.stringify({v:edge.dy.valid,age:Math.round(edge.dy.startAge*100)/100}):'null');
 
+console.log('== 排盘失败可读诊断（v1.3.12）==');
+// ⑦ 回归自真实对接事故：applyDst 原先不返回 mm，调用方写 paipan(...,d.mm,...) 得到 undefined
+//    → Number(undefined)=NaN → 校验失败返回 null（静默）→ 调用方堆栈落在后一行"Cannot read properties of null"
+const dd = BaziEngine.applyDst(1986,7,15,10,30);
+assert('applyDst 透传分钟 mm=30', dd.mm===30, JSON.stringify(dd));
+assert('applyDst 结果可直接喂 paipan（v1.3.12 前此处必为 null）',
+  BaziEngine.paipan('夏令时链路','男',dd.y,dd.m,dd.d,dd.hh,dd.mm,'广州市','no') !== null);
+assert('applyDst 不传 mm 时默认 0', BaziEngine.applyDst(1992,7,15,10).mm===0, JSON.stringify(BaziEngine.applyDst(1992,7,15,10)));
+// ⑧ 校验失败必须留下可读原因（原实现 Node 下只调 no-op alert 后 return null，原因彻底丢失）
+assert('paipan 非法月份仍返回 null（旧契约不变）', BaziEngine.paipan('T','男',1990,13,15,10,30,'','no')===null);
+assert('getLastError 记录 code=INVALID_MONTH', (BaziEngine.getLastError()||{}).code==='INVALID_MONTH', JSON.stringify(BaziEngine.getLastError()));
+assert('getLastError 消息可读（含"月份"）', /月份/.test((BaziEngine.getLastError()||{}).message||''));
+assert('getLastError 带 detail 上下文', (BaziEngine.getLastError()||{}).detail && BaziEngine.getLastError().detail.m===13, JSON.stringify(BaziEngine.getLastError().detail));
+assert('getLastError 记录 INVALID_DATE（2/30）', (BaziEngine.paipan('T','男',2024,2,30,10,0,'','no')===null) && BaziEngine.getLastError().code==='INVALID_DATE');
+assert('getLastError 记录 YEAR_OUT_OF_RANGE', (BaziEngine.paipan('T','男',1800,1,1,12,0,'','no')===null) && BaziEngine.getLastError().code==='YEAR_OUT_OF_RANGE');
+// ⑨ paipanStrict：同样的诊断信息，但 fail-fast 抛错（服务端推荐入口）
+let strictCode='', strictMsg='';
+try { BaziEngine.paipanStrict('T','男',1990,5,15,10,70,'','no'); } catch(e){ strictCode=e.code; strictMsg=e.message; }
+assert('paipanStrict 参数非法时抛错', strictCode==='INVALID_MINUTE', 'code='+strictCode);
+assert('paipanStrict 错误消息可读', /分钟/.test(strictMsg), strictMsg);
+assert('paipanStrict 合法输入正常返回 ctx', BaziEngine.paipanStrict('T','男',1990,5,15,10,30,'北京市','no')!==null);
+// ⑩ 真太阳时被静默跳过时给出警告（原实现只把 solarInfo 置 found:false，无任何提示）
+const wk = BaziEngine.paipan('客','女',1990,5,15,10,0,'不存在市','yes');
+assert('未知地名 → 仍出盘 + found:false', wk && wk.solarInfo && wk.solarInfo.found===false);
+assert('未知地名 → getLastWarning=SOLAR_TIME_SKIPPED', (BaziEngine.getLastWarning()||{}).code==='SOLAR_TIME_SKIPPED', JSON.stringify(BaziEngine.getLastWarning()));
+assert('警告 detail 回传原始地名与城市数', (BaziEngine.getLastWarning()||{}).detail.place==='不存在市' && BaziEngine.getLastWarning().detail.cityCount===724);
+assert('合法排盘后警告被清空', BaziEngine.paipan('T','男',1990,5,15,10,30,'北京市','no') && BaziEngine.getLastWarning()===null);
+assert('未填地名 + truesun=yes → 结构不变（solarInfo 仍为 null）', BaziEngine.paipan('匿名','男',1990,5,15,10,0,'','yes').solarInfo===null);
+
 console.log('\n结果: ' + pass + ' PASS, ' + fail + ' FAIL');
 if (fail > 0) process.exit(1);
