@@ -6,7 +6,7 @@ description: >
   适用场景：用户想算八字、看命盘、测运势、查合婚、补五行、看神煞、看流年，或提到"算命/四柱/命理/bazi/fortune"。
   即使只提"算命""八字"而未明确说用 skill，也应启用本 skill。
   本 Skill 采用双许可：代码 MIT / 数据 CC BY-NC-SA 4.0（详见仓库 LICENSE / LICENSE-DATA）。
-version: 1.3.14
+version: 1.3.15
 tags: [八字, 命理, 四柱, 排盘, 运势, bazi, fortune]
 category: 传统文化/命理占卜
 platforms: [WorkBuddy, QClaw, ima]
@@ -72,6 +72,7 @@ license-data: CC-BY-NC-SA-4.0
 - `tools/check_same_condition.js` — **同条件多规则门禁**（同类别 + 同 condition 的"互斥/近重复"检测；v1.3.11 就是为修 `yongshen_寒月`/`yongshen_暑月` 在 50.1% 命盘上同时命中而新增）
 - `tools/check_reachability.js` — **断语可达性门禁**（固定网格 + 极端样例盘，揪出"库里写了但用户永远看不到"的规则；`pattern_专旺_水` 长期缺失即由此发现）
 - `tools/check_content_lexicon.py` — **内容合规词表门禁**（绝对化表述 / 恐吓性表述 / 健康类就医兜底 / 传统性别表述对冲）
+- `tools/check_data_integrity.js` — **三张手工维护数据表的完整性门禁**（城市经度 724 城的"自解析 + 35 个权威坐标"、农历表 1900-2099 的结构与逐月递推、节气表 206 年 × 12 节的格式与递增；带 `--self-test` 注入故障自检，证明门禁不是空转的。v1.3.15 就是为固化"天津市被解析成津市市"这类经度错误而新增）
 - `tools/check_compliance_equivalence.js` — **合规软化版等价性门禁**（C 端 `engine.compliance.js` 只允许改"给人看的文案"，`id`/`category`/`condition`/`source` 与 `matchRules` 命中结果必须与 dist 逐盘一致；v1.3.13 就是为修软化越界把 `k==='流年'` 改成 `k==='年度'`、导致每张盘泄漏 20 条面板断语而新增）
 - `tools/compliance_soften.py` — 生成 / 校验 C 端合规软化版（结构感知：数据区只软化 `conclusion`/`suggestion`，代码区保护比较位置的标识字面量；无参数运行时只写 `engine/engine.compliance.js`，**不修改 dist**）
 

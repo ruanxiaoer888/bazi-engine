@@ -189,10 +189,10 @@ const cats = BaziEngine.matchRules(ctx);   // 缺字段会抛可读错误，而�
 
 - **UI**：`ui/index.html` — 单文件离线（零外部依赖），内置 206 年节气数据 + 1000 条断语
 - **构建**：`tools/build_ui.py`（Python）内联节气与断语库生成 UI
-- **验证**：14 套回归脚本 + 5 道内容/可达性/交付/软化合规门禁，覆盖引擎库、农历、夏令时、输入容错、边界场景、报告质量与端到端用户视角，CI 自动执行
+- **验证**：14 套回归脚本 + 6 道内容/可达性/交付/软化/数据表门禁，覆盖引擎库、农历、夏令时、输入容错、边界场景、报告质量与端到端用户视角，CI 自动执行
 
   <details>
-  <summary>14 套回归脚本 + 5 道门禁清单（点击展开）</summary>
+  <summary>14 套回归脚本 + 6 道门禁清单（点击展开）</summary>
 
   ```
   tools/test_engine.js       引擎库直测（60 项：排盘/断语/神煞/大运/夏令时/真太阳时/排盘失败可读诊断）
@@ -213,12 +213,13 @@ const cats = BaziEngine.matchRules(ctx);   // 缺字段会抛可读错误，而�
   tools/check_reachability.js    断语可达性门禁（固定网格 + 极端样例盘）
   tools/check_content_lexicon.py 内容合规词表（绝对化 / 恐吓性 / 健康兜底 / 性别对冲）
   tools/check_compliance_equivalence.js 合规软化版等价性（C 端产物标识与命中结果不得被软化改动）
+  tools/check_data_integrity.js  数据表完整性（724 城经度自解析+权威坐标 / 农历表结构+逐月递推 / 206 年节气）
   tools/build_release_zip.py --check 交付包契约（根文件齐全 / 禁入合规派生件 / 拒 docx 提取件）
   ```
   </details>
-- **CI 门禁**：`.github/workflows/ci.yml`（GitHub Actions）在每次 push / PR 时自动构建 UI 与引擎 dist、校验断语库 JSON、跑 14 套回归 + 5 道门禁（内容词表 / 同条件多规则 / 可达性 / 交付包契约干跑 / 合规软化等价）+ 命中分布审计，全绿方可合并——质量保障由机器人把关
+- **CI 门禁**：`.github/workflows/ci.yml`（GitHub Actions）在每次 push / PR 时自动构建 UI 与引擎 dist、校验断语库 JSON、跑 14 套回归 + 6 道门禁（内容词表 / 同条件多规则 / 可达性 / 数据表完整性 / 交付包契约干跑 / 合规软化等价）+ 命中分布审计，全绿方可合并——质量保障由机器人把关
 - **跨平台一致性**：`.gitattributes` 强制构建产物与数据文件使用 LF 换行（Windows CRLF 曾导致 dist 字节不一致、MD5 无法跨平台对齐），保证本地 / CI / C 端三方字节一致
-- **质检工具**：`audit_hit_distribution.js`（命中分布审查）、`check_dup_hits.js`（重复命中检测）、`check_conflicts.js`（反义矛盾检测）、`check_reachability.js`（可达性）、`check_same_condition.js`（同条件互斥）、`check_compliance_equivalence.js`（C 端软化版与 dist 行为等价）
+- **质检工具**：`audit_hit_distribution.js`（命中分布审查）、`check_dup_hits.js`（重复命中检测）、`check_conflicts.js`（反义矛盾检测）、`check_reachability.js`（可达性）、`check_same_condition.js`（同条件互斥）、`check_compliance_equivalence.js`（C 端软化版与 dist 行为等价）、`check_data_integrity.js`（城市经度 / 农历 / 节气三张表）
 
 <p align="center">
   <img src="assets/screenshots/promo/flow.png" alt="bazi-engine · 处理链路" width="420"/>

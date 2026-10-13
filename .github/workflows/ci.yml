@@ -56,6 +56,13 @@ jobs:
         run: node tools/check_same_condition.js
       - name: 断语可达性（固定网格 + 极端样例盘）
         run: node tools/check_reachability.js
+      # 2026-10-14（v1.3.15）新增：三张手工维护的大表（724 城经度 / 1900-2099 农历 / 206 年节气）
+      #   任一字符写错都会静默算错盘，而 14 套回归都碰不到。--self-test 会注入 4 处故障并要求被抓到
+      #   —— 门禁最大的风险不是漏检，是"永远不会失败"。
+      - name: 数据表完整性（城市经度 / 农历 / 节气）+ 门禁自检
+        run: |
+          node tools/check_data_integrity.js
+          node tools/check_data_integrity.js --self-test
       - name: 交付包契约（干跑，不写 ZIP）
         run: python tools/build_release_zip.py --check
       - name: Compliance soften + check (C-end gate)
