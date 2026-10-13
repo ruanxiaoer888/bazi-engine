@@ -1,5 +1,5 @@
 /* bazi-engine 独立引擎库 —— 由 tools/build_ui.py 自动生成，请勿手改
- * 版本：v1.3.12（与 skill/SKILL.md frontmatter 同步）
+ * 版本：v1.3.13（与 skill/SKILL.md frontmatter 同步）
  * 纯计算层：四柱排盘 / 五行身强弱 / 大运 / 神煞 / 断语匹配 / 流年流月流日规则 / 合婚数据 / 夏令时与真太阳时校正。
  * 无 DOM 依赖。浏览器与 Node 双端可用：
  *   浏览器：<script src="engine.dist.js"></script> → window.BaziEngine

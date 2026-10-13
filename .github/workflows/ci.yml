@@ -63,5 +63,11 @@ jobs:
           cp engine/engine.dist.js engine/engine.compliance.js
           python tools/compliance_soften.py engine/engine.compliance.js
           python tools/compliance_soften.py engine/engine.compliance.js --check
+      # 2026-10-13（v1.3.13）新增：上面那步"能过 --check"并不代表产物正确 ——
+      #   原实现是整文件全局替换，把 k==='流年' 改成 k==='年度'、把 id/category/source 一起改了，
+      #   而 --check 只看"敏感词是否清干净"，越界改动它一个字都看不出来。
+      #   本步用"逐规则标识逐字节相同 + 逐盘 matchRules 命中一致"来卡住软化越界。
+      - name: 合规软化版与 dist 行为等价（标识不得被软化）
+        run: node tools/check_compliance_equivalence.js
       - name: Hit distribution audit (100 charts, fixed seed)
         run: node tools/audit_hit_distribution.js --sample=100 --seed=42
