@@ -1,21 +1,30 @@
 #!/usr/bin/env node
 // 断语库大样本命中分布审查工具（全类别覆盖版）
 // 用法：
-//   node audit_hit_distribution.js                 # 默认 80 个随机盘全量审查（全16类别）
-//   node audit_hit_distribution.js --sample=200    # 自定义样本数
+//   node audit_hit_distribution.js                 # 默认 300 盘、固定种子 42（可复现）
+//   node audit_hit_distribution.js --sample=2000   # 自定义样本数
+//   node audit_hit_distribution.js --seed=random   # 换一批样本（默认固定种子，保证 CI 可复现）
 //   node audit_hit_distribution.js --rules=combo_全无财星,pattern_tiaohou  # 深挖指定规则
 //   node audit_hit_distribution.js --cat=性格,财运  # 只看指定类别
 //
-// 判定标准：
-//   - 命中率 100% 的规则 = 坏规则（条件过宽/字段引用错误/存在性判断代替真实判断），必须修复
-//   - 命中率 >80% 需人工复核；单盘 0 命中也异常（覆盖缺口或引擎短路）
-//   - 无 condition 的规则 = 始终命中（若非故意设计则需补条件）
+// 判定标准（2026-10-14 v1.3.16 修订，原因见下）：
+//   - 命中率【100%】的规则 = 坏规则（条件过宽/字段引用错误/存在性判断代替真实判断），**失败**
+//   - 命中率【≥90%】= 几乎必然无条件，**失败**
+//   - 命中率【80%~90%】= 需人工复核，**仅警告，不失败**
+//   - 单盘 0 命中属正常（低命中规则见"样本内 0 命中"一节，大样本仍 0 才需深挖）
+//
+// 【为什么把 >80% 从"失败"降级为"警告"】原实现对**点估计**硬卡 80% 就 exit 1，
+//   而 n=80、随机种子时，一条真实命中率 73% 的规则（career_用神被冲 / pattern_yongshen_chong，
+//   n=2000 实测 1464/2000 = 73%）有约 8% 概率在样本里显示 >80% → **门禁随机失败**。
+//   CI 当时靠 `--sample=100 --seed=42` 把失败概率压到约 5%，属于"挑个能过的样本"，
+//   而工具自己的注释写的是"需人工复核"（复核 ≠ 让构建失败）。现改为：
+//   阈值分层（≥90% 才失败）+ 默认样本提到 300 + 默认种子固定 42（可复现，--seed=random 换样本）。
 const fs = require('fs');
 const path = require('path');
 
 // ---- 参数解析 ----
 const args = process.argv.slice(2);
-const sampleN = (args.find(a => a.startsWith('--sample=')) || '--sample=80').split('=')[1] | 0;
+const sampleN = (args.find(a => a.startsWith('--sample=')) || '--sample=300').split('=')[1] | 0;
 const rulesArg = (args.find(a => a.startsWith('--rules=')) || '').split('=')[1];
 const catsArg = (args.find(a => a.startsWith('--cat=')) || '').split('=')[1];
 const watchRules = rulesArg ? rulesArg.split(',').map(s => s.trim()).filter(Boolean) : null;
@@ -35,7 +44,10 @@ let activeCats = watchCats || ALL_CATS;
 
 // ---- 随机盘生成（2026-08-19：LCG 可复现种子，--seed=N 固定样本；默认时间种子保持随机）----
 let seed = (args.find(a => a.startsWith('--seed=')) || '').split('=')[1];
-seed = seed ? (+seed >>> 0) : (Date.now() >>> 0);
+// 默认固定 42：门禁必须可复现（原实现用 Date.now()，同一份数据两次跑结论可能不同）。
+// 需要换一批样本时用 --seed=random。
+seed = (seed === 'random') ? (Date.now() >>> 0) : (seed ? (+seed >>> 0) : 42);
+const seedInit = seed;   // rnd() 会不断推进 seed，报告里要打印**初始**种子才可复现
 function rnd(){ seed = (seed * 1664525 + 1013904223) >>> 0; return seed / 4294967296; }
 const rand = (a, b) => a + Math.floor(rnd() * (b - a + 1));
 const charts = [];
@@ -81,20 +93,27 @@ for (const id in hitCount) {
 console.log(bad === 0 ? '✅ 无 100% 命中规则（排除无条件规则）' : `共 ${bad} 条需修复\n`);
 
 // ---- 命中率分布 ----
-console.log('\n== 命中率分布（>80% 需人工复核，排除无条件规则）==');
-const over80 = [];
+console.log('\n== 命中率分布（≥90% 失败；80%~90% 人工复核，仅警告）==');
+const hardFail = [], review = [];
 for (const id in hitCount) {
   const r = RULES.find(x => x.id === id);
   if (r && (!r.condition || Object.keys(r.condition).length === 0)) continue; // 跳过无条件规则
   const rate = hitCount[id] / total;
-  if (rate > 0.8) over80.push({ id, rate, hit: hitCount[id] });
+  if (rate >= 0.9 && hitCount[id] < total) hardFail.push({ id, rate, hit: hitCount[id] });
+  else if (rate >= 0.8) review.push({ id, rate, hit: hitCount[id] });
 }
-over80.sort((a, b) => b.rate - a.rate);
-if (over80.length === 0) console.log('✅ 无 >80% 命中规则');
-else over80.forEach(({ id, rate, hit }) => {
+hardFail.sort((a, b) => b.rate - a.rate);
+review.sort((a, b) => b.rate - a.rate);
+const show = (list, mark) => list.forEach(({ id, rate, hit }) => {
   const r = RULES.find(x => x.id === id);
-  console.log(`🔎 ${id} ${(rate * 100).toFixed(0)}% (${hit}/${total}) [${r ? r.category : '?'}] → ${r ? r.conclusion.substring(0, 50) : ''}`);
+  console.log(`${mark} ${id} ${(rate * 100).toFixed(0)}% (${hit}/${total}) [${r ? r.category : '?'}] → ${r ? r.conclusion.substring(0, 50) : ''}`);
 });
+if (hardFail.length === 0) console.log('✅ 无 ≥90% 命中规则');
+else show(hardFail, '❌');
+if (review.length === 0) console.log('✅ 无 80%~90% 命中规则');
+else show(review, '🔎');
+if (review.length && total < 300)
+  console.log(`   （本样本仅 ${total} 盘，80%~90% 区间波动大，建议 --sample=2000 复核后再判断）`);
 const conditionalRules = Object.keys(hitCount).filter(id => {
   const r = RULES.find(x => x.id === id);
   return r && r.condition && Object.keys(r.condition).length > 0;
@@ -143,9 +162,12 @@ if (watchRules) {
   });
 }
 
-// ---- 门禁退出码（2026-08-19 修复：此前恒 exit 0，CI 中发现问题不失败）----
-if (bad > 0 || over80.length > 0) {
-  console.log(`\n❌ 门禁未过：100% 命中规则 ${bad} 条 / >80% 规则 ${over80.length} 条（CI 应失败）`);
+// ---- 门禁退出码（2026-08-19 修复：此前恒 exit 0；2026-10-14 分层：≥90% 才失败）----
+if (bad > 0 || hardFail.length > 0) {
+  console.log(`\n❌ 门禁未过：100% 命中规则 ${bad} 条 / ≥90% 规则 ${hardFail.length} 条（需修复条件）`);
+  if (review.length) console.log(`   （另有 ${review.length} 条落在 80%~90%，属"人工复核"级，不计入失败）`);
   process.exit(1);
 }
+console.log(`\n✅ 门禁通过（样本 ${total} 盘，种子 ${seedInit}）：无 100% / 无 ≥90% 命中规则`
+  + (review.length ? `；${review.length} 条落在 80%~90%，建议人工复核` : ''));
 process.exit(0);
