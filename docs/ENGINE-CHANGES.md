@@ -14,9 +14,18 @@
 
 ## v1.3.13（2026-10-13 · 合规软化越界修复：C 端产物凭空多出断语）
 
-> **引擎层变更（dist 仅头注释版本号变化，MD5 `b82b2502fe04c79e0e0e6a4c31aa1724`），影响 C 端：是（严重）但修复方式在工具侧**——
+> **引擎层变更（dist 仅头注释版本号变化，MD5 `b82b2502fe04c79e0e0e6a4c31aa1724`），影响 C 端：是（潜伏缺陷，当前无用户可见影响）**——
 > 排盘 / 断语匹配算法**零改动**；本版修的是 `tools/compliance_soften.py`（C 端合规版生成器）**越界改到了机器读的标识**。
-> **C 端（bazi-app）必须重新用新工具软化一次自己的 `web/engine.dist.js`**，否则线上继续带着下面的错误。
+
+> **⚠️ 影响范围的两句话说清（2026-10-13 复核更正）**：
+> ① **产物级**：加载 `bazi-app/web/engine.dist.js` 调用 `matchRules`，实测单盘命中 143 条（其中 20 条为泄漏），
+>    `findRule('liunian_流年财星旺')` → `undefined` —— 缺陷在产物里确凿存在；
+> ② **线上级**：`bazi-app` 的界面（`web/paid/*.js`）与 API（`api/`）**从未调用 `matchRules`**
+>    （只用 `paipan` / `applyDst` / `SHI_CHEN_MAP`），因此**当前没有用户可见影响**。
+>    真正受损的是**任何调用 `matchRules` 的消费方**：商业授权交付包里的 `engine.compliance.js`、
+>    以及 bazi-app 将来一旦要用断语库就会立刻踩到。
+>    最初把 ① 直接写成"线上每张盘多 20 条"是**推断越过了证据**，此处更正。
+> **建议动作**：bazi-app 不紧急，但应择机用新工具重新软化一次（幂等，一条命令）。
 
 | 项 | 值 |
 |---|---|
@@ -28,7 +37,7 @@
 | README.md MD5 | `93831ec5d8d4ef26fe5eb7b11abf0a51` |
 | 新增门禁 | `tools/check_compliance_equivalence.js`（MD5 `8d87003e3d1ce9ddf930cdf0b244084e`） |
 | 发布包 | `bazi-engine-v1.3.13.zip`（48 文件 / MD5 `a8cfe5be98de6628acd21b9cde89f245`） |
-| 影响 C 端 | **是（严重）**：C 端产物每张盘多 20 条面板断语 + 面板按 id 查不到规则；需重新软化 |
+| 影响 C 端 | **是（潜伏）**：产物级缺陷确凿（调 `matchRules` 即每盘多 20 条、`findRule` 失效），但 bazi-app 未调用 `matchRules`，当前无用户可见影响；建议择机重新软化 |
 
 **第八轮扫描（换维度：不再是"内容正确性"，而是"运行时行为等价性"）发现的问题**
 
@@ -42,9 +51,10 @@
 | ③ | `category` 改名 38 处（流年→年度、大运→十年节奏） | 消费方 `cats['流年']` / `cats['大运']` 直接取空 |
 | ④ | `source`（古籍出处）改写 1 处 | 与授权书"不得删除/篡改 `source`"的义务相冲突 |
 
-**线上影响已确认**：`bazi-app/web/engine.dist.js`（2026-10-11）中 `k==='年度'` 存在 1 处、
-`"category": "年度"` 30 处、`"category": "十年节奏"` 20 处，实测单盘命中 143 条（其中 20 条为泄漏），
-`findRule('liunian_流年财星旺')` → `undefined`。
+**产物级影响已确认**（`bazi-app/web/engine.dist.js`，2026-10-11）：`k==='年度'` 存在 1 处、
+`"category": "年度"` 30 处、`"category": "十年节奏"` 20 处；加载该文件调用 `matchRules` 实测单盘命中
+143 条（其中 20 条为泄漏）、`findRule('liunian_流年财星旺')` → `undefined`。
+**但 bazi-app 的界面与 API 都未调用 `matchRules`，故当前无用户可见影响**（详见上方"影响范围"说明）。
 
 **修复（结构感知软化）**：
 
