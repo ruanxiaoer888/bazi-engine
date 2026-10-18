@@ -54,7 +54,7 @@ assert('matchLiuDay 为函数', typeof BaziEngine.matchLiuDay==='function');
 console.log('== 时辰映射 & 数据表 ==');
 assert('SHI_CHEN_MAP 子时→0:00', BaziEngine.SHI_CHEN_MAP['子'][0]===0);
 assert('SHI_CHEN_MAP 亥时→22:00', BaziEngine.SHI_CHEN_MAP['亥'][0]===22);
-assert('RULES 共 1000 条', BaziEngine.RULES.length===1000, 'len='+BaziEngine.RULES.length);
+assert('RULES 共 1001 条', BaziEngine.RULES.length===1001, 'len='+BaziEngine.RULES.length);
 assert('JIEQI 覆盖 206 年', Object.keys(BaziEngine.JIEQI.data).length===206, 'len='+Object.keys(BaziEngine.JIEQI.data).length);
 assert('SHENSHA 24 项', BaziEngine.SHENSHA.length===24);
 assert('NAYIN 60 条', Object.keys(BaziEngine.NAYIN).length===60);
@@ -212,6 +212,24 @@ assert('年干有真实比肩时 combo_偏印_比肩 仍命中', (BaziEngine.mat
 // ㉒ 透干 vs 藏干：官杀透干才参与组合
 const fxGuan = BaziEngine.paipan('G','男',2019,2,24,19,23,'','no');
 assert('正官透干时 combo_偏印_正官 命中', (BaziEngine.matchRules(fxGuan)['十神组合']||[]).some(r=>r.id==='combo_偏印_正官'), fxGuan.pillars.join(' '));
+
+console.log('== 财印组合接喜忌：同组合正负两断语互斥分流（v1.3.19）==');
+// ㉓ N02：偏印（火）为忌神 → 出「财星制枭」（正向），不出「财星坏印」（负向）
+assert('N02 命中 combo_正财_偏印_制枭（偏印为忌，财制枭）', n02.has('combo_正财_偏印_制枭'));
+assert('N02 不命中 combo_正财_偏印（偏印为忌时不判坏印）', !n02.has('combo_正财_偏印'));
+// ㉔ 反向：身弱印为用 → 出「财星坏印」，不出「制枭」
+const fxWeak = BaziEngine.paipan('W','男',2010,3,3,14,10,'','no');
+const sWeak = new Set(Object.values(BaziEngine.matchRules(fxWeak)).flat().map(r=>r.id));
+assert('身弱印为用之盘命中 combo_正财_偏印（财星坏印）', sWeak.has('combo_正财_偏印'), fxWeak.pillars.join(' '));
+assert('身弱印为用之盘不命中 combo_正财_偏印_制枭', !sWeak.has('combo_正财_偏印_制枭'));
+// ㉕ 互斥性：同一盘不可能同时命中同一组合的 正/负 两半（财印五行喜忌恒互斥）
+for (const fx of [['A','男',1988,1,24,7,0],['B','女',1975,6,9,3,20],['C','男',2001,11,17,22,45],['D','女',1966,4,2,9,5],['E','男',1992,8,28,17,30]]) {
+  const c = BaziEngine.paipan(fx[0],fx[1],fx[2],fx[3],fx[4],fx[5],fx[6],'','no');
+  const s = new Set(Object.values(BaziEngine.matchRules(c)).flat().map(r=>r.id));
+  assert(`${fx[0]} 财印组合正负两半互斥（${c.pillars.join(' ')}）`,
+    !(s.has('combo_正财_偏印') && s.has('combo_正财_偏印_制枭')) &&
+    !(s.has('combo_正财_正印') && s.has('combo_财星破印')));
+}
 
 console.log('\n结果: ' + pass + ' PASS, ' + fail + ' FAIL');
 if (fail > 0) process.exit(1);

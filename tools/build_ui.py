@@ -32,7 +32,7 @@ TPL = r"""<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<!-- 许可：本文件代码部分为 MIT（见 LICENSE）；其中内联的断语数据（RULES，1000 条）为 CC BY-NC-SA 4.0（见 LICENSE-DATA），商业使用需另行取得授权 -->
+<!-- 许可：本文件代码部分为 MIT（见 LICENSE）；其中内联的断语数据（RULES，1001 条）为 CC BY-NC-SA 4.0（见 LICENSE-DATA），商业使用需另行取得授权 -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#07070d">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14' fill='%2307070d' stroke='%23c9a35f' stroke-width='2'/%3E%3Cpath d='M16 2a14 14 0 0 1 0 28z' fill='%23c9a35f'/%3E%3Ccircle cx='16' cy='8' r='3.5' fill='%2307070d'/%3E%3Ccircle cx='16' cy='24' r='3.5' fill='%23c9a35f'/%3E%3C/svg%3E">
@@ -1565,6 +1565,20 @@ function matchRules(ctx){
       else if(k==='状态'){ st=v; }
       else if(k==='性别'){ if(v!==ctx.gender) hit=false; }
       else if(k==='位置'){ pos=v; }
+      // 2026-10（v1.3.19）喜忌键：把"某十神所属五行为喜用/忌神"写成条件，用于给同一组合的正/负两条断语做**互斥分流**。
+      // 为什么需要它：combo_财星破印 与 combo_正财_正印 原本 condition 完全相同（组合:[正财,正印]），
+      // 实测 2000 盘 125/125 双出——每张"正财+正印同透"的盘同时收到"财印相益"和"财破印相妨"。
+      // 口径：ctx.xiYong/jiYong 是**五行**数组，正印与偏印共用同一五行 → 共用同一喜忌（这是命理口径，不是实现折中）。
+      // 写法：{"十神":"偏印","为":"忌"}，也接受 {"五行":"火","为":"喜"}；数组=全部成立。
+      // 边界：中和盘 ratio 恰为 0.5 时 xiYong/jiYong 皆空 → 喜忌无定论，正负两断语都不命中（设计如此，不是漏检）。
+      else if(k==='喜忌'){
+        const arr=Array.isArray(v)?v:[v];
+        if(hit&&!arr.every(o=>{
+          const w=o['五行']||GAN_WX_OfTen(o['十神'],ctx);
+          const list=(o['为']==='忌')?ctx.jiYong:ctx.xiYong;
+          return !!w&&!!list&&list.indexOf(w)>=0;
+        })) hit=false;
+      }
       // 2026-10（v1.3.18）组合匹配排除日干：ctx.tens 含日干，而日干对自身恒为"比肩"（tenGod 同我+同阴阳），
       // 导致任何"比肩+X"的组合实际退化为"X 透干"——实测 combo_偏印_比肩 在"偏印透干"的盘上 100% 命中，
       // 其中 63.5% 除日主外无任何真实比劫。含"比肩"的组合改为只查年/月/时三干。
@@ -3515,7 +3529,7 @@ DIST_TPL = """/* bazi-engine 独立引擎库 —— 由 tools/build_ui.py 自动
  * 无 DOM 依赖。浏览器与 Node 双端可用：
  *   浏览器：<script src="engine.dist.js"></script> → window.BaziEngine
  *   Node：  const BaziEngine = require('./engine.dist.js');
- * 许可：代码部分为 MIT（见 LICENSE）；本文件内联的 RULES 断语数据（1000 条）为 CC BY-NC-SA 4.0（见 LICENSE-DATA）。
+ * 许可：代码部分为 MIT（见 LICENSE）；本文件内联的 RULES 断语数据（1001 条）为 CC BY-NC-SA 4.0（见 LICENSE-DATA）。
  *       取得本文件不等于获得断语数据的商用许可，商业使用需另行取得授权。
  */
 (function(root, factory){

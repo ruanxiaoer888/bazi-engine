@@ -33,7 +33,7 @@
 - **五行补救**：喜用神、调候用神（古籍）、五行缺失与补救建议
 - **神煞速查**：24 项吉凶星曜按命中展示
 - **三式宫位**：胎元、命宫、身宫
-- **断语可追溯**：1000 条断语，每条标注古籍出处（古代命理典籍）与行动建议
+- **断语可追溯**：1001 条断语，每条标注古籍出处（古代命理典籍）与行动建议
 
 <p align="center">
   <img src="assets/screenshots/final/02_liuri.png" alt="bazi-engine · 流日分析" width="520"/>
@@ -46,7 +46,7 @@
 <p align="center">
   <img src="assets/screenshots/promo/compare.png" alt="bazi-engine vs 传统工具" width="420"/>
   <br/>
-  <em>开源 · 节气精确切分 · 本地零依赖 · 1000 条古籍溯源断语</em>
+  <em>开源 · 节气精确切分 · 本地零依赖 · 1001 条古籍溯源断语</em>
 </p>
 
 ## 产品生态
@@ -187,15 +187,15 @@ const cats = BaziEngine.matchRules(ctx);   // 缺字段会抛可读错误，而�
 
 ## 技术说明
 
-- **UI**：`ui/index.html` — 单文件离线（零外部依赖），内置 206 年节气数据 + 1000 条断语
+- **UI**：`ui/index.html` — 单文件离线（零外部依赖），内置 206 年节气数据 + 1001 条断语
 - **构建**：`tools/build_ui.py`（Python）内联节气与断语库生成 UI
-- **验证**：14 套回归脚本 + 6 道内容/可达性/交付/软化/数据表门禁，覆盖引擎库、农历、夏令时、输入容错、边界场景、报告质量与端到端用户视角，CI 自动执行
+- **验证**：14 套回归脚本 + 7 道内容/可达性/极性/交付/软化/数据表门禁，覆盖引擎库、农历、夏令时、输入容错、边界场景、报告质量与端到端用户视角，CI 自动执行
 
   <details>
-  <summary>14 套回归脚本 + 6 道门禁清单（点击展开）</summary>
+  <summary>14 套回归脚本 + 7 道门禁清单（点击展开）</summary>
 
   ```
-  tools/test_engine.js       引擎库直测（60 项：排盘/断语/神煞/大运/夏令时/真太阳时/排盘失败可读诊断）
+  tools/test_engine.js       引擎库直测（105 项：排盘/断语/神煞/大运/夏令时/真太阳时/排盘失败可读诊断）
   tools/test_lunar.js        农历模块（27 项）
   tools/test_ui.js           UI 功能回归
   tools/test_eval_state.js   旺衰状态机
@@ -210,6 +210,7 @@ const cats = BaziEngine.matchRules(ctx);   // 缺字段会抛可读错误，而�
   tools/check_conflicts.js   反义矛盾检测
   tools/check_dup_hits.js    重复命中 + 逐字重复结论门禁（含 id 有效性校验）
   tools/check_same_condition.js  同条件多规则门禁（互斥 / 近重复结论）
+  tools/check_polarity.js    同条件极性门禁（一正一负 + 假拆分 + `--self-test` 自检）
   tools/check_reachability.js    断语可达性门禁（固定网格 + 极端样例盘）
   tools/check_content_lexicon.py 内容合规词表（绝对化 / 恐吓性 / 健康兜底 / 性别对冲）
   tools/check_compliance_equivalence.js 合规软化版等价性（C 端产物标识与命中结果不得被软化改动）
@@ -217,7 +218,7 @@ const cats = BaziEngine.matchRules(ctx);   // 缺字段会抛可读错误，而�
   tools/build_release_zip.py --check 交付包契约（根文件齐全 / 禁入合规派生件 / 拒 docx 提取件）
   ```
   </details>
-- **CI 门禁**：`.github/workflows/ci.yml`（GitHub Actions）在每次 push / PR 时自动构建 UI 与引擎 dist、校验断语库 JSON、跑 14 套回归 + 6 道门禁（内容词表 / 同条件多规则 / 可达性 / 数据表完整性 / 交付包契约干跑 / 合规软化等价）+ 命中分布审计，全绿方可合并——质量保障由机器人把关
+- **CI 门禁**：`.github/workflows/ci.yml`（GitHub Actions）在每次 push / PR 时自动构建 UI 与引擎 dist、校验断语库 JSON、跑 14 套回归 + 7 道门禁（内容词表 / 同条件多规则 / 同条件极性 / 可达性 / 数据表完整性 / 交付包契约干跑 / 合规软化等价）+ 命中分布审计，全绿方可合并——质量保障由机器人把关
 - **跨平台一致性**：`.gitattributes` 强制构建产物与数据文件使用 LF 换行（Windows CRLF 曾导致 dist 字节不一致、MD5 无法跨平台对齐），保证本地 / CI / C 端三方字节一致
 - **质检工具**：`audit_hit_distribution.js`（命中分布审查）、`check_dup_hits.js`（重复命中检测）、`check_conflicts.js`（反义矛盾检测）、`check_reachability.js`（可达性）、`check_same_condition.js`（同条件互斥）、`check_compliance_equivalence.js`（C 端软化版与 dist 行为等价）、`check_data_integrity.js`（城市经度 / 农历 / 节气三张表）
 
@@ -255,7 +256,7 @@ kb/                      古籍原文 + 规则手册 + 断语库
 
 - **代码**（排盘引擎 / UI 逻辑 / 构建测试脚本 / Skill 定义）：[MIT](LICENSE) — 自由使用
 - **数据**（`kb/` 断语库与古籍汇编等）：[CC BY-NC-SA 4.0](LICENSE-DATA) — 署名 · 非商业 · 相同方式共享（古籍原文属公有领域，可自由引用）
-- **复合产物**（`ui/index.html`、`engine/engine.dist.js`）：**同一文件内"代码部分 MIT + 内联的 1000 条断语数据 CC BY-NC-SA 4.0"**。下载/引用这两个文件不等于获得断语数据的商用许可。
+- **复合产物**（`ui/index.html`、`engine/engine.dist.js`）：**同一文件内"代码部分 MIT + 内联的 1001 条断语数据 CC BY-NC-SA 4.0"**。下载/引用这两个文件不等于获得断语数据的商用许可。
 
 > **商业边界**：「本初」为作者自有商业产品（作者对自有代码与数据享有完整权利）；**第三方**使用本仓库仍按上方双许可执行（代码 MIT / 数据 CC BY-NC-SA 4.0），商业授权请联系作者。
 >

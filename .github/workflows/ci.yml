@@ -54,6 +54,14 @@ jobs:
         run: python tools/check_content_lexicon.py
       - name: 同条件多规则（互斥 / 近重复）
         run: node tools/check_same_condition.js
+      # 2026-10-18（v1.3.19）新增：check_same_condition 只查"近重复（相似度≥0.60）"和寒/暑互斥，
+      #   对"语义相反但用词不相似"无感——combo_财星破印 × combo_正财_正印 相似度仅 0.19，
+      #   而 condition 完全相同、2000 盘 125/125 双出（同一张盘既被告知"财印相益"又"财破印相妨"）。
+      #   本门禁查①同条件一正一负 ②写了区分键但两半仍可并存（假拆分）；--self-test 注入故障必须被抓到。
+      - name: 同条件极性（一正一负 / 假拆分）+ 门禁自检
+        run: |
+          node tools/check_polarity.js
+          node tools/check_polarity.js --self-test
       - name: 断语可达性（固定网格 + 极端样例盘）
         run: node tools/check_reachability.js
       # 2026-10-14（v1.3.15）新增：三张手工维护的大表（724 城经度 / 1900-2099 农历 / 206 年节气）
