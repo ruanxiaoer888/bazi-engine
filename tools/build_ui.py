@@ -1364,7 +1364,10 @@ function fmtRule(r){ if(!r) return ''; return `<div style="margin-top:4px;font-s
 // 状态条件运行时评估：为"状态"条件提供真实判断（十神/五行/喜忌/格局上下文）
 function evalState(st, c, ctx){
   const avg=ctx.avgFive||1;
-  const allTens=[...ctx.tens];
+  // 2026-10（v1.3.20）状态类计数同样排除日干自身：原实现从 ctx.tens 全量起算，
+  // 日干对自身恒为"比肩" → 任何"比劫多/重重"的计数凭空 +1，门槛等于降了一档。
+  // 地支本气仍按四支计入（那是真实的藏干，不是日主自己）。
+  const allTens=[ctx.tens[0],ctx.tens[1],ctx.tens[3]];
   ctx.pillars.forEach(p=>{ const tg=CANG[p[1]][0][0]; allTens.push(tenGod(tg,ctx.dmWx,ctx.dmYin)); });
   const cnt=(arr,t)=>{ let n=0; arr.forEach(x=>{ if(x===t) n++; }); return n; };
   const wxOf=t=>GAN_WX_OfTen(t,ctx);
@@ -1644,13 +1647,18 @@ function matchRules(ctx){
       wx=null;
     }
     if(hit && tenArr){
-      let pool=ctx.tens;
+      // 2026-10（v1.3.20）十神键同样排除日干自身：ctx.tens[2] 是日干，而日干对自身恒为"比肩"
+      //（tenGod 同我 + 同阴阳）。v1.3.18 只修了 `组合`/`十神组合`，`十神` 键漏修——
+      // 实测 10 条含"比肩"的十神条件规则被污染，最重的 `career_比肩_中和` 命中率 52.5%（等于按旺衰发牌）。
+      // 修法：透干池默认取年/月/时三干；带 `位置` 键时按指定柱（`日时` 同样剔掉日干）。
+      // 不含"比肩"的十神条件不受影响——日干位置上除"比肩"以外不可能出现其它十神。
+      let pool=[ctx.tens[0],ctx.tens[1],ctx.tens[3]];
       if(pos==='日支'){ pool=[ctx.dayZhiTG_ten]; }
       else if(pos==='年干'){ pool=[ctx.tens[0]]; }
       else if(pos==='月干'){ pool=[ctx.tens[1]]; }
       else if(pos==='时干'){ pool=[ctx.tens[3]]; }
       else if(pos==='年月'){ pool=[ctx.tens[0],ctx.tens[1]]; if(!(ctx.caiGuanPos==='年月'||ctx.caiGuanPos==='双')) hit=false; }  // 财官需天干透出（藏而不透力度弱）
-      else if(pos==='日时'){ pool=[ctx.tens[2],ctx.tens[3]]; if(!(ctx.caiGuanPos==='日时'||ctx.caiGuanPos==='双')) hit=false; }  // 财官需天干透出
+      else if(pos==='日时'){ pool=[ctx.tens[3]]; if(!(ctx.caiGuanPos==='日时'||ctx.caiGuanPos==='双')) hit=false; }  // 财官需天干透出（日干不算比肩）
       if(hit && !tenArr.some(t=>pool.includes(t))) hit=false;
     }
     if(hit && wx!==null){

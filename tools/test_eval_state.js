@@ -68,7 +68,11 @@ assert('evalState(未知状态)不命中', evalState('某未知状态',{},c1)===
 // 财官位置：年月/日时需天干透出（藏而不透不命中）——防止命中率回归 80%+
 {
   const srcB = fs.readFileSync(__dirname + '/../tools/build_ui.py', 'utf8');
-  assert('位置年月/日时 仅匹配天干透出', srcB.indexOf("pool=[ctx.tens[0],ctx.tens[1]]")>=0 && srcB.indexOf("pool=[ctx.tens[2],ctx.tens[3]]")>=0);
+  assert('位置年月/日时 仅匹配天干透出', srcB.indexOf("pool=[ctx.tens[0],ctx.tens[1]]")>=0 && srcB.indexOf("pool=[ctx.tens[3]]")>=0);
+  // 2026-10（v1.3.20）日时池不再含日干：日干对自身恒为"比肩"，计入会让含"比肩"的条件恒真
+  assert('日时池排除日干（不含 ctx.tens[2] 的比肩）', srcB.indexOf("pool=[ctx.tens[2],ctx.tens[3]]")<0);
+  assert('十神键默认池排除日干（年/月/时三干）', srcB.indexOf("let pool=[ctx.tens[0],ctx.tens[1],ctx.tens[3]];")>=0);
+  assert('evalState 计数池排除日干', srcB.indexOf("const allTens=[ctx.tens[0],ctx.tens[1],ctx.tens[3]];")>=0);
 }
 
 console.log('== C. 缺失字段引用修复 ==');

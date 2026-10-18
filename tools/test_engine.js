@@ -213,8 +213,7 @@ assert('年干有真实比肩时 combo_偏印_比肩 仍命中', (BaziEngine.mat
 const fxGuan = BaziEngine.paipan('G','男',2019,2,24,19,23,'','no');
 assert('正官透干时 combo_偏印_正官 命中', (BaziEngine.matchRules(fxGuan)['十神组合']||[]).some(r=>r.id==='combo_偏印_正官'), fxGuan.pillars.join(' '));
 
-console.log('== 财印组合接喜忌：同组合正负两断语互斥分流（v1.3.19）==');
-// ㉓ N02：偏印（火）为忌神 → 出「财星制枭」（正向），不出「财星坏印」（负向）
+console.log('== 财印组合接喜忌：同组合正负两断语互斥分流（v1.3.19）==');// ㉓ N02：偏印（火）为忌神 → 出「财星制枭」（正向），不出「财星坏印」（负向）
 assert('N02 命中 combo_正财_偏印_制枭（偏印为忌，财制枭）', n02.has('combo_正财_偏印_制枭'));
 assert('N02 不命中 combo_正财_偏印（偏印为忌时不判坏印）', !n02.has('combo_正财_偏印'));
 // ㉔ 反向：身弱印为用 → 出「财星坏印」，不出「制枭」
@@ -230,6 +229,26 @@ for (const fx of [['A','男',1988,1,24,7,0],['B','女',1975,6,9,3,20],['C','男'
     !(s.has('combo_正财_偏印') && s.has('combo_正财_偏印_制枭')) &&
     !(s.has('combo_正财_正印') && s.has('combo_财星破印')));
 }
+
+console.log('== 十神键排除日干：比肩规则不再对每张盘恒真（v1.3.20）==');
+// ㉖ N02 只有日干是比肩（tens=[正印,正财,比肩,偏印]，日干戊=比肩）→ 比肩类规则必须全不命中
+[['career_比肩_中和', 'career_比肩_中和'], ['career_bijian', 'career_bijian'],
+ ['char_ten_比肩', 'char_ten_比肩'], ['study_比劫重', 'study_比劫重'],
+ ['marriage_bijie_duo', 'marriage_bijie_duo']].forEach(([id, label]) => {
+  assert(`N02 不命中 ${label}（除日干外无比劫）`, !n02.has(id));
+});
+// ㉗ 反向哨兵：真有比肩透干时必须仍命中（防止规则被修死）
+const fxBiStrong = BaziEngine.paipan('BIS', '男', 1993, 1, 1, 0, 36, '', 'no');
+const biStrong = new Set(Object.values(BaziEngine.matchRules(fxBiStrong)).flat().map(r => r.id));
+assert('年/月干有真实比肩且日主强 → career_比肩_强 命中', biStrong.has('career_比肩_强'), fxBiStrong.pillars.join(' '));
+assert('年/月干有真实比肩 → kin_sibling_jie 命中', biStrong.has('kin_sibling_jie'));
+// ㉘ 中和 + 真实比肩透干 → career_比肩_中和 仍可达（不是被一刀切掉）
+const fxBiZhong = BaziEngine.paipan('BIZ', '男', 1960, 6, 7, 15, 10, '', 'no');
+const biZhong = new Set(Object.values(BaziEngine.matchRules(fxBiZhong)).flat().map(r => r.id));
+assert('中和 + 真实比肩透干 → career_比肩_中和 命中', biZhong.has('career_比肩_中和'), fxBiZhong.pillars.join(' '));
+// ㉙ 状态计数同样不含日干：只有日干是比肩时「比劫重重」类不成立
+assert('N02 不命中 kin_兄弟_比肩得力（旺衰+比肩条件，日干不算）', !n02.has('kin_兄弟_比肩得力'));
+assert('N02 总命中 = 100 条（v1.3.20 实测，去掉 5 条被日干污染的比肩规则）', n02.size === 100, 'size=' + n02.size);
 
 console.log('\n结果: ' + pass + ' PASS, ' + fail + ' FAIL');
 if (fail > 0) process.exit(1);
