@@ -1565,8 +1565,11 @@ function matchRules(ctx){
       else if(k==='状态'){ st=v; }
       else if(k==='性别'){ if(v!==ctx.gender) hit=false; }
       else if(k==='位置'){ pos=v; }
-      else if(k==='组合'){ const arr=Array.isArray(v)?v:[v]; if(hit&&!arr.every(t=>ctx.tens.includes(t))) hit=false; }
-      else if(k==='十神组合'){ const arr=Array.isArray(v)?v:[v]; if(hit&&!arr.every(t=>ctx.tens.includes(t))) hit=false; }
+      // 2026-10（v1.3.18）组合匹配排除日干：ctx.tens 含日干，而日干对自身恒为"比肩"（tenGod 同我+同阴阳），
+      // 导致任何"比肩+X"的组合实际退化为"X 透干"——实测 combo_偏印_比肩 在"偏印透干"的盘上 100% 命中，
+      // 其中 63.5% 除日主外无任何真实比劫。含"比肩"的组合改为只查年/月/时三干。
+      else if(k==='组合'){ const arr=Array.isArray(v)?v:[v]; const _p=arr.includes('比肩')?[ctx.tens[0],ctx.tens[1],ctx.tens[3]]:ctx.tens; if(hit&&!arr.every(t=>_p.includes(t))) hit=false; }
+      else if(k==='十神组合'){ const arr=Array.isArray(v)?v:[v]; const _p=arr.includes('比肩')?[ctx.tens[0],ctx.tens[1],ctx.tens[3]]:ctx.tens; if(hit&&!arr.every(t=>_p.includes(t))) hit=false; }
       else if(k==='否决'){ /* flag，后续在组合/十神匹配中反转逻辑 */ }
       else if(k==='干支'){ /* 位置标记键，仅指定柱位（年干/月干/时干），实际十神检查由十神+位置组合完成 */ }
       else if(k==='生克检测'){ /* 五行生克运行时检测，在循环后处理 */ }

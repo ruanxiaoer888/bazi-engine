@@ -192,5 +192,26 @@ const fxC = BaziEngine.paipan('C','女',1940,1,1,0,0,'','no');
 assert('≥2 个对手柱仍判为用神被冲克合', BaziEngine.yongShenChong(fxC)===true, fxC.pillars.join(' '));
 assert('该盘仍命中 pattern_yongshen_chong', (BaziEngine.matchRules(fxC)['格局']||[]).some(r=>r.id==='pattern_yongshen_chong'));
 
+console.log('== 组合匹配排除日干 + 「中和」文案口径（v1.3.18）==');
+// ⑳ 客户 N02 样本（1988-01-24 07:00 男 / 丁卯 癸丑 戊寅 丙辰）：日主中和、偏印透时干、官杀只藏不透
+const fxN02 = BaziEngine.paipan('N02','男',1988,1,24,7,0,'','no');
+assert('N02 四柱 = 丁卯 癸丑 戊寅 丙辰', fxN02.yg==='丁卯'&&fxN02.mg==='癸丑'&&fxN02.dg==='戊寅'&&fxN02.hg==='丙辰', fxN02.pillars.join(' '));
+assert('N02 日主中和（「中和」键判的是日主，不是十神）', fxN02.strength==='中和');
+const n02 = new Set(Object.values(BaziEngine.matchRules(fxN02)).flat().map(r=>r.id));
+assert('N02 命中 career_偏印_时干（时干丙=偏印）', n02.has('career_偏印_时干'));
+assert('N02 命中 career_偏印_中和（日主中和 + 偏印透干）', n02.has('career_偏印_中和'));
+assert('N02 不命中 career_pianyin（偏印=火为忌神，非"为用神有力"）', !n02.has('career_pianyin'));
+assert('N02 不命中 combo_偏印_比肩（除日主外无真实比劫）', !n02.has('combo_偏印_比肩'));
+assert('N02 不命中 combo_偏印_七杀 / combo_偏印_正官 / combo_30（官杀只藏地支、不透干）',
+  !n02.has('combo_偏印_七杀') && !n02.has('combo_偏印_正官') && !n02.has('combo_30'));
+assert('「中和」文案口径：不再写成"偏印中和"',
+  (BaziEngine.matchRules(fxN02)['事业']||[]).find(r=>r.id==='career_偏印_中和').conclusion.startsWith('日主中和、偏印透干'));
+// ㉑ 反向哨兵：年干另有真实比肩时必须仍命中（防止规则被改死）
+const fxBi = BaziEngine.paipan('BI','男',1993,1,1,0,36,'','no');
+assert('年干有真实比肩时 combo_偏印_比肩 仍命中', (BaziEngine.matchRules(fxBi)['十神组合']||[]).some(r=>r.id==='combo_偏印_比肩'), fxBi.pillars.join(' '));
+// ㉒ 透干 vs 藏干：官杀透干才参与组合
+const fxGuan = BaziEngine.paipan('G','男',2019,2,24,19,23,'','no');
+assert('正官透干时 combo_偏印_正官 命中', (BaziEngine.matchRules(fxGuan)['十神组合']||[]).some(r=>r.id==='combo_偏印_正官'), fxGuan.pillars.join(' '));
+
 console.log('\n结果: ' + pass + ' PASS, ' + fail + ' FAIL');
 if (fail > 0) process.exit(1);
